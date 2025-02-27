@@ -18,7 +18,6 @@ public class Product {
     private String name;
     private double price;
     private int stock;
-    private String img;
     private String provider;
     
     @Column(columnDefinition = "TEXT")
@@ -35,12 +34,12 @@ public class Product {
 
     public Product() {}
 
-    public Product(String name, String description, double price, int stock, String img, String provider) {
+    public Product(String name, String description, double price, int stock, Blob img, String provider) {
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
-        this.img = img;
+        this.imageFile = img;
         this.provider = provider;
     }
 
@@ -64,8 +63,8 @@ public class Product {
         return stock;
     }
 
-    public String getImg() {
-        return img;
+    public Blob getImageFile() {
+        return imageFile;
     }
 
     public String getProvider() {
@@ -88,8 +87,8 @@ public class Product {
         this.stock = stock;
     }
 
-    public void setImg(String img) {
-        this.img = img;
+    public void setImageFile(Blob img) {
+        this.imageFile = img;
     }
 
     public void setProvider(String provider) {

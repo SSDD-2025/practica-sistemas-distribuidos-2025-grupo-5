@@ -23,9 +23,8 @@ import org.springframework.web.server.ResponseStatusException;
 
 import es.codeurjc.practica1.model.Product;
 
-//import es.codeurjc.daw.library.model.Book;
-//import es.codeurjc.daw.library.service.BookService;
-//import es.codeurjc.daw.library.service.ShopService;
+import es.codeurjc.practica1.service.ProductService;
+import es.codeurjc.practica1.service.UserService;
 
 @Controller
 public class ProductController {
@@ -87,7 +86,7 @@ public class ProductController {
 	@PostMapping("/newproduct")
 	public String newProductProcess(Model model, Product product, MultipartFile imageField, @RequestParam(required = false) List<Long> selectedUsers) throws IOException {
 
-		Product newProduct = productService.save(product, selectedUsers, imageField);
+		Product newProduct = productService.save(product);
 
 		model.addAttribute("productId", newProduct.getId());
 
