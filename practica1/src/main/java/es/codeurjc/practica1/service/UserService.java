@@ -4,10 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.stereotype.Service;
 
 import es.codeurjc.practica1.model.User;
 import es.codeurjc.practica1.repositories.UserRepository;
 
+@Service
 public class UserService {
 
     @Autowired
