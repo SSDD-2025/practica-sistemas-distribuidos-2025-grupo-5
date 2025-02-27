@@ -1,9 +1,9 @@
 package es.codeurjc.practica1.repositories;
 
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.data.jpa.repository.JpaRepository;
-import java.util.Optional;
 
 import es.codeurjc.practica1.model.Product;
 
@@ -17,7 +17,7 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByPriceEquals(double price);
     List<Product> findAll();
     Product save(Product product);
-    List<Product> delete(Product product);
+    void delete(Product product);
     boolean existsById(long id);
 
 }

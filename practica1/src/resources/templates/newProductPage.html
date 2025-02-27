@@ -1,0 +1,35 @@
+{{>header}}
+
+<h2>New Product</h2>
+
+<form action="/newproduct" method="post" enctype="multipart/form-data">
+
+  <div class="mb-3">
+    <label class="form-label">Title</label>
+    <input type="text" class="form-control" name="title" placeholder="Title">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Abstract: </label>
+    <textarea class="form-control" name="description"></textarea>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Image: </label>
+    <input type='file' class="form-control" name='imageField' accept=".jpg, .jpeg" />
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Shops: </label>
+    <select class="form-select" name="selectedUsers" multiple>
+      {{#availableUserss}}
+      <option value="{{ id }}">{{ name }}</option>
+      {{/availableUsers}}
+    </select>
+  </div>
+
+  <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Cancel</button>
+  <button class="btn btn-primary" type="submit">Save</button>
+</form>
+
+{{>footer}}
