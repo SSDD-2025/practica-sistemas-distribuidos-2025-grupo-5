@@ -1,22 +1,39 @@
 package es.codeurjc.practica1.model;
+import java.sql.Blob;
+import java.util.List;
+
+import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.Lob;
+import jakarta.persistence.ManyToMany;
+
 @Entity
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
     private String name;
-    private String description;
     private double price;
     private int stock;
     private String img;
     private String provider;
     
-    public Product() {
-    }
+    @Column(columnDefinition = "TEXT")
+	private String description;
+
+	@Lob
+	private Blob imageFile;
+	private int publicationYear;
+	private String lang;
+
+    @ManyToMany
+	private List<User> shops;
+
+
+    public Product() {}
 
     public Product(String name, String description, double price, int stock, String img, String provider) {
         this.name = name;
