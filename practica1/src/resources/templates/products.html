@@ -5,11 +5,11 @@
 
 	<ul class="items">
 		{{#products}}
-		<li><a href="/products/{{id}}">{{title}}</a></li>
+		<li><a href="/products/{{id}}">{{name}}</a></li>
 		{{/products}}
 	</ul>
 
-	<button class="btn btn-primary" onclick="location.href='/newbook'">New product</button>
+	<button class="btn btn-primary" onclick="location.href='/newproduct'">New product</button>
 </div>
 
 {{>footer}}
