@@ -1,0 +1,33 @@
+{{>header}}
+
+<div>
+
+  <div class="container">
+    <div class="row">
+      <div class="col-2">
+        <img class="img-thumbnail" src="/product/{{product.id}}/image">
+      </div>
+      <div class="col-10">
+        <h2>Product "{{product.name}}"</h2>
+        
+        <div>
+          <p>{{{product.description}}}</p>
+        </div>
+
+        <p> <b>Shops where product is available:</b></p>
+        <div>
+          <ul>
+            {{#product.users}}
+            <li><a href="/users/{{id}}">{{id}}</a></li>
+            {{/product.users}}
+          </ul>
+        </div>
+        <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Back to all products</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+
+
+{{>footer}}

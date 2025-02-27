@@ -1,0 +1,43 @@
+{{>header}}
+
+    <div class="content">
+        <h1>Bienvenido a la Aplicación</h1>
+        <p>Mira este producto.</p>
+        <div class="producto">
+            <img src="ruta_de_la_imagen.jpg" alt="Imagen del producto" class="imagen-producto">
+            
+            <p class="descripcion">Este producto es <span class="atributo">+atributo</span>, tiene una medida de <span class="medida">+medida</span>, su funcionalidad es <span class="funcionalidad">+funcionalidad</span>.</p>
+            <!--Añadir boton de reseñas que redirija a la pantalla de reseñas?-->
+            
+            <h4>Precio: <span th:text="${product.price}"></span> €</h4>
+    
+            <div class="botones">
+                <a href="linkAPantallaCompra" class="comprar">Comprar ahora</a>
+                <a href="linkACarro" class="carrito">Añadir al carro</a>
+            </div>
+        </div>
+    </div>
+    
+    <script>
+        function openSettings() {
+            alert("Abriendo ajustes...");
+        }
+
+        function login() {
+            window.location.href = "http://127.0.0.1:3000/Practica1/PantallaLogIn.html";
+            alert("Redirigiendo a inicio de sesión...");
+        }
+
+        function changeLanguage() {
+            let lang = document.getElementById("language").value;
+            alert("Idioma cambiado a: " + lang);
+        }
+
+        function reload(){
+            window.location.href = "http://127.0.0.1:3000/Practica1/PantallaInicio.html";
+            alert("Redirigiendo a inicio de sesión...");
+        }
+    </script>
+
+
+{{>footer}}
