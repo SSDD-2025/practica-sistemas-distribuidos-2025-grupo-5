@@ -28,7 +28,7 @@ public class UserController {
 	@GetMapping("/users/{id}")
 	public String showUser(Model model, @PathVariable long id) {
 
-		Optional<User> shop = userService.findById(id);
+		Optional<User> user = userService.findById(id);
 		if (user.isPresent()) {
 			model.addAttribute("user", user.get());
 			return "user";
