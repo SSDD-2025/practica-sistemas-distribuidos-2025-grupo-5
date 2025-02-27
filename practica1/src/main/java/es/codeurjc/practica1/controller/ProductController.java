@@ -21,6 +21,8 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import es.codeurjc.practica1.model.Product;
+
 //import es.codeurjc.daw.library.model.Book;
 //import es.codeurjc.daw.library.service.BookService;
 //import es.codeurjc.daw.library.service.ShopService;
@@ -35,34 +37,34 @@ public class ProductController {
 	private UserService userService;
 
 	@GetMapping("/")
-	public String showBooks(Model model) {
-		model.addAttribute("books", bookService.findAll());
-		return "books";
+	public String showProducts(Model model) {
+		model.addAttribute("products", productService.findAll());
+		return "products";
 	}
 
-	@GetMapping("/books/{id}")
-	public String showBook(Model model, @PathVariable long id) {
+	@GetMapping("/products/{id}")
+	public String showProduct(Model model, @PathVariable long id) {
 
-		Optional<Book> book = bookService.findById(id);
-		if (book.isPresent()) {
-			model.addAttribute("book", book.get());
-			return "book";
+		Optional<Product> product = productService.findById(id);
+		if (product.isPresent()) {
+			model.addAttribute("product", product.get());
+			return "product";
 		} else {
-			return "books";
+			return "products";
 		}
 
 	}
 
-	@GetMapping("/books/{id}/image")
+	@GetMapping("/products/{id}/image")
 	public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException, IOException {
 
-		Optional<Book> op = bookService.findById(id);
+		Optional<Product> op = productService.findById(id);
 
 		if(op.isPresent()) {
-			Book book = op.get();
+			Product product = op.get();
 			Resource image;
 			try {
-				image = new InputStreamResource(book.getImageFile().getBinaryStream());
+				image = new InputStreamResource(product.getImageFile().getBinaryStream());
 			} catch (Exception e) {
 				ClassPathResource resource = new ClassPathResource("static/no-image.png");
         		byte[] imageBytes = resource.getInputStream().readAllBytes();
