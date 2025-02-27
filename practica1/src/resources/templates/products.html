@@ -1,0 +1,15 @@
+{{>header}}
+
+<div class="container">
+	<h2>Products</h2>
+
+	<ul class="items">
+		{{#products}}
+		<li><a href="/products/{{id}}">{{title}}</a></li>
+		{{/products}}
+	</ul>
+
+	<button class="btn btn-primary" onclick="location.href='/newbook'">New product</button>
+</div>
+
+{{>footer}}
