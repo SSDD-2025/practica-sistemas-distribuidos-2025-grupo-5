@@ -34,12 +34,12 @@ public class Product {
 
     public Product() {}
 
-    public Product(String name, String description, double price, int stock, Blob img, String provider) {
+    public Product(String name, String description, double price, int stock, String provider) { //Blob img
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
-        this.imageFile = img;
+        //this.imageFile = img;
         this.provider = provider;
     }
 
