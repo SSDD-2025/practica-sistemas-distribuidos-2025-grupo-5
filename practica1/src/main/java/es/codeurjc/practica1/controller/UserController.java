@@ -8,8 +8,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 
-import es.codeurjc.practica1.library.model.User;
-import es.codeurjc.practica1.library.service.UserService;
+import es.codeurjc.practica1.model.User;
+import es.codeurjc.practica1.service.UserService;
 
 @Controller
 public class UserController {

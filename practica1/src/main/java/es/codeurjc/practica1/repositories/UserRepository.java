@@ -1,5 +1,11 @@
 package es.codeurjc.practica1.repositories;
 
-public class UserRepository {
+
+import org.springframework.data.jpa.repository.JpaRepository;
+
+import es.codeurjc.practica1.model.User;
+
+
+public interface UserRepository extends JpaRepository<User, Long> {
 
 }
