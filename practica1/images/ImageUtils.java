@@ -1,4 +1,4 @@
-package es.codeurjc.practica1.img;
+package es.codeurjc.practica1.images;
 
 import java.io.File;
 import java.io.IOException;

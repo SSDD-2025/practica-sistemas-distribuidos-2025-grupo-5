@@ -27,6 +27,7 @@ public class User {
         this.password = password;
         this.rol = rol;
         this.phoneNumber = phoneNumber;
+        
     }
 
     public long getId() {

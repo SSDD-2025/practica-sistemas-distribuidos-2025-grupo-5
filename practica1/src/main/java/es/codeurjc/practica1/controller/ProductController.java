@@ -21,10 +21,10 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import es.codeurjc.practica1.img.ImageUtils;
 import es.codeurjc.practica1.model.Product;
 import es.codeurjc.practica1.service.ProductService;
 import es.codeurjc.practica1.service.UserService;
+import es.codeurjc.practica1.utils.ImageUtils;
 import jakarta.annotation.PostConstruct;
 
 @Controller
