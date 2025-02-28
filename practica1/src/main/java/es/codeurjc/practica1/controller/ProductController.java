@@ -128,8 +128,6 @@ public class ProductController {
 		return "cart";  // Mostrar la vista del carrito
 	}
 	
-	
-
 	@GetMapping("/add-to-cart/{productId}")
 	public String addToCart(@PathVariable long productId, HttpSession session) {
 		// Obtener o inicializar el carrito en la sesión
@@ -159,6 +157,37 @@ public class ProductController {
 
 		System.out.println("Producto agregado al carrito: " + productId);
 		System.out.println(cart);
+
+		return "redirect:/cart";
+	}
+
+	@PostMapping("/remove-from-cart/{productId}")
+	public String removeFromCart(@PathVariable long productId, HttpSession session) {
+		// Obtener o inicializar el carrito en la sesión
+		List<Long> cart = (List<Long>) session.getAttribute("cart");
+		Optional<User> oneUser = userService.findById(0);
+		Optional<Product> productAux=productService.findById(productId);
+
+		if (productAux.isPresent() && oneUser.isPresent()) {
+			Product product = productAux.get();
+			User user =oneUser.get();
+			user.removeProduct(product);
+			// Guardar el usuario actualizado en la base de datos
+			userService.save(user);
+		}
+
+		if (cart == null) {
+			cart = new ArrayList<>();
+			session.setAttribute("cart", cart);
+			System.out.println("CREAMOS NUEVO CARRITO");
+		}
+
+		// Eliminar el producto del carrito
+		cart.remove(productId);
+		session.setAttribute("cart", cart);
+
+		//System.out.println("Producto agregado al carrito: " + productId);
+		//System.out.println(cart);
 
 		return "redirect:/cart";
 	}
