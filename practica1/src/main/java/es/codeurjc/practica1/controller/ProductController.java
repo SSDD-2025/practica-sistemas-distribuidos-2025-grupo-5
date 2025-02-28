@@ -178,7 +178,6 @@ public class ProductController {
 
 		return "redirect:/cart";
 	}
-
 	@PostMapping("/newproduct")
 	public String newProductProcess(
 		Model model,
@@ -189,23 +188,24 @@ public class ProductController {
 		@RequestParam String provider,
 		@RequestParam(required = false) List<Long> selectedUsers,
 		@RequestParam("imageField") MultipartFile imageField) throws IOException, SQLException {
-
+	
 		Product product = new Product(name, description, price, stock, provider);
-
+	
 		if (!imageField.isEmpty()) {
 			Blob imageBlob = imageUtils.createBlob(imageField.getInputStream());
 			product.setImageFile(imageBlob);
 		}
-
+	
+		// Asociar usuarios si se seleccionaron
 		if (selectedUsers != null && !selectedUsers.isEmpty()) {
 			List<User> shops = userService.findAllById(selectedUsers);
 			product.setUsers(shops);
 		}
-
+	
 		Product newProduct = productService.save(product);
 		model.addAttribute("productId", newProduct.getId());
 		
 		return "redirect:/products/" + newProduct.getId();
 	}
-
+	
 }

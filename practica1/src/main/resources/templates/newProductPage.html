@@ -5,31 +5,46 @@
 <form action="/newproduct" method="post" enctype="multipart/form-data">
 
   <div class="mb-3">
-    <label class="form-label">Title</label>
-    <input type="text" class="form-control" name="title" placeholder="Title">
+    <label class="form-label">Nombre del producto</label>
+    <input type="text" class="form-control" name="name">
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Abstract: </label>
+    <label class="form-label">Descripción: </label>
     <textarea class="form-control" name="description"></textarea>
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Image: </label>
-    <input type='file' class="form-control" name='imageField' accept=".jpg, .jpeg" />
+    <label class="form-label">Precio: </label>
+    <input type="number" class="form-control" name="price" step="0.01">
   </div>
 
   <div class="mb-3">
-    <label class="form-label">Shops: </label>
+    <label class="form-label">Stock disponible: </label>
+    <input type="number" class="form-control" name="stock">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Proveedor: </label>
+    <input type="text" class="form-control" name="provider">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Imagen: </label>
+    <input type='file' class="form-control" name='imageField' accept=".jpg, .jpeg">
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Disponibilidad en tiendas: </label>
     <select class="form-select" name="selectedUsers" multiple>
-      {{#availableUserss}}
+      {{#availableShops}}
       <option value="{{ id }}">{{ name }}</option>
-      {{/availableUsers}}
+      {{/availableShops}}
     </select>
   </div>
 
-  <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Cancel</button>
-  <button class="btn btn-primary" type="submit">Save</button>
+  <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Cancelar</button>
+  <button class="btn btn-primary" type="submit">Guardar</button>
 </form>
 
 {{>footer}}
