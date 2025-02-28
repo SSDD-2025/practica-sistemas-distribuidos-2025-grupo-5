@@ -1,14 +1,14 @@
-.container{
+.container {
     max-width: 80%;
     margin-top: 2em !important;
     margin: auto;
 }
 
-.container form{
+.container form {
     max-width: 40em;
 }
 
-form{
+form {
     margin-bottom: 20px;
 }
 
@@ -16,9 +16,29 @@ form{
     min-height: 10em;
     background-color: white;
 }
-.large-image {
-    width: 150px;
-    height: auto;
-    max-width: 100%; /* Para que sea responsive */
-    border: 2px solid #ccc; /* Opcional: borde para visualizar mejor */
+
+
+
+.buy-button {
+    display: inline-block;
+    padding: 10px 20px;
+    font-size: 1.2em;
+    font-weight: bold;
+    color: white;
+    background: linear-gradient(135deg, #FF416C, #FF4B2B);
+    border: none;
+    border-radius: 8px;
+    box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+    cursor: pointer;
+    transition: transform 0.2s, box-shadow 0.2s;
+}
+
+.buy-button:hover {
+    transform: translateY(-2px);
+    box-shadow: 0 6px 12px rgba(0, 0, 0, 0.15);
+}
+
+.buy-button:active {
+    transform: translateY(1px);
+    box-shadow: 0 2px 4px rgba(0, 0, 0, 0.1);
 }

@@ -15,10 +15,15 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByPriceLessThan(double price);
     List<Product> findByPriceGreaterThan(double price);
     List<Product> findByPriceEquals(double price);
-    List<Product> findAll();
-    Product save(Product product);
-    void delete(Product product);
     boolean existsById(long id);
+
+    List<Product> findAll();
+
+
+    Product save(Product product);
+
+
+    void delete(@SuppressWarnings("null") Product product);
 
 }
 

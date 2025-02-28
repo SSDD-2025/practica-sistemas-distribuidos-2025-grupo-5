@@ -1,0 +1,18 @@
+{{>header}}
+
+<div class="content">
+    <h1>Carrito de la Compra</h1>
+
+    <div class="container">
+        <h2>Productos en tu carrito</h2>
+        <ul>
+            {{#user.products}}
+                <pro><a href="/cart/{{id}}">{{name}}</a></pro>
+            {{/user.products}}
+        </ul>
+
+        <button class="btn btn-primary" onclick="location.href='/checkout'">Realizar compra</button>
+    </div>
+</div>
+
+{{>footer}}

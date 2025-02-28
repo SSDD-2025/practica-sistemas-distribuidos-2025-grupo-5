@@ -2,6 +2,7 @@ package es.codeurjc.practica1.controller;
 
 import java.io.IOException;
 import java.sql.SQLException;
+import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
@@ -25,6 +26,7 @@ import es.codeurjc.practica1.model.Product;
 import es.codeurjc.practica1.service.ProductService;
 import es.codeurjc.practica1.service.UserService;
 import es.codeurjc.practica1.utils.ImageUtils;
+import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ProductController {
@@ -93,6 +95,41 @@ public class ProductController {
 		model.addAttribute("productId", newProduct.getId());
 
 		return "redirect:/products/"+newProduct.getId();
+	}
+
+    @GetMapping("/cart")
+	public String showCart(HttpSession session, Model model) {
+		// Obtener la lista de productos en la sesión
+		List<Product> cartProducts = (List<Product>) session.getAttribute("cart");
+	
+		if (cartProducts == null || cartProducts.isEmpty()) {
+			// Si no hay productos en el carrito, puedes mostrar un mensaje vacío
+			model.addAttribute("message", "Tu carrito está vacío");
+		} else {
+			// Pasar los productos al modelo para mostrarlos en la vista
+			model.addAttribute("cartProducts", cartProducts);
+		}
+	
+		return "cart";  // Mostrar la vista del carrito
+	}
+	
+
+	@GetMapping("/add-to-cart/{productId}")
+	public String addToCart(@PathVariable long productId, HttpSession session) {
+		// Obtener o inicializar el carrito en la sesión
+		List<Long> cart = (List<Long>) session.getAttribute("cart");
+
+		if (cart == null) {
+			cart = new ArrayList<>();
+			session.setAttribute("cart", cart);
+		}
+
+		// Agregar el producto al carrito
+		cart.add(productId);
+		session.setAttribute("cart", cart);
+
+		System.out.println("Producto agregado al carrito: " + productId);
+		return "redirect:/cart";
 	}
 
 

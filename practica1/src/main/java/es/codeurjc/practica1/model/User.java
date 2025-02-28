@@ -1,8 +1,15 @@
 package es.codeurjc.practica1.model;
+import java.util.ArrayList;
+import java.util.List;
+
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
+import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
+import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 @Entity
 @Table(name = "app_user")
@@ -17,6 +24,11 @@ public class User {
     private int rol; // 0 = Admin, 1 = User, 2 = Empresa
     private int phoneNumber;
 
+// Anotación para indicar que un usuario puede tener muchos productos en su carrito
+    @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")  // Especifica la columna que relaciona la tabla "product" con la de "user"
+    private List<Product> products;  // Lista de productos que están en el carrito del usuario
+
     //Constructor para cargar desde la BBDD
     protected User() {
     }
@@ -27,9 +39,21 @@ public class User {
         this.password = password;
         this.rol = rol;
         this.phoneNumber = phoneNumber;
-        
+        this.products = new ArrayList<>();
+   
+    }
+    public List<Product> getProducts() {
+        return products;
     }
 
+    public void addProduct(Product product) {
+        this.products.add(product);
+    }
+
+    public void removeProduct(Product product) {
+        this.products.remove(product);
+    }
+    
     public long getId() {
         return id;
     }

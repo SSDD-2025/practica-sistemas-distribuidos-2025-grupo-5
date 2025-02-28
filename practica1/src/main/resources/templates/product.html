@@ -4,7 +4,7 @@
   <div class="container">
     <div class="row align-items-center">
       <div class="col-4">
-        <img class="img-thumbnail large-image" src="/products/{{product.id}}/image" style="width: 100%; height: auto;">
+        <img class="img-thumbnail" src="/products/{{product.id}}/image" style="width: 100%; height: auto;">
       </div>
       <div class="col-8">
         <h2>Product "{{product.name}}"</h2>
@@ -12,17 +12,31 @@
         <div>
           <p>{{{product.description}}}</p>
         </div>
-  
+        <p><b>Price: {{{product.price}}} €</b></p>
+
         <p><b>The Stock available is:</b></p>
         <div>
-          <p>{{{product.stock}}}</p>
+          <p>{{{product.stock}}} units</p>
         </div>
 
         <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Back to all products</button>
       </div>
+      <p><b></b></p>
+      <p><b>¿Quieres añadirlo al carrito?</b></p>
+      
+      <button class="btn btn-success" onclick="location.href='/add-to-cart/{{product.id}}'">AÑADIR AL CARRITO</button>
+      <p><b></b></p>
+
+      <p><b>¿Quieres comprarlo ahora?</b></p>
+      <button class="btn btn-warning" onclick="goCart()">COMPRAR AHORA</button>
+
     </div>
   </div>
 </div>
-
-
+<script>
+  function goCart(){
+    
+      location.href = "cart.html";
+  }
+</script>
 {{>footer}}

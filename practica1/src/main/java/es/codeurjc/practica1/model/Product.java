@@ -20,7 +20,7 @@ public class Product {
     private double price;
     private int stock;
     private String provider;
-    
+
     @Column(columnDefinition = "TEXT")
 	private String description;
 
@@ -76,6 +76,7 @@ public class Product {
     public Blob getImageFile() {
         return imageFile;
     }
+
 
     public String getProvider() {
         return provider;
