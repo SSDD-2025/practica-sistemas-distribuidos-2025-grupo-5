@@ -1,6 +1,7 @@
 package es.codeurjc.practica1.controller;
 
 import java.io.IOException;
+import java.sql.Blob;
 import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
@@ -87,14 +88,6 @@ public class ProductController {
 		return "newProductPage";
 	}
 
-	@PostMapping("/newproduct")
-	public String newProductProcess(Model model, Product product, MultipartFile imageField, @RequestParam(required = false) List<Long> selectedUsers) throws IOException {
-
-		Product newProduct = productService.save(product);
-		model.addAttribute("productId", newProduct.getId());
-		return "redirect:/products/"+newProduct.getId();
-	}
-	
 	@GetMapping("/cart")
 	public String showCart(HttpSession session, Model model) {
 		// Obtener la lista de IDs de productos en la sesión
@@ -185,4 +178,34 @@ public class ProductController {
 
 		return "redirect:/cart";
 	}
+
+	@PostMapping("/newproduct")
+	public String newProductProcess(
+		Model model,
+		@RequestParam String name,
+		@RequestParam String description,
+		@RequestParam double price,
+		@RequestParam int stock,
+		@RequestParam String provider,
+		@RequestParam(required = false) List<Long> selectedUsers,
+		@RequestParam("imageField") MultipartFile imageField) throws IOException, SQLException {
+
+		Product product = new Product(name, description, price, stock, provider);
+
+		if (!imageField.isEmpty()) {
+			Blob imageBlob = imageUtils.createBlob(imageField.getInputStream());
+			product.setImageFile(imageBlob);
+		}
+
+		if (selectedUsers != null && !selectedUsers.isEmpty()) {
+			List<User> shops = userService.findAllById(selectedUsers);
+			product.setUsers(shops);
+		}
+
+		Product newProduct = productService.save(product);
+		model.addAttribute("productId", newProduct.getId());
+		
+		return "redirect:/products/" + newProduct.getId();
+	}
+
 }

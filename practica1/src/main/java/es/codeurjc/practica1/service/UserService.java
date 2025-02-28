@@ -30,4 +30,8 @@ public class UserService {
 		return userRepository.save(shop);
 	}
 
+    public List<User> findAllById(List<Long> ids) {
+        return userRepository.findAllById(ids);
+    }
+
 }
