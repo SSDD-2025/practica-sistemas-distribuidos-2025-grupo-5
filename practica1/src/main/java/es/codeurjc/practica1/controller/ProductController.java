@@ -97,21 +97,27 @@ public class ProductController {
 		return "redirect:/products/"+newProduct.getId();
 	}
 
-    @GetMapping("/cart")
+	@GetMapping("/cart")
 	public String showCart(HttpSession session, Model model) {
-		// Obtener la lista de productos en la sesión
-		List<Product> cartProducts = (List<Product>) session.getAttribute("cart");
+		// Obtener el carrito desde la sesión
+		List<Long> cartProducts = (List<Long>) session.getAttribute("cart");
 	
 		if (cartProducts == null || cartProducts.isEmpty()) {
-			// Si no hay productos en el carrito, puedes mostrar un mensaje vacío
 			model.addAttribute("message", "Tu carrito está vacío");
 		} else {
-			// Pasar los productos al modelo para mostrarlos en la vista
-			model.addAttribute("cartProducts", cartProducts);
+			// Obtener los productos por sus IDs
+			List<Product> products = new ArrayList<>();
+			for (Long productId : cartProducts) {
+				Optional<Product> product = productService.findById(productId);
+				product.ifPresent(products::add);
+			}
+	
 		}
 	
 		return "cart";  // Mostrar la vista del carrito
 	}
+	
+	
 	
 
 	@GetMapping("/add-to-cart/{productId}")
@@ -121,16 +127,18 @@ public class ProductController {
 
 		if (cart == null) {
 			cart = new ArrayList<>();
-			session.setAttribute("cart", cart);
+			System.out.println("CREAMOS NUEVO CARRITO");
+
 		}
 
 		// Agregar el producto al carrito
 		cart.add(productId);
+		
 		session.setAttribute("cart", cart);
 
 		System.out.println("Producto agregado al carrito: " + productId);
+		System.out.println(cart);
+
 		return "redirect:/cart";
 	}
-
-
 }

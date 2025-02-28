@@ -5,11 +5,17 @@
 
     <div class="container">
         <h2>Productos en tu carrito</h2>
-        <ul>
-            {{#user.products}}
-                <pro><a href="/cart/{{id}}">{{name}}</a></pro>
-            {{/user.products}}
-        </ul>
+
+        {{#cartProducts}}
+            <li style="font-size: 24px;">
+                <a href="/products/{{id}}">{{name}}</a> - {{price}} €  
+            </li>
+        {{/cartProducts}}
+        <div style="margin-top: 20px;"></div>
+
+        <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Back to all products</button>
+
+        <div style="margin-top: 20px;"></div>
 
         <button class="btn btn-primary" onclick="location.href='/checkout'">Realizar compra</button>
     </div>
