@@ -39,8 +39,7 @@ public class User {
         this.password = password;
         this.rol = rol;
         this.phoneNumber = phoneNumber;
-        this.products = new ArrayList<>();
-   
+        this.products = new ArrayList<>();  
     }
     public List<Product> getProducts() {
         return products;

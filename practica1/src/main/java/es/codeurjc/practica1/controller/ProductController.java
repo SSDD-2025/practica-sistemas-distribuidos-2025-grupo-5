@@ -23,6 +23,7 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import es.codeurjc.practica1.model.Product;
+import es.codeurjc.practica1.model.User;
 import es.codeurjc.practica1.service.ProductService;
 import es.codeurjc.practica1.service.UserService;
 import es.codeurjc.practica1.utils.ImageUtils;
@@ -100,9 +101,17 @@ public class ProductController {
 	public String showCart(HttpSession session, Model model) {
 		// Obtener la lista de IDs de productos en la sesión
 		List<Long> cartProductIds = (List<Long>) session.getAttribute("cart");
-	
 		List<Product> cartProducts = new ArrayList<>();
 	
+		Optional<User> oneUser = userService.findById(0);
+		System.out.println("USUARIO OPCIONAL"+oneUser);
+
+		if (oneUser.isPresent()) {
+			User user =oneUser.get();
+			cartProducts=user.getProducts();
+			System.out.println("LOS PRODUCTOS SON"+cartProducts);
+		}
+
 		if (cartProductIds != null && !cartProductIds.isEmpty()) {
 			// Buscar cada producto por ID y agregarlo a la lista
 			for (Long productId : cartProductIds) {
@@ -125,6 +134,16 @@ public class ProductController {
 	public String addToCart(@PathVariable long productId, HttpSession session) {
 		// Obtener o inicializar el carrito en la sesión
 		List<Long> cart = (List<Long>) session.getAttribute("cart");
+		Optional<User> oneUser = userService.findById(0);
+		Optional<Product> productAux=productService.findById(productId);
+
+		if (productAux.isPresent() && oneUser.isPresent()) {
+			Product product = productAux.get();
+			User user =oneUser.get();
+			user.addProduct(product);
+			// Guardar el usuario actualizado en la base de datos
+			userService.save(user);
+		}
 
 		if (cart == null) {
 			cart = new ArrayList<>();

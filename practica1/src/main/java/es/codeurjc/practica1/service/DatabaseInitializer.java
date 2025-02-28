@@ -25,11 +25,9 @@ public class DatabaseInitializer {
     public void init() throws IOException {
         
         User user1 = new User( "paula", "paula@gmail.com", "567",0, 123456789 );
-       
+        System.out.println("ID USUARIO: "+user1.getId());
         UserService.save(user1);
         List<Long> set = List.of(user1.getId());
-
-        
 
         // Create some books
         Product product1 = new Product("Cuerda","resistente", 12.3, 123,"ES_factory");
