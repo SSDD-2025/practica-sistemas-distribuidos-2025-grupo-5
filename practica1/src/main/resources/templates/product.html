@@ -15,12 +15,9 @@
   
         <p><b>The Stock available is:</b></p>
         <div>
-          <ul>
-            {{#product.users}}
-            <li><a href="/users/{{id}}">{{id}}</a></li>
-            {{/product.users}}
-          </ul>
+          <p>{{{product.stock}}}</p>
         </div>
+
         <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Back to all products</button>
       </div>
     </div>
