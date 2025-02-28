@@ -22,7 +22,9 @@ public class UserService {
     public Optional<User> findById(long id){
         return userRepository.findById(id);
     }
-
+	public List<User> findByIds(List<Long> ids){
+		return userRepository.findAllById(ids);
+	}
 
 	public User save(User shop) {
 		return userRepository.save(shop);

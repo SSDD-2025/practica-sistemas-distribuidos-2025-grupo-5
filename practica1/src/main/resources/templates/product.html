@@ -1,20 +1,19 @@
 {{>header}}
 
 <div>
-
   <div class="container">
-    <div class="row">
-      <div class="col-2">
-        <img class="img-thumbnail" src="/product/{{product.id}}/image">
+    <div class="row align-items-center">
+      <div class="col-4">
+        <img class="img-thumbnail large-image" src="/products/{{product.id}}/image" style="width: 100%; height: auto;">
       </div>
-      <div class="col-10">
+      <div class="col-8">
         <h2>Product "{{product.name}}"</h2>
         
         <div>
           <p>{{{product.description}}}</p>
         </div>
-
-        <p> <b>Shops where product is available:</b></p>
+  
+        <p><b>The Stock available is:</b></p>
         <div>
           <ul>
             {{#product.users}}
@@ -27,7 +26,6 @@
     </div>
   </div>
 </div>
-
 
 
 {{>footer}}

@@ -16,3 +16,9 @@ form{
     min-height: 10em;
     background-color: white;
 }
+.large-image {
+    width: 150px;
+    height: auto;
+    max-width: 100%; /* Para que sea responsive */
+    border: 2px solid #ccc; /* Opcional: borde para visualizar mejor */
+}

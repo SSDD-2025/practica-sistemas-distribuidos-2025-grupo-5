@@ -25,14 +25,20 @@ public class ImageUtils {
 	}
 
 	public Blob localImageToBlob(String localFilePath){
+
 		File imageFile = new File(localFilePath);
+		
 		if (imageFile.exists()) {
+
 			try {
+				System.out.println("LA IMAGEN EXISTE");
 				return BlobProxy.generateProxy(imageFile.toURI().toURL().openStream(), imageFile.length());
 			} catch (IOException e) {
-				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error at processing the image");
+				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "ERROR at processing the IMAGE");
 			}
 		}
+		System.out.println("LA IMAGEN NO EXISTE");
+
 		return null;
 	}
 
@@ -44,6 +50,7 @@ public class ImageUtils {
 				throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Error at processing the image");
 			}
 		}
+		System.out.println("path image: images/" + image);
         return null;
 	}
     

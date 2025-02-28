@@ -1,5 +1,6 @@
 package es.codeurjc.practica1.model;
 import java.sql.Blob;
+import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.Column;
@@ -23,13 +24,13 @@ public class Product {
     @Column(columnDefinition = "TEXT")
 	private String description;
 
+	@ManyToMany
+	private List<User> users;
+
 	@Lob
 	private Blob imageFile;
 	private int publicationYear;
 	private String lang;
-
-    @ManyToMany
-	private List<User> shops;
 
 
     public Product() {}
@@ -40,6 +41,7 @@ public class Product {
         this.price = price;
         this.stock = stock;
         //this.imageFile = img;
+        this.users = new ArrayList<>();
         this.provider = provider;
     }
 
@@ -62,6 +64,14 @@ public class Product {
     public int getStock() {
         return stock;
     }
+
+	public List<User> getShops() {
+		return users;
+	}
+
+	public void setUsers(List<User> users) {
+		this.users = users;
+	}
 
     public Blob getImageFile() {
         return imageFile;

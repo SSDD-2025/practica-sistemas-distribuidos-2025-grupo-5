@@ -25,7 +25,6 @@ import es.codeurjc.practica1.model.Product;
 import es.codeurjc.practica1.service.ProductService;
 import es.codeurjc.practica1.service.UserService;
 import es.codeurjc.practica1.utils.ImageUtils;
-import jakarta.annotation.PostConstruct;
 
 @Controller
 public class ProductController {
@@ -96,14 +95,5 @@ public class ProductController {
 		return "redirect:/products/"+newProduct.getId();
 	}
 
-	@PostConstruct
-    public void init() throws IOException{
-		Product cuerda = new Product("Cuerda", "Es muy util", 23.5, 3, "Corte Ingles");
-		saveProductWithURLImage(cuerda,"descarga.jpg");
-        //productService.save(new Product("Cuerda", "Es muy util", 23.5, 3, "Corte Ingles"));
-    }
-	private Product saveProductWithURLImage(Product product, String image) throws IOException {
-		product.setImageFile(imageUtils.localImageToBlob("images/" + image));
-		return productService.save(product, null);
-	}
+
 }

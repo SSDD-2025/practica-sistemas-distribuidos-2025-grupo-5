@@ -4,12 +4,11 @@ import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
 
-import org.hibernate.engine.jdbc.BlobProxy;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import org.springframework.web.multipart.MultipartFile;
 
 import es.codeurjc.practica1.model.Product;
+import es.codeurjc.practica1.model.User;
 import es.codeurjc.practica1.repositories.ProductRepository;
 
 @Service
@@ -36,14 +35,14 @@ public class ProductService {
     public Product save(Product product){
         return productRepository.save(product);
     }
-    public Product save(Product product, MultipartFile imageField) throws IOException {
 
-		if (imageField != null && !imageField.isEmpty()){
-			product.setImageFile(BlobProxy.generateProxy(imageField.getInputStream(), imageField.getSize()));
+    public Product save(Product product, List<Long> selectedUsers) throws IOException {
+
+		if (selectedUsers != null){
+			List<User> products = userService.findByIds(selectedUsers);
+			product.setUsers(products);
 		}
-
-		return productRepository.save(product);
-    
+        return productRepository.save(product);
 	}
 
     public boolean delete(Product product) {
@@ -53,5 +52,6 @@ public class ProductService {
         }
         return false;
     }
+
 }
 
