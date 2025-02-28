@@ -84,7 +84,6 @@ public class ProductController {
 	public String newProduct(Model model) {
 
 		model.addAttribute("availableShops", userService.findAll());
-
 		return "newProductPage";
 	}
 
@@ -92,11 +91,10 @@ public class ProductController {
 	public String newProductProcess(Model model, Product product, MultipartFile imageField, @RequestParam(required = false) List<Long> selectedUsers) throws IOException {
 
 		Product newProduct = productService.save(product);
-
 		model.addAttribute("productId", newProduct.getId());
-
 		return "redirect:/products/"+newProduct.getId();
 	}
+	
 	@GetMapping("/cart")
 	public String showCart(HttpSession session, Model model) {
 		// Obtener la lista de IDs de productos en la sesión
@@ -181,13 +179,9 @@ public class ProductController {
 			session.setAttribute("cart", cart);
 			System.out.println("CREAMOS NUEVO CARRITO");
 		}
-
 		// Eliminar el producto del carrito
 		cart.remove(productId);
 		session.setAttribute("cart", cart);
-
-		//System.out.println("Producto agregado al carrito: " + productId);
-		//System.out.println(cart);
 
 		return "redirect:/cart";
 	}
