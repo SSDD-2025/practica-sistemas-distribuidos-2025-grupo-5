@@ -56,16 +56,15 @@
         box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* More prominent shadow on hover */
     }
 
-    /* Style for the product image */
+    /* Hacer las imágenes más pequeñas */
     .product-img {
-        width: 100%; /* La imagen ocupará todo el ancho del contenedor */
-        height: auto; /* Ajusta la altura de la imagen proporcionalmente al ancho */
-        max-height: 150px; /* Limita la altura máxima de la imagen */
-        object-fit: cover; /* Asegura que la imagen cubra el área sin distorsionarse */
-        border-radius: 8px; /* Bordes redondeados */
-        margin-bottom: 15px; /* Espacio debajo de la imagen */
+        width: 100%;
+        height: 150px; /* Mantener altura fija */
+        object-fit: contain; /* Ajustar la imagen sin recortarla */
+        border-radius: 8px;
+        margin-bottom: 15px;
+        background-color: #f9f9f9; /* Color de fondo para imágenes más pequeñas */
     }
-
     /* Product name style */
     .product-name {
         font-size: 1.3em;
@@ -98,6 +97,24 @@
     .btn.btn-primary:hover {
         background-color: #0056b3; /* Darker blue on hover */
     }
+
+    /* Igualar medidas de los contenedores */
+    .product-item-content {
+        background-color: #fff;
+        border-radius: 12px;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        overflow: hidden;
+        transition: transform 0.3s ease-in-out;
+        text-align: center;
+        padding: 20px;
+        cursor: pointer;
+        height: 100%; /* Hace que todos los elementos tengan la misma altura */
+        display: flex;
+        flex-direction: column;
+        justify-content: space-between;
+    }
+
+
 </style>
 
 <script>
