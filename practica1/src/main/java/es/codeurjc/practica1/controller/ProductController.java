@@ -262,25 +262,25 @@ public class ProductController {
 	}
 	
 	@GetMapping("/edit/{id}")
-    public ResponseEntity<Optional<Product>> getProductForEdit(@PathVariable Long id) {
+    public String getProductForEdit(@PathVariable Long id) {
         Optional<Product> product = productService.findById(id);
         if (product == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
         }
-        return ResponseEntity.ok(product);
+        return "/editProduct/{id}";
     }
 
     /**
      * Guardar los cambios de un producto editado
      */
     @PostMapping("/update/{id}")
-    public ResponseEntity<Product> updateProduct(@PathVariable Long id, 
+    public String updateProduct(@PathVariable Long id, 
 	@ModelAttribute Product updatedProduct, 
 	@RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
         Optional<Product> existingProduct = productService.findById(id);
 		Product product = null;
         if (existingProduct == null) {
-            return ResponseEntity.notFound().build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
         } else{
 			product = existingProduct.get();
 		}
@@ -299,12 +299,12 @@ public class ProductController {
             product.setImageFile(newImageBlob);
         } catch (SQLException | IOException e) {
             e.printStackTrace();
-            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Image not found");
         }
     }
 
         productService.save(product);
-        return ResponseEntity.ok(product);
+        return "redirect:/products/{id}";
     }
 
 }

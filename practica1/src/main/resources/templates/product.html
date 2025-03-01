@@ -12,11 +12,11 @@
         <div>
           <p>{{{product.description}}}</p>
         </div>
-        <p><b>Price: {{{product.price}}} €</b></p>
+        <p><b>Price: </b>{{product.price}} €</p>
 
-        <p><b>The Stock available is:</b></p>
+        <p><b>The Stock available is:</b> {{{product.stock}}} units</p>
         <div>
-          <p>{{{product.stock}}} units</p>
+        <p><b>The provider is:</b> {{{product.provider}}}</p>
         </div>
 
         <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Back to all products</button>
