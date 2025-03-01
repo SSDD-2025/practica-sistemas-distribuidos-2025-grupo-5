@@ -235,4 +235,20 @@ public class ProductController {
 		}
 	}
 
+	@PostMapping("/remove-from-products/{productId}")
+	public String removeFromProducts(@PathVariable long productId) {
+		// Buscar el producto en la base de datos
+		Optional<Product> productAux = productService.findById(productId);
+	
+		if (productAux.isPresent()) {
+			productService.delete(productAux.get()); // Elimina el producto de la base de datos
+			System.out.println("Producto eliminado: " + productId);
+		} else {
+			System.out.println("Error: Producto no encontrado");
+		}
+	
+		return "redirect:/"; // Redirigir a la lista de productos actualizada
+	}
+	
+
 }

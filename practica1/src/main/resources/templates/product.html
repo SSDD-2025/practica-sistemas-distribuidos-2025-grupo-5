@@ -37,9 +37,11 @@
       <p><b></b></p>
 
       <p><b>¿Quieres borrarlo?</b></p>
-      <button class="btn btn-danger" onclick="goCart()">BORRAR</button>
-
-
+      <div style="justify-content: center;">
+          <form action="/remove-from-products/{{product.id}}" method="post">
+              <button class="btn btn-danger" style="width: 920%; max-width: 920px;">BORRAR</button>
+          </form>
+      </div>
     </div>
   </div>
 </div>
