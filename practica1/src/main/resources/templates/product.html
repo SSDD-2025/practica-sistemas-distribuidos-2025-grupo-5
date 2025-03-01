@@ -22,33 +22,24 @@
         <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Back to all products</button>
       </div>
       <p><b></b></p>
-      <p><b>¿Quieres añadirlo al carrito?</b></p>
-      
-      <button class="btn btn-success" onclick="location.href='/add-to-cart/{{product.id}}'">AÑADIR AL CARRITO</button>
+      <p><b>¿Quieres añadirlo al carrito?</b></p> 
+      <button class="btn btn-success" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/add-to-cart/{{product.id}}'">AÑADIR AL CARRITO</button>
       <p><b></b></p>
 
       <p><b>¿Quieres comprarlo ahora?</b></p>
-      <button class="btn btn-warning" onclick="location.href='/gateway/{{product.id}}'">COMPRAR AHORA</button>
+      <button class="btn btn-warning" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/gateway/{{product.id}}'">COMPRAR AHORA</button>
 
       <p><b></b></p>
 
       <p><b>¿Quieres editarlo?</b></p>
-      <button class="btn btn-primary" onclick="goCart()">EDITAR</button>
+      <button class="btn btn-primary" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/edit/{{product.id}}'">EDITAR</button>
       <p><b></b></p>
 
       <p><b>¿Quieres borrarlo?</b></p>
-      <div style="justify-content: center;">
-          <form action="/remove-from-products/{{product.id}}" method="post">
-              <button class="btn btn-danger" style="width: 1200%; max-width: 1200px; margin-left: -15px;">BORRAR</button>
-          </form>
+        <button class="btn btn-danger" style="width: 1200%; max-width: 1172px; margin-left: -15px; margin-bottom: 100px;" onclick="location.href='/remove-from-products/{{product.id}}'">BORRAR</button>
       </div>
     </div>
   </div>
 </div>
-<script>
-  function goCart(){
-    
-      location.href = "cart.html";
-  }
-</script>
+
 {{>footer}}

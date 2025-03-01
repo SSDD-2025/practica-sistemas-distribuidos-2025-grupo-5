@@ -7,6 +7,8 @@ import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
 
+import javax.sql.rowset.serial.SerialBlob;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.core.io.ClassPathResource;
 import org.springframework.core.io.InputStreamResource;
@@ -17,6 +19,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
@@ -258,5 +261,50 @@ public class ProductController {
 		return "redirect:/"; // Redirigir a la lista de productos actualizada
 	}
 	
+	@GetMapping("/edit/{id}")
+    public ResponseEntity<Optional<Product>> getProductForEdit(@PathVariable Long id) {
+        Optional<Product> product = productService.findById(id);
+        if (product == null) {
+            return ResponseEntity.notFound().build();
+        }
+        return ResponseEntity.ok(product);
+    }
+
+    /**
+     * Guardar los cambios de un producto editado
+     */
+    @PostMapping("/update/{id}")
+    public ResponseEntity<Product> updateProduct(@PathVariable Long id, 
+	@ModelAttribute Product updatedProduct, 
+	@RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+        Optional<Product> existingProduct = productService.findById(id);
+		Product product = null;
+        if (existingProduct == null) {
+            return ResponseEntity.notFound().build();
+        } else{
+			product = existingProduct.get();
+		}
+
+        // Actualizar datos del producto con la nueva información del formulario
+        product.setName(updatedProduct.getName());
+        product.setDescription(updatedProduct.getDescription());
+        product.setPrice(updatedProduct.getPrice());
+        product.setStock(updatedProduct.getStock());
+        product.setProvider(updatedProduct.getProvider());
+
+        // Si el usuario sube una nueva imagen, actualizarla
+        if (imageFile != null && !imageFile.isEmpty()) {
+        try {
+            Blob newImageBlob = new SerialBlob(imageFile.getBytes()); // Convertir MultipartFile a Blob
+            product.setImageFile(newImageBlob);
+        } catch (SQLException | IOException e) {
+            e.printStackTrace();
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).build();
+        }
+    }
+
+        productService.save(product);
+        return ResponseEntity.ok(product);
+    }
 
 }
