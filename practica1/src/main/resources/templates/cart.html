@@ -7,10 +7,18 @@
         <h2>Productos en tu carrito</h2>
 
         {{#cartProducts}}
-            <li style="font-size: 24px;">
-                <a href="/products/{{id}}">{{name}}</a> - {{price}} €
+            <li style="font-size: 24px; display: flex; align-items: center; justify-content: space-between; padding: 10px 0; border-bottom: 1px solid #ccc;">
+                <div>
+                    <a href="/products/{{id}}" style="text-decoration: none; color: #007bff;">{{name}}</a> - {{price}} €
+                </div>
+                <form method="post" action="/remove-from-cart/{{id}}" style="margin: 0;">
+                    <button type="submit" class="btn btn-outline-danger" style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">
+                        Borrar
+                    </button>
+                </form>
             </li>
         {{/cartProducts}}
+        
         <div style="margin-top: 20px;"></div>
 
         <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Back to all products</button>
