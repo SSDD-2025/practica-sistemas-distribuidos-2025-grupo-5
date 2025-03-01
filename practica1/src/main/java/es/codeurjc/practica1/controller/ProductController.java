@@ -35,7 +35,7 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ProductController {
-    
+	
 	@Autowired
 	private ProductService productService;
 
@@ -74,7 +74,7 @@ public class ProductController {
 				image = new InputStreamResource(product.getImageFile().getBinaryStream());
 			} catch (Exception e) {
 				ClassPathResource resource = new ClassPathResource("static/no-image.png");
-        		byte[] imageBytes = resource.getInputStream().readAllBytes();
+				byte[] imageBytes = resource.getInputStream().readAllBytes();
 				return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(imageBytes);
 			}
 			return ResponseEntity.ok().header(HttpHeaders.CONTENT_TYPE, "image/jpeg").body(image);
@@ -153,7 +153,7 @@ public class ProductController {
 
 	@GetMapping("/gateway/{productId}")
 	public String showGatewayPage(@PathVariable long productId, Model model) {
-    	Optional<Product> product = productService.findById(productId);
+		Optional<Product> product = productService.findById(productId);
 
 		if (product.isPresent()) {
 			Product p = product.get();
@@ -257,54 +257,49 @@ public class ProductController {
 		} else {
 			System.out.println("Error: Producto no encontrado");
 		}
-	
 		return "redirect:/"; // Redirect to the updated product list.
 	}
-	
+		
 	@GetMapping("/edit/{id}")
-    public String getProductForEdit(@PathVariable Long id) {
-        Optional<Product> product = productService.findById(id);
-        if (product == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
-        }
-        return "/editProduct/{id}";
-    }
-
-    /**
-     * Save the changes of an edited product.
-     */
-    @PostMapping("/update/{id}")
-    public String updateProduct(@PathVariable Long id, 
-	@ModelAttribute Product updatedProduct, 
-	@RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
-        Optional<Product> existingProduct = productService.findById(id);
-		Product product = null;
-        if (existingProduct == null) {
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
-        } else{
-			product = existingProduct.get();
+	public String getProductForEdit(@PathVariable Long id, Model model) {
+		Optional<Product> product = productService.findById(id);
+		if (product.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
 		}
+		model.addAttribute("product", product.get());
+		return "editProduct";
+	}
+	
+	@PostMapping("/update/{id}")
+	public String updateProduct(@PathVariable Long id, 
+		@ModelAttribute Product updatedProduct, 
+		@RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+	
+		Optional<Product> existingProduct = productService.findById(id);
+		if (existingProduct.isEmpty()) {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+		}
+	
+		Product product = existingProduct.get();
+		product.setName(updatedProduct.getName());
+		product.setDescription(updatedProduct.getDescription());
+		product.setPrice(updatedProduct.getPrice());
+		product.setStock(updatedProduct.getStock());
+		product.setProvider(updatedProduct.getProvider());
+	
+		if (imageFile != null && !imageFile.isEmpty()) {
+			try {
+				Blob newImageBlob = new SerialBlob(imageFile.getBytes());
+				product.setImageFile(newImageBlob);
+			} catch (SQLException | IOException e) {
+				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing image");
+			}
+		}
+	
+		productService.save(product);
+		return "redirect:/products/" + id; // Redirige correctamente al producto actualizado
+	}
+	
 
-        // Update product data with the new information from the form.
-        product.setName(updatedProduct.getName());
-        product.setDescription(updatedProduct.getDescription());
-        product.setPrice(updatedProduct.getPrice());
-        product.setStock(updatedProduct.getStock());
-        product.setProvider(updatedProduct.getProvider());
-
-        // If the user uploads a new image, update it.
-        if (imageFile != null && !imageFile.isEmpty()) {
-        try {
-            Blob newImageBlob = new SerialBlob(imageFile.getBytes()); // Convert MultipartFile to Blob
-            product.setImageFile(newImageBlob);
-        } catch (SQLException | IOException e) {
-            e.printStackTrace();
-            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Image not found");
-        }
-    }
-
-        productService.save(product);
-        return "redirect:/products/{id}";
-    }
 
 }

@@ -35,9 +35,15 @@
       <button class="btn btn-primary" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/edit/{{product.id}}'">EDITAR</button>
       <p><b></b></p>
 
+
       <p><b>¿Quieres borrarlo?</b></p>
-        <button class="btn btn-danger" style="width: 1200%; max-width: 1172px; margin-left: -15px; margin-bottom: 100px;" onclick="location.href='/remove-from-products/{{product.id}}'">BORRAR</button>
+      <div style="justify-content: center;">
+          <form action="/remove-from-products/{{product.id}}" method="post">
+              <button class="btn btn-danger" style="width: 1200%; max-width: 1200px; margin-left: -15px; margin-bottom: 100px;">BORRAR</button>
+          </form>
       </div>
+
+    
     </div>
   </div>
 </div>

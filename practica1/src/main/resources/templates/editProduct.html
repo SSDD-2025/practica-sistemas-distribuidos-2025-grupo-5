@@ -1,25 +1,48 @@
 {{>header}}
 
-<h2>Editar Producto</h2>
+<div>
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-4">
+        <img class="img-thumbnail" src="/products/{{product.id}}/image" style="width: 100%; height: auto;">
+      </div>
+      <div class="col-8">
+        <h2>Editar Producto "{{product.name}}"</h2>
 
-<form action="/update/{{product.id}}" method="post">
-    <label>Nombre del producto:</label>
-    <input type="text" name="name" value="{{product.name}}" required>
+        <form action="/update/{{product.id}}" method="post">
+          <div class="form-group">
+            <label for="name">Nombre del producto:</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{product.name}}" required>
+          </div>
 
-    <label>Descripción:</label>
-    <textarea name="description" required>{{product.description}}</textarea>
+          <div class="form-group">
+            <label for="description">Descripción:</label>
+            <textarea class="form-control" id="description" name="description" required>{{product.description}}</textarea>
+          </div>
 
-    <label>Precio (€):</label>
-    <input type="number" name="price" value="{{product.price}}" step="0.01" required>
+          <div class="form-group">
+            <label for="price">Precio (€):</label>
+            <input type="number" class="form-control" id="price" name="price" value="{{product.price}}" step="0.01" required>
+          </div>
 
-    <label>Stock disponible:</label>
-    <input type="number" name="stock" value="{{product.stock}}" required>
+          <div class="form-group">
+            <label for="stock">Stock disponible:</label>
+            <input type="number" class="form-control" id="stock" name="stock" value="{{product.stock}}" required>
+          </div>
 
-    <label>Proveedor:</label>
-    <input type="text" name="provider" value="{{product.provider}}" required>
+          <div class="form-group">
+            <label for="provider">Proveedor:</label>
+            <input type="text" class="form-control" id="provider" name="provider" value="{{product.provider}}" required>
+          </div>
 
-    <button type="submit">Guardar Cambios</button>
-    <button type="button" onclick="location.href='/products';">Cancelar</button>
-</form>
+          <button type="submit" class="btn btn-primary" style="width: 100%;">Guardar Cambios</button>
+        </form>
+
+        <button class="btn btn-outline-secondary" style="width: 100%; margin-top: 10px;" onclick="location.href='/products';">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 {{>footer}}
+
