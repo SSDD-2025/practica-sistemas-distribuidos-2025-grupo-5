@@ -44,22 +44,22 @@ public class DatabaseInitializer {
 
     private Product saveProductWithURLImage(Product product, List<Long> selectedUsers, String image) {
         try {
-            // URL RAW de GitHub para acceder a la imagen
+            // GitHub RAW URL to access the image.
             String imageUrl = "https://raw.githubusercontent.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/main/images/" + image;
 
-            // Descargar la imagen desde la URL
+            // Download the image from the URL.
             InputStream imageStream = new URL(imageUrl).openStream();
             byte[] imageBytes = imageStream.readAllBytes(); // Java 9+
 
-            // Convertir el byte[] en Blob
+            // Convert the byte[] into a Blob.
             Blob imageBlob = new SerialBlob(imageBytes);
             product.setImageFile(imageBlob);
 
-            // Guardar el producto con la imagen
+            // Save the product with the image.
             return productService.save(product, selectedUsers);
         } catch (Exception e) {
-            e.printStackTrace(); // Imprimir error en consola para depuración
-            return null; // O manejar con una excepción personalizada
+            e.printStackTrace(); // Print error in console for debugging.
+            return null; //Or handle with a custom exception.
         }
     }
 

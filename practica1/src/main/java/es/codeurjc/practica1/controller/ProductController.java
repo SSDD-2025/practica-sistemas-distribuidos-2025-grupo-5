@@ -92,7 +92,7 @@ public class ProductController {
 
 	@GetMapping("/cart")
 	public String showCart(HttpSession session, Model model) {
-		// Obtener la lista de IDs de productos en la sesión
+		// Get the list of product IDs in the session.
 		List<Long> cartProductIds = (List<Long>) session.getAttribute("cart");
 		List<Product> cartProducts = new ArrayList<>();
 	
@@ -106,7 +106,7 @@ public class ProductController {
 		}
 
 		if (cartProductIds != null && !cartProductIds.isEmpty()) {
-			// Buscar cada producto por ID y agregarlo a la lista
+			// Search for each product by ID and add it to the list.
 			for (Long productId : cartProductIds) {
 				productService.findById(productId).ifPresent(cartProducts::add);
 			}
@@ -118,12 +118,12 @@ public class ProductController {
 			model.addAttribute("cartProducts", cartProducts);
 		}
 	
-		return "cart";  // Mostrar la vista del carrito
+		return "cart";  // Display the cart view.
 	}
 	
 	@GetMapping("/add-to-cart/{productId}")
 	public String addToCart(@PathVariable long productId, HttpSession session) {
-		// Obtener o inicializar el carrito en la sesión
+		// Get or initialize the cart in the session.
 		List<Long> cart = (List<Long>) session.getAttribute("cart");
 		Optional<User> oneUser = userService.findById(0);
 		Optional<Product> productAux=productService.findById(productId);
@@ -132,7 +132,7 @@ public class ProductController {
 			Product product = productAux.get();
 			User user =oneUser.get();
 			user.addProduct(product);
-			// Guardar el usuario actualizado en la base de datos
+			// Save the updated user in the database.
 			userService.save(user);
 		}
 
@@ -142,7 +142,7 @@ public class ProductController {
 			System.out.println("CREAMOS NUEVO CARRITO");
 		}
 
-		// Agregar el producto al carrito
+		// Add the product to the cart.
 		cart.add(productId);
 		session.setAttribute("cart", cart);
 		System.out.println("Producto agregado al carrito: " + productId);
@@ -173,7 +173,7 @@ public class ProductController {
 
 	@PostMapping("/remove-from-cart/{productId}")
 	public String removeFromCart(@PathVariable long productId, HttpSession session) {
-		// Obtener o inicializar el carrito en la sesión
+		// Get or initialize the cart in the session.
 		List<Long> cart = (List<Long>) session.getAttribute("cart");
 		Optional<User> oneUser = userService.findById(0);
 		Optional<Product> productAux=productService.findById(productId);
@@ -182,7 +182,7 @@ public class ProductController {
 			Product product = productAux.get();
 			User user =oneUser.get();
 			user.removeProduct(product);
-			// Guardar el usuario actualizado en la base de datos
+			// Save the updated user in the database.
 			userService.save(user);
 		}
 
@@ -191,7 +191,7 @@ public class ProductController {
 			session.setAttribute("cart", cart);
 			System.out.println("CREAMOS NUEVO CARRITO");
 		}
-		// Eliminar el producto del carrito
+		// Remove the product from the cart.
 		cart.remove(productId);
 		session.setAttribute("cart", cart);
 		return "redirect:/cart";
@@ -214,7 +214,7 @@ public class ProductController {
 			product.setImageFile(imageBlob);
 		}
 
-		// Asociar usuarios si se seleccionaron
+		// Associate users if selected.
 		if (selectedUsers != null && !selectedUsers.isEmpty()) {
 			List<User> shops = userService.findAllById(selectedUsers);
 			product.setUsers(shops);
@@ -235,7 +235,7 @@ public class ProductController {
 		if (productAux.isPresent() && oneUser.isPresent()) {
 			product = productAux.get();
 			User user =oneUser.get();
-			// Guardar el usuario actualizado en la base de datos
+			// Save the updated user in the database.
 			userService.save(user);
 		}
 
@@ -248,17 +248,17 @@ public class ProductController {
 
 	@PostMapping("/remove-from-products/{productId}")
 	public String removeFromProducts(@PathVariable long productId) {
-		// Buscar el producto en la base de datos
+		// Search for the product in the database.
 		Optional<Product> productAux = productService.findById(productId);
 	
 		if (productAux.isPresent()) {
-			productService.delete(productAux.get()); // Elimina el producto de la base de datos
+			productService.delete(productAux.get()); // Delete the product from the database.
 			System.out.println("Producto eliminado: " + productId);
 		} else {
 			System.out.println("Error: Producto no encontrado");
 		}
 	
-		return "redirect:/"; // Redirigir a la lista de productos actualizada
+		return "redirect:/"; // Redirect to the updated product list.
 	}
 	
 	@GetMapping("/edit/{id}")
@@ -271,7 +271,7 @@ public class ProductController {
     }
 
     /**
-     * Guardar los cambios de un producto editado
+     * Save the changes of an edited product.
      */
     @PostMapping("/update/{id}")
     public String updateProduct(@PathVariable Long id, 
@@ -285,17 +285,17 @@ public class ProductController {
 			product = existingProduct.get();
 		}
 
-        // Actualizar datos del producto con la nueva información del formulario
+        // Update product data with the new information from the form.
         product.setName(updatedProduct.getName());
         product.setDescription(updatedProduct.getDescription());
         product.setPrice(updatedProduct.getPrice());
         product.setStock(updatedProduct.getStock());
         product.setProvider(updatedProduct.getProvider());
 
-        // Si el usuario sube una nueva imagen, actualizarla
+        // If the user uploads a new image, update it.
         if (imageFile != null && !imageFile.isEmpty()) {
         try {
-            Blob newImageBlob = new SerialBlob(imageFile.getBytes()); // Convertir MultipartFile a Blob
+            Blob newImageBlob = new SerialBlob(imageFile.getBytes()); // Convert MultipartFile to Blob
             product.setImageFile(newImageBlob);
         } catch (SQLException | IOException e) {
             e.printStackTrace();

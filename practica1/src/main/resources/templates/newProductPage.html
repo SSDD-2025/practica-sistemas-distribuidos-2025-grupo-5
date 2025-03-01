@@ -49,7 +49,7 @@
 
 <script>
   function validateForm() {
-    // Obtener todos los elementos del formulario
+    // Get all form elements.
     var name = document.getElementById('name');
     var description = document.getElementById('description');
     var price = document.getElementById('price');
@@ -58,13 +58,13 @@
     var imageField = document.getElementById('imageField');
     var selectedUsers = document.getElementById('selectedUsers');
 
-    // Comprobar si algún campo está vacío
+    // Check if any field is empty.
     if (!name.value || !description.value || !price.value || !stock.value || !provider.value || !imageField.value || selectedUsers.selectedOptions.length === 0) {
       alert('Por favor, rellena todos los campos antes de enviar.');
-      return false; // Evitar el envío del formulario
+      return false; // Prevent form submission.
     }
 
-    return true; // Permitir el envío del formulario
+    return true; // Allow form submission.
   }
 </script>
 

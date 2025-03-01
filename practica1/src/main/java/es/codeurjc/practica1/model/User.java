@@ -21,15 +21,15 @@ public class User {
     private String name;
     private String email;
     private String password;
-    private int rol; // 0 = Admin, 1 = User, 2 = Empresa
+    private int rol; // 0 = Admin, 1 = User, 2 = Company.
     private int phoneNumber;
 
-// Anotación para indicar que un usuario puede tener muchos productos en su carrito
+// Annotation to indicate that a user can have many products in their cart.
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")  // Especifica la columna que relaciona la tabla "product" con la de "user"
-    private List<Product> products;  // Lista de productos que están en el carrito del usuario
+    @JoinColumn(name = "user_id")  // Specify the column that relates the "product" table with the "user" table.
+    private List<Product> products;  // List of products that are in the user's cart.
 
-    //Constructor para cargar desde la BBDD
+    //Constructor to load from the database.
     protected User() {
     }
 
