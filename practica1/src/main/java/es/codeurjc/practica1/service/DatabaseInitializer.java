@@ -1,6 +1,11 @@
 package es.codeurjc.practica1.service;
 import java.io.IOException;
+import java.io.InputStream;
+import java.sql.Blob;
 import java.util.List;
+import java.net.URL;
+
+import javax.sql.rowset.serial.SerialBlob;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
@@ -37,8 +42,25 @@ public class DatabaseInitializer {
         saveProductWithURLImage(product2,set,"glasses.jpg"); 
     }
 
-    private Product saveProductWithURLImage(Product product, List<Long> selectedUsers,String image) throws IOException {
-		product.setImageFile(imageUtils.localImageToBlob("/Users/paulamarcelabarrosorobleda/Desktop/practica-sistemas-distribuidos-2025-grupo-5/images/" + image));
-		return productService.save(product,selectedUsers);
-	}
+    private Product saveProductWithURLImage(Product product, List<Long> selectedUsers, String image) {
+        try {
+            // URL RAW de GitHub para acceder a la imagen
+            String imageUrl = "https://raw.githubusercontent.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/main/images/" + image;
+
+            // Descargar la imagen desde la URL
+            InputStream imageStream = new URL(imageUrl).openStream();
+            byte[] imageBytes = imageStream.readAllBytes(); // Java 9+
+
+            // Convertir el byte[] en Blob
+            Blob imageBlob = new SerialBlob(imageBytes);
+            product.setImageFile(imageBlob);
+
+            // Guardar el producto con la imagen
+            return productService.save(product, selectedUsers);
+        } catch (Exception e) {
+            e.printStackTrace(); // Imprimir error en consola para depuración
+            return null; // O manejar con una excepción personalizada
+        }
+    }
+
 }
