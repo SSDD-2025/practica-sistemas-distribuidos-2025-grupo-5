@@ -1,0 +1,20 @@
+{{>header}}
+
+<div class="content">
+    <h1>Pasarela de pagos</h1>
+    <div>
+        <p><b>Ya está todo gestionado, le llegará en 10-15 días:</b></p>
+        <div class="col-4">
+            <img class="img-thumbnail" src="/products/{{product.id}}/image" style="width: 100%; height: auto;">
+        </div>
+        <div class="col-8">
+            <p><b>Nombre del producto:</b>{{product.name}}</p>
+            <p><b>Descripción:</b> {{product.description}}</p>
+            <p><b>Precio:</b> {{product.price}} €</p>
+        </div>
+        <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Back to all products</button>
+    </div>
+    
+</div>
+
+{{>footer}}

@@ -57,7 +57,6 @@ public class ProductController {
 		} else {
 			return "products";
 		}
-
 	}
 
 	@GetMapping("/products/{id}/image")
@@ -65,7 +64,7 @@ public class ProductController {
 
 		Optional<Product> op = productService.findById(id);
 
-		if(op.isPresent()) {
+		if(op.isPresent()){
 			Product product = op.get();
 			Resource image;
 			try {
@@ -138,18 +137,27 @@ public class ProductController {
 			cart = new ArrayList<>();
 			session.setAttribute("cart", cart);
 			System.out.println("CREAMOS NUEVO CARRITO");
-
 		}
 
 		// Agregar el producto al carrito
 		cart.add(productId);
-		
 		session.setAttribute("cart", cart);
-
 		System.out.println("Producto agregado al carrito: " + productId);
 		System.out.println(cart);
 
 		return "redirect:/cart";
+	}
+
+	@GetMapping("/gateway/{productId}")
+	public String showGatewayPage(@PathVariable long productId, Model model) {
+    	Optional<Product> product = productService.findById(productId);
+
+		if (product.isPresent()) {
+			model.addAttribute("product", product.get());
+			return "gateway";
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+		}
 	}
 
 	@PostMapping("/remove-from-cart/{productId}")
@@ -175,7 +183,6 @@ public class ProductController {
 		// Eliminar el producto del carrito
 		cart.remove(productId);
 		session.setAttribute("cart", cart);
-
 		return "redirect:/cart";
 	}
 	@PostMapping("/newproduct")
@@ -195,7 +202,7 @@ public class ProductController {
 			Blob imageBlob = imageUtils.createBlob(imageField.getInputStream());
 			product.setImageFile(imageBlob);
 		}
-	
+
 		// Asociar usuarios si se seleccionaron
 		if (selectedUsers != null && !selectedUsers.isEmpty()) {
 			List<User> shops = userService.findAllById(selectedUsers);
@@ -204,8 +211,27 @@ public class ProductController {
 	
 		Product newProduct = productService.save(product);
 		model.addAttribute("productId", newProduct.getId());
-		
 		return "redirect:/products/" + newProduct.getId();
 	}
-	
+
+	@PostMapping("/go-purchase/{productId}")
+	public String goPurchaseGateway(@PathVariable long productId, HttpSession session) {
+		
+		Optional<User> oneUser = userService.findById(0);
+		Optional<Product> productAux=productService.findById(productId);
+
+		Product product = null;
+		if (productAux.isPresent() && oneUser.isPresent()) {
+			product = productAux.get();
+			User user =oneUser.get();
+			// Guardar el usuario actualizado en la base de datos
+			userService.save(user);
+		}
+
+		if (product != null) {
+			return "redirect:/gateway/" + product.getId();
+		} else {
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+		}
+	}
 }

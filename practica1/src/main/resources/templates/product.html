@@ -28,7 +28,17 @@
       <p><b></b></p>
 
       <p><b>¿Quieres comprarlo ahora?</b></p>
-      <button class="btn btn-warning" onclick="goCart()">COMPRAR AHORA</button>
+      <button class="btn btn-warning" onclick="location.href='/gateway/{{product.id}}'">COMPRAR AHORA</button>
+
+      <p><b></b></p>
+
+      <p><b>¿Quieres editarlo?</b></p>
+      <button class="btn btn-primary" onclick="goCart()">EDITAR</button>
+      <p><b></b></p>
+
+      <p><b>¿Quieres borrarlo?</b></p>
+      <button class="btn btn-danger" onclick="goCart()">BORRAR</button>
+
 
     </div>
   </div>

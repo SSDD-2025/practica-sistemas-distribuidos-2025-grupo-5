@@ -38,7 +38,7 @@ public class DatabaseInitializer {
     }
 
     private Product saveProductWithURLImage(Product product, List<Long> selectedUsers,String image) throws IOException {
-		product.setImageFile(imageUtils.localImageToBlob("/Users/paulamarcelabarrosorobleda/Documents/SD/practica-sistemas-distribuidos-2025-grupo-5/images/" + image));
+		product.setImageFile(imageUtils.localImageToBlob("/Users/paulamarcelabarrosorobleda/Desktop/practica-sistemas-distribuidos-2025-grupo-5/images/" + image));
 		return productService.save(product,selectedUsers);
 	}
 }
