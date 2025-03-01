@@ -2,41 +2,41 @@
 
 <h2>New Product</h2>
 
-<form action="/newproduct" method="post" enctype="multipart/form-data">
+<form action="/newproduct" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
 
   <div class="mb-3">
     <label class="form-label">Nombre del producto</label>
-    <input type="text" class="form-control" name="name">
+    <input type="text" class="form-control" name="name" id="name" required>
   </div>
 
   <div class="mb-3">
     <label class="form-label">Descripción: </label>
-    <textarea class="form-control" name="description"></textarea>
+    <textarea class="form-control" name="description" id="description" required></textarea>
   </div>
 
   <div class="mb-3">
     <label class="form-label">Precio: </label>
-    <input type="number" class="form-control" name="price" step="0.01">
+    <input type="number" class="form-control" name="price" id="price" step="0.01" required>
   </div>
 
   <div class="mb-3">
     <label class="form-label">Stock disponible: </label>
-    <input type="number" class="form-control" name="stock">
+    <input type="number" class="form-control" name="stock" id="stock" required>
   </div>
 
   <div class="mb-3">
     <label class="form-label">Marca/Provedor: </label>
-    <input type="text" class="form-control" name="provider">
+    <input type="text" class="form-control" name="provider" id="provider" required>
   </div>
 
   <div class="mb-3">
     <label class="form-label">Imagen: </label>
-    <input type='file' class="form-control" name='imageField' accept=".jpg, .jpeg">
+    <input type="file" class="form-control" name="imageField" id="imageField" accept=".jpg, .jpeg" required>
   </div>
 
   <div class="mb-3">
     <label class="form-label">Usuario que lo vende: </label>
-    <select class="form-select" name="selectedUsers" multiple>
+    <select class="form-select" name="selectedUsers" id="selectedUsers" multiple required>
       {{#availableShops}}
       <option value="{{ id }}">{{ name }}</option>
       {{/availableShops}}
@@ -46,5 +46,27 @@
   <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Cancelar</button>
   <button class="btn btn-primary" type="submit">Guardar</button>
 </form>
+
+<script>
+  function validateForm() {
+    // Obtener todos los elementos del formulario
+    var name = document.getElementById('name');
+    var description = document.getElementById('description');
+    var price = document.getElementById('price');
+    var stock = document.getElementById('stock');
+    var provider = document.getElementById('provider');
+    var imageField = document.getElementById('imageField');
+    var selectedUsers = document.getElementById('selectedUsers');
+
+    // Comprobar si algún campo está vacío
+    if (!name.value || !description.value || !price.value || !stock.value || !provider.value || !imageField.value || selectedUsers.selectedOptions.length === 0) {
+      alert('Por favor, rellena todos los campos antes de enviar.');
+      return false; // Evitar el envío del formulario
+    }
+
+    return true; // Permitir el envío del formulario
+  }
+</script>
+
 
 {{>footer}}
