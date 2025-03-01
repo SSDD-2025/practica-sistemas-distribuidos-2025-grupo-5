@@ -153,8 +153,16 @@ public class ProductController {
     	Optional<Product> product = productService.findById(productId);
 
 		if (product.isPresent()) {
-			model.addAttribute("product", product.get());
-			return "gateway";
+			Product p = product.get();
+			if (p.getStock() > 0) {
+				p.setStock(p.getStock() - 1);
+				productService.save(p);
+				model.addAttribute("product", product.get());
+				return "gateway";
+			}
+			else{
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No stock available");
+			}
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
 		}
