@@ -39,7 +39,7 @@ public class DatabaseInitializer {
         saveProductWithURLImage(product1,set,"rope.jpg");
 
         Product product2 = new Product("Gafas","para el sol", 56.3, 123,"GLLASSES_factory");
-        saveProductWithURLImage(product2,set,"glasses.jpg"); 
+        saveProductWithURLImage(product2,set,"glasses.jpg");
     }
 
     private Product saveProductWithURLImage(Product product, List<Long> selectedUsers, String image) {
