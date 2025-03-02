@@ -23,11 +23,13 @@
       </div>
       <p><b></b></p>
       <p><b>¿Quieres añadirlo al carrito?</b></p> 
-      <button class="btn btn-success" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/add-to-cart/{{product.id}}'">AÑADIR AL CARRITO</button>
+      <button id="add-to-cart" class="btn btn-success" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/add-to-cart/{{product.id}}'">AÑADIR AL CARRITO</button>
       <p><b></b></p>
 
       <p><b>¿Quieres comprarlo ahora?</b></p>
-      <button class="btn btn-warning" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/gateway/{{product.id}}'">COMPRAR AHORA</button>
+      <button id="buy-now" class="btn btn-warning" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/gateway/{{product.id}}'">COMPRAR AHORA</button>
+
+      <p id="out-of-stock-message" style="color: red; font-weight: bold; display: none;">Lo sentimos, este producto está agotado.</p>
 
       <p><b></b></p>
 
@@ -41,10 +43,29 @@
               <button class="btn btn-danger" style="width: 1200%; max-width: 1172px; margin-left: -28px; margin-bottom: 100px;">BORRAR</button>
           </form>
       </div>
-
     
     </div>
   </div>
 </div>
 
 {{>footer}}
+
+<script>
+    // Asegurarse de que el valor de stock esté correctamente inyectado y convertido a número
+    const stock =  parseInt("{{product.stock}}", 10); // Asegúrate de que product.stock es un número
+    
+    // Obtener los botones y el mensaje
+    const addToCartButton = document.getElementById('add-to-cart');
+    const buyNowButton = document.getElementById('buy-now');
+    const outOfStockMessage = document.getElementById('out-of-stock-message');
+    
+    // Verificar si el stock es 0
+    if (typeof stock === 'number' && stock === 0) {
+        // Deshabilitar los botones
+        addToCartButton.disabled = true;
+        buyNowButton.disabled = true;
+        // Mostrar el mensaje de agotado
+        outOfStockMessage.style.display = 'block';
+    }
+</script>
+

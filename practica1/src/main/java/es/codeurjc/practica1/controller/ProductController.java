@@ -164,7 +164,7 @@ public class ProductController {
 				return "gateway";
 			}
 			else{
-				return "outOfStock";
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
 			}
 		} else {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
