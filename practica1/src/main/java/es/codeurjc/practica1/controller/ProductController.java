@@ -97,7 +97,6 @@ public class ProductController {
 		List<Product> cartProducts = new ArrayList<>();
 	
 		Optional<User> oneUser = userService.findById(0);
-		System.out.println("USUARIO OPCIONAL"+oneUser);
 
 		if (oneUser.isPresent()) {
 			User user =oneUser.get();
@@ -121,6 +120,55 @@ public class ProductController {
 		return "cart";  // Display the cart view.
 	}
 	
+	@GetMapping("/checkout")
+	public String showGateway(HttpSession session, Model model) {
+		// Get the list of product IDs in the session.
+		List<Long> cartProductIds = (List<Long>) session.getAttribute("cart");
+		List<Product> cartProducts = new ArrayList<>();
+	
+		Optional<User> oneUser = userService.findById(0);
+		System.out.println("USUARIO OPCIONAL"+oneUser);
+
+		if (oneUser.isPresent()) {
+			User user =oneUser.get();
+			cartProducts=user.getProducts();
+			System.out.println("LOS PRODUCTOS SON"+cartProducts);
+		}
+
+		if (cartProductIds != null && !cartProductIds.isEmpty()) {
+			// Search for each product by ID and add it to the list.
+			for (Long productId : cartProductIds) {
+				productService.findById(productId).ifPresent(cartProducts::add);
+			}
+		}
+		if (cartProducts.isEmpty()) {
+			model.addAttribute("message", "Tu carrito está vacío");
+		} else {
+			model.addAttribute("cartProducts", cartProducts);
+		}
+			model.addAttribute("cartProducts", cartProducts);
+			return "gateway";
+	}
+
+	@GetMapping("/checkoutOne/{id}")
+	public String showGatewayOne(@PathVariable Long id,HttpSession session, Model model) {
+		// Get the list of product IDs in the session.
+		Optional<Product> productOptional = productService.findById(id);	
+		System.out.println("PRODUCTO OPCIONAL "+productOptional);
+
+		if (productOptional.isPresent()) {
+			Product product = productOptional.get();
+			session.setAttribute("product", product);
+			List<Product> cartProducts = new ArrayList<>();
+			cartProducts.add(product);		
+			model.addAttribute("cartProducts", cartProducts);
+
+		} else {
+			return "redirect:/";
+		}
+		return "gateway";
+	}
+
 	@GetMapping("/add-to-cart/{productId}")
 	public String addToCart(@PathVariable long productId, HttpSession session) {
 		// Get or initialize the cart in the session.
@@ -196,6 +244,7 @@ public class ProductController {
 		session.setAttribute("cart", cart);
 		return "redirect:/cart";
 	}
+
 	@PostMapping("/newproduct")
 	public String newProductProcess(
 		Model model,
@@ -225,26 +274,7 @@ public class ProductController {
 		return "redirect:/products/" + newProduct.getId();
 	}
 
-	@PostMapping("/go-purchase/{productId}")
-	public String goPurchaseGateway(@PathVariable long productId, HttpSession session) {
-		
-		Optional<User> oneUser = userService.findById(0);
-		Optional<Product> productAux=productService.findById(productId);
 
-		Product product = null;
-		if (productAux.isPresent() && oneUser.isPresent()) {
-			product = productAux.get();
-			User user =oneUser.get();
-			// Save the updated user in the database.
-			userService.save(user);
-		}
-
-		if (product != null) {
-			return "redirect:/gateway/" + product.getId();
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
-		}
-	}
 
 	@PostMapping("/remove-from-products/{productId}")
 	public String removeFromProducts(@PathVariable long productId) {

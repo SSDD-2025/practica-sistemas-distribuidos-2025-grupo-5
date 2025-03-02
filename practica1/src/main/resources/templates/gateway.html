@@ -4,15 +4,17 @@
     <h1>Pasarela de pagos</h1>
     <div>
         <p><b>Ya está todo gestionado, le llegará en 10-15 días:</b></p>
-        <div class="col-4">
-            <img class="img-thumbnail" src="/products/{{product.id}}/image" style="width: 100%; height: auto;">
-        </div>
-        <div class="col-8">
-            <p><b>Nombre del producto:</b>{{product.name}}</p>
-            <p><b>Descripción:</b> {{product.description}}</p>
-            <p><b>Precio:</b> {{product.price}} €</p>
-        </div>
-        <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Back to all products</button>
+
+        {{#cartProducts}}
+        <a href="/products/{{id}}" class="product-item">
+            <img class="product-img" src="/products/{{id}}/image" alt="{{name}}">        
+            <p class="product-name">{{name}}</p>
+            <p class="product-price">{{price}} €</p>
+            <p><b>Descripción:</b> {{description}}</p>
+        </a>
+        {{/cartProducts}}
+        <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Volver a todos los productos</button>
+        <p><b></b></p>
     </div>
 </div>
 

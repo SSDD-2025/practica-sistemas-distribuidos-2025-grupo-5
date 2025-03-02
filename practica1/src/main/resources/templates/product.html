@@ -27,11 +27,13 @@
       <p><b></b></p>
 
       <p><b>¿Quieres comprarlo ahora?</b></p>
-      <button id="buy-now" class="btn btn-warning" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/gateway/{{product.id}}'">COMPRAR AHORA</button>
+      <div style="justify-content: center;">
+        <form method="get" action="/checkoutOne/{{product.id}}">
+          <button type="submit" class="btn btn-warning" style="width: 1200%; max-width: 1172px; margin-left: -28px;">COMPRAR AHORA</button>
+        </form>
+      </div>
 
       <p id="out-of-stock-message" style="color: red; font-weight: bold; display: none;">Lo sentimos, este producto está agotado.</p>
-
-      <p><b></b></p>
 
       <p><b>¿Quieres editarlo?</b></p>
       <button class="btn btn-primary" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/edit/{{product.id}}'">EDITAR</button>
