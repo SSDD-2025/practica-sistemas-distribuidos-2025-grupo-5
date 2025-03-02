@@ -297,7 +297,7 @@ public class ProductController {
 		}
 	
 		productService.save(product);
-		return "redirect:/products/" + id; // Redirige correctamente al producto actualizado
+		return "redirect:/products/" + id; // Correctly redirect to the updated product.
 	}
 	
 

@@ -32,13 +32,13 @@
 
           <div class="form-group">
             <label for="provider">Proveedor:</label>
-            <input type="text" class="form-control" id="provider" name="provider" value="{{product.provider}}" required>
+            <input type="text" style="margin-bottom: 20px" class="form-control" id="provider" name="provider" value="{{product.provider}}" required>
           </div>
 
-          <button type="submit" class="btn btn-primary" style="width: 100%;">Guardar Cambios</button>
+          <button type="submit" class="btn btn-primary" style="width: 700px;">Guardar Cambios</button>
         </form>
 
-        <button class="btn btn-outline-secondary" style="width: 100%; margin-top: 10px;" onclick="location.href='/products';">Cancelar</button>
+        <button class="btn btn-outline-secondary" style="width: 700px" onclick="location.href='/products/{{id}}'; return false;">Cancelar</button>
       </div>
     </div>
   </div>
