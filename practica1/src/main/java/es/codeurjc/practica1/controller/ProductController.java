@@ -170,11 +170,21 @@ public class ProductController {
 	}
 
 	@GetMapping("/add-to-cart/{productId}")
-	public String addToCart(@PathVariable long productId, HttpSession session) {
+	public String addToCart(@PathVariable long productId, HttpSession session, Model model) {
 		// Get or initialize the cart in the session.
 		List<Long> cart = (List<Long>) session.getAttribute("cart");
 		Optional<User> oneUser = userService.findById(0);
 		Optional<Product> productAux=productService.findById(productId);
+
+		Product p = productAux.get();
+		if (p.getStock() > 0) {
+			p.setStock(p.getStock() - 1);
+			productService.save(p);
+			model.addAttribute("product", productAux.get());
+		}
+		else{
+			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
+		}
 
 		if (productAux.isPresent() && oneUser.isPresent()) {
 			Product product = productAux.get();
