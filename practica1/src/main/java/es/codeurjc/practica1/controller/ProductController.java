@@ -158,11 +158,17 @@ public class ProductController {
 
 		if (productOptional.isPresent()) {
 			Product product = productOptional.get();
-			session.setAttribute("product", product);
-			List<Product> cartProducts = new ArrayList<>();
-			cartProducts.add(product);		
-			model.addAttribute("cartProducts", cartProducts);
-
+			if (product.getStock() > 0) {
+				product.setStock(product.getStock() - 1);
+				productService.save(product);
+				model.addAttribute("product", productOptional.get());
+				List<Product> cartProducts = new ArrayList<>();
+				cartProducts.add(product);	
+				model.addAttribute("cartProducts", cartProducts);
+			}else{
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
+			}
+			
 		} else {
 			return "redirect:/";
 		}
@@ -212,7 +218,7 @@ public class ProductController {
 	@GetMapping("/gateway/{productId}")
 	public String showGatewayPage(@PathVariable long productId, Model model) {
 		Optional<Product> product = productService.findById(productId);
-
+		System.out.println("PRODUCTO OPCIONAL "+product);
 		if (product.isPresent()) {
 			Product p = product.get();
 			if (p.getStock() > 0) {
