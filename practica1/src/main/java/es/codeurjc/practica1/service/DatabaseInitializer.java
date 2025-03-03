@@ -34,6 +34,10 @@ public class DatabaseInitializer {
         UserService.save(user1);
         List<Long> set = List.of(user1.getId());
 
+        User user2 = new User( "juanjo", "juanjo@gmail.com", "567",0, 987654321 );
+        UserService.save(user2);
+        set = List.of(user2.getId());
+
         // Create some books
         Product product1 = new Product("Cuerda","resistente", 12.3, 123,"ES_factory");
         saveProductWithURLImage(product1,set,"rope.jpg");

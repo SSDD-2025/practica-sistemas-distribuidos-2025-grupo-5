@@ -33,5 +33,7 @@ public class UserService {
     public List<User> findAllById(List<Long> ids) {
         return userRepository.findAllById(ids);
     }
-
+    public User getLoggedUser() {
+        return userRepository.findAll().get(0);
+    }
 }

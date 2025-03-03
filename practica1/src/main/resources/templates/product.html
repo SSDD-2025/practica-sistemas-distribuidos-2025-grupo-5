@@ -20,12 +20,14 @@
         </div>
 
         <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Back to all products</button>
+        <button class="btn btn-outline-dark" onclick="location.href='/'; return false;">Ver comentarios</button>
+
       </div>
       <p><b></b></p>
       <p><b>¿Quieres añadirlo al carrito?</b></p> 
       <button id="add-to-cart" class="btn btn-success" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/add-to-cart/{{product.id}}'">AÑADIR AL CARRITO</button>
-      <p id="out-of-stock-message" style="color: red; font-weight: bold; display: none;">Lo sentimos, este producto está agotado.</p>
-
+      <p><b></b></p>
+      
       <p><b>¿Quieres comprarlo ahora?</b></p>
       <div style="justify-content: center;">
         <form method="get" action="/checkoutOne/{{product.id}}">

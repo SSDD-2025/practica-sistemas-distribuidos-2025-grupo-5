@@ -9,6 +9,7 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
 @Entity
@@ -24,8 +25,12 @@ public class User {
     private int rol; // 0 = Admin, 1 = User, 2 = Company.
     private int phoneNumber;
 
-// Annotation to indicate that a user can have many products in their cart.
+    // Annotation to indicate that a user can have many products in their cart.
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+
+    @ManyToMany
+    private List<Review> reviews;
+
     @JoinColumn(name = "user_id")  // Specify the column that relates the "product" table with the "user" table.
     private List<Product> products;  // List of products that are in the user's cart.
 
@@ -40,6 +45,7 @@ public class User {
         this.rol = rol;
         this.phoneNumber = phoneNumber;
         this.products = new ArrayList<>();  
+        this.reviews = new ArrayList<>();
     }
     public List<Product> getProducts() {
         return products;
@@ -97,4 +103,17 @@ public class User {
         this.phoneNumber = phoneNumber;
     }
 
+    public List<Review> getReviews() {
+        return reviews;
+    }
+
+    public void setReviews(List<Review> reviews) {
+        this.reviews = reviews;
+    }
+
+    public void deleteReview(Review review) {
+        this.reviews.remove(review);
+    }
+
+    
 }
