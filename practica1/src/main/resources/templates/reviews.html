@@ -41,8 +41,17 @@
         <p class="review-title">De: {{author.name}}</p>
         <p class="review-title">Título:{{title}}</p>
         <p class="review-text">Comentario: {{text}}</p>
+        <form method="post" action="/removeReview/{{id}}" style="margin: 0;">
+            <button type="submit" class="btn btn-outline-danger" style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">Borrar
+            </button>
+        </form>
     </div>
     {{/reviews}}
+
+    {{^reviews}}
+    <p>No hay reseñas disponibles.</p>
+    {{/reviews}}
+    
 </div>
 
 

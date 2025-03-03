@@ -27,8 +27,10 @@ import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
 import es.codeurjc.practica1.model.Product;
+import es.codeurjc.practica1.model.Review;
 import es.codeurjc.practica1.model.User;
 import es.codeurjc.practica1.service.ProductService;
+import es.codeurjc.practica1.service.ReviewService;
 import es.codeurjc.practica1.service.UserService;
 import es.codeurjc.practica1.utils.ImageUtils;
 import jakarta.servlet.http.HttpSession;
@@ -43,6 +45,8 @@ public class ProductController {
 	private UserService userService;
 	@Autowired
 	private ImageUtils imageUtils;
+	@Autowired
+	private ReviewService reviewService;
 
 	@GetMapping("/")
 	public String showProducts(Model model) {
@@ -139,7 +143,7 @@ public class ProductController {
 		// Get the list of product IDs in the session.
 		List<Long> cartProductIds = (List<Long>) session.getAttribute("cart");
 		List<Product> cartProducts = new ArrayList<>();
-	
+
 		Optional<User> oneUser = userService.findById(0);
 		System.out.println("USUARIO OPCIONAL"+oneUser);
 
@@ -275,6 +279,74 @@ public class ProductController {
 		return "redirect:/cart";
 	}
 
+	@GetMapping("/reviews/{productId}")
+	public String showReviews(@PathVariable Long productId, Model model, HttpSession session) {
+		try {
+			Optional<Product> productOpt = productService.findById(productId);
+			if (!productOpt.isPresent()) {
+				System.out.println("Producto no encontrado con ID: " + productId);
+				return "redirect:/error"; // Redirigir a una página de error si el producto no existe
+			}
+	
+			Product product = productOpt.get();
+			List<Review> reviews = product.getReviews(); // Obtener las reseñas del producto
+	
+			session.setAttribute("reviews", reviews); // Guardar en la sesión
+			model.addAttribute("reviews", reviews);   // Pasar al modelo
+	
+			return "reviews"; // Renderizar reviews.html
+	
+		} catch (Exception e) {
+			System.out.println("Error al obtener las reseñas: " + e.getMessage());
+			return "redirect:/error"; // Página de error
+		}
+	}
+	
+	@PostMapping("/removeReview/{reviewId}")
+	public String removeReview(@PathVariable long reviewId, HttpSession session) {
+		try {
+			List<Review> reviews = (List<Review>) session.getAttribute("reviews");
+		
+			Optional<Review> reviewAux = reviewService.findById(reviewId);
+			if (!reviewAux.isPresent()) {
+				return "redirect:/reviews";
+			}
+	
+			Review review = reviewAux.get();
+			User userAux = userService.findById(review.getAuthor().getId()).orElse(null);
+			Product productAux = productService.findById(review.getProduct().getId()).orElse(null);
+	
+			if (userAux == null || productAux == null) {
+				return "redirect:/reviews";
+			}
+
+			userAux.deleteReview(review);
+			productAux.removeReview(review);
+	
+			userService.save(userAux);
+			productService.save(productAux);
+	
+			reviewService.delete(review);
+	
+			// Actualizar la lista de reseñas en la sesión
+			if (reviews != null) {
+				reviews.removeIf(r -> r.getId() == reviewId);
+			} else {
+				reviews = new ArrayList<>();
+			}
+
+			session.setAttribute("reviews", reviews);
+			List<Review> updatedReviews = reviewService.findAll();
+
+			session.setAttribute("reviews", updatedReviews);
+			return "redirect:/reviews/"  + productAux.getId();
+	
+		} catch (Exception e) {
+			return "redirect:/error"; 
+		}
+	}
+
+
 	@PostMapping("/newproduct")
 	public String newProductProcess(
 		Model model,
@@ -330,6 +402,8 @@ public class ProductController {
 		return "editProduct";
 	}
 	
+
+
 	@PostMapping("/update/{id}")
 	public String updateProduct(@PathVariable Long id, 
 		@ModelAttribute Product updatedProduct, 

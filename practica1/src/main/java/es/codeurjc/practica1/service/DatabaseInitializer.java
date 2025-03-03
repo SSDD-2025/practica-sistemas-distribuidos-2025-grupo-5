@@ -51,6 +51,9 @@ public class DatabaseInitializer {
         Product product2 = new Product("Gafas","para el sol", 56.3, 123,"GLLASSES_factory");
         saveProductWithURLImage(product2,set,"glasses.jpg");
         Review review1 = new Review("Gafas", "no son de sol", user1, product2);
+        Review review3 = new Review("ggg", "ggg", user1, product2);
+        reviewService.save(review3);
+
         reviewService.save(review1);
 
     }
