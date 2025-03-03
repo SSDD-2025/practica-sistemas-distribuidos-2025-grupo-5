@@ -11,6 +11,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Component;
 
 import es.codeurjc.practica1.model.Product;
+import es.codeurjc.practica1.model.Review;
 import es.codeurjc.practica1.model.User;
 import es.codeurjc.practica1.utils.ImageUtils;
 import jakarta.annotation.PostConstruct;
@@ -24,26 +25,34 @@ public class DatabaseInitializer {
     private ProductService productService;
 
     @Autowired
+    private ReviewService reviewService;
+
+    @Autowired
 	private ImageUtils imageUtils;
 
     @PostConstruct
     public void init() throws IOException {
-        
         User user1 = new User( "paula", "paula@gmail.com", "567",0, 123456789 );
         System.out.println("ID USUARIO: "+user1.getId());
+
         UserService.save(user1);
         List<Long> set = List.of(user1.getId());
 
-        User user2 = new User( "juanjo", "juanjo@gmail.com", "567",0, 987654321 );
-        UserService.save(user2);
-        set = List.of(user2.getId());
+        //User user2 = new User( "juanjo", "juanjo@gmail.com", "567",0, 987654321 );
+        //UserService.save(user2);
+        //set = List.of(user2.getId());
 
         // Create some books
         Product product1 = new Product("Cuerda","resistente", 12.3, 123,"ES_factory");
         saveProductWithURLImage(product1,set,"rope.jpg");
+        Review review2 = new Review("Cuerda", "no aguanta", user1, product1);
+        reviewService.save(review2);
 
         Product product2 = new Product("Gafas","para el sol", 56.3, 123,"GLLASSES_factory");
         saveProductWithURLImage(product2,set,"glasses.jpg");
+        Review review1 = new Review("Gafas", "no son de sol", user1, product2);
+        reviewService.save(review1);
+
     }
 
     private Product saveProductWithURLImage(Product product, List<Long> selectedUsers, String image) {

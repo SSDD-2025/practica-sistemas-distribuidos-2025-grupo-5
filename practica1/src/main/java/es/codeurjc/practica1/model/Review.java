@@ -32,9 +32,11 @@ public class Review {
 
 	protected Review() {}
 
-	public Review(String title, String text) {
+	public Review(String title, String text, User author, Product product) {
 		this.title = title;
 		this.text = text;
+		this.author = author;
+		this.product = product;
 	}
 
 	public long getId() {

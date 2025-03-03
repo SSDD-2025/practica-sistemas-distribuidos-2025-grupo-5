@@ -1,113 +1,49 @@
 {{>header}}
 
 <style>
-    /* General container for reviews */
+    /* Contenedor de reseñas en bloque */
     .review-container {
-        display: grid;
-        grid-template-columns: repeat(auto-fill, minmax(250px, 1fr));
-        gap: 20px;
+        display: block;
         margin-top: 20px;
     }
 
-    /* Make the entire review item clickable */
-    .review-item {
-        display: block; /* Make the entire div clickable */
-        text-decoration: none; /* Remove underline from the link */
-    }
-
-    /* Individual review item */
+    /* Ajustes en cada reseña */
     .review-item-content {
         background-color: #fff;
         border-radius: 12px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1); /* Soft shadow for depth */
-        overflow: hidden; /* Ensure the image doesn't overflow the border radius */
-        transition: transform 0.3s ease-in-out; /* Smooth transition on hover */
-        text-align: center;
-        padding: 20px;
-        cursor: pointer;
+        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
+        padding: 15px; /* Reducir padding */
+        text-align: left;
+        margin-bottom: 20px; /* Espaciado entre reseñas */
     }
 
-    /* Hover effect */
-    .review-item-content:hover {
-        transform: translateY(-10px); /* Lift the review when hovered */
-        box-shadow: 0 6px 12px rgba(0, 0, 0, 0.2); /* More prominent shadow on hover */
-    }
-
-    /* Review title style */
+    /* Reducir tamaño de los títulos */
     .review-title {
-        font-size: 1.5em;
+        font-size: 1.2em; /* Más pequeño */
         font-weight: bold;
         color: #333;
-        text-decoration: none;
-        margin-top: 10px;
-        display: inline-block;
-        transition: color 0.3s ease;
+        margin-top: 5px;
     }
 
-    /* Hover effect on review title */
-    .review-title:hover {
-        color: #69a3e2; /* Change color on hover */
-        text-decoration: underline;
+    /* Reducir tamaño del texto */
+    .review-text {
+        font-size: 0.9em; /* Más pequeño */
+        color: #666;
+        line-height: 1.4;
     }
 
-    /* Style for the 'New review' button */
-    .btn.btn-primary {
-        background-color: #69a3e2;
-        color: white;
-        padding: 12px 25px;
-        font-size: 1em;
-        border: none;
-        border-radius: 8px;
-        cursor: pointer;
-        transition: background-color 0.3s ease;
-    }
-
-    .btn.btn-primary:hover {
-        background-color: #4176a1; /* Darker blue on hover */
-    }
-
-    /* Style for the comment section */
-    .comments-section {
-        margin-top: 15px;
-        background-color: #f9f9f9;
-        padding: 10px;
-        border-radius: 8px;
-    }
-
-    .comment {
-        padding: 10px;
-        background-color: #e6e6e6;
-        border-radius: 8px;
-        margin-bottom: 10px;
-    }
 
 </style>
 
-<div class="content">
-    <h1>Bienvenido a la Aplicación</h1>
-    <p>Explora las reviews publicadas por otros usuarios.</p>
-    <div class="container">
-        <h2>Reviews</h2>
-
-        <div class="review-container">
-            {{#reviews}}
-            <a href="/reviews/{{id}}" class="review-item">
-                <div class="review-item-content">
-                    <p class="review-title">{{title}}</p>
-                    <p class="review-text">{{text}}</p>
-                    <div class="comments-section">
-                        <h3>Comentarios</h3>
-                        <p class="review-text">{{comment}}</p>
-                        <p>No hay comentarios aún.</p>
-                    </div>
-                </div>
-            </a>
-            {{/reviews}}
-        </div>
-        
-        <p>¿Quieres dejar tu propia review?</p>
-        <button class="btn btn-primary" onclick="location.href='/newreview'">Nueva review</button>
+<div class="review-container">
+    {{#reviews}}
+    <div class="review-item-content">
+        <p class="review-title">De: {{author.name}}</p>
+        <p class="review-title">Título:{{title}}</p>
+        <p class="review-text">Comentario: {{text}}</p>
     </div>
+    {{/reviews}}
 </div>
+
 
 {{>footer}}
