@@ -3,6 +3,7 @@ import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
+import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
@@ -10,6 +11,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.Lob;
 import jakarta.persistence.ManyToMany;
+import jakarta.persistence.OneToMany;
 
 @Entity
 public class Product {
@@ -32,6 +34,8 @@ public class Product {
 	private int publicationYear;
 	private String lang;
 
+    @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
+	private List<Review> reviews = new ArrayList<>();
 
     public Product() {}
 
@@ -114,6 +118,15 @@ public class Product {
     }
                 */
 
+    public void addReview(Review review) {
+        reviews.add(review);    
+    }
+    public void removeReview(Review review) {
+        reviews.remove(review);
+    }
+    public List<Review> getReviews() {
+        return reviews;
+    }   
 }
 
 

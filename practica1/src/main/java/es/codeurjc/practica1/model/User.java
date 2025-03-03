@@ -9,9 +9,9 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
-import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 import jakarta.persistence.Table;
+
 @Entity
 @Table(name = "app_user")
 public class User {
@@ -25,18 +25,15 @@ public class User {
     private int rol; // 0 = Admin, 1 = User, 2 = Company.
     private int phoneNumber;
 
-    // Annotation to indicate that a user can have many products in their cart.
+    // Un usuario puede crear muchas reviews
+    @OneToMany(mappedBy = "author", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Review> reviews = new ArrayList<>();
+
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
+    @JoinColumn(name = "user_id")  
+    private List<Product> products; 
 
-    @ManyToMany
-    private List<Review> reviews;
-
-    @JoinColumn(name = "user_id")  // Specify the column that relates the "product" table with the "user" table.
-    private List<Product> products;  // List of products that are in the user's cart.
-
-    //Constructor to load from the database.
-    protected User() {
-    }
+    protected User() {}
 
     public User(String name, String email, String password, int rol, int phoneNumber) {
         this.name = name;
@@ -47,6 +44,7 @@ public class User {
         this.products = new ArrayList<>();  
         this.reviews = new ArrayList<>();
     }
+
     public List<Product> getProducts() {
         return products;
     }
@@ -113,6 +111,14 @@ public class User {
 
     public void deleteReview(Review review) {
         this.reviews.remove(review);
+    }
+
+    public void addReview(Review review) {
+        this.reviews.add(review);
+    }
+
+    public void deleteAllReviews() {
+        this.reviews.clear();
     }
 
     

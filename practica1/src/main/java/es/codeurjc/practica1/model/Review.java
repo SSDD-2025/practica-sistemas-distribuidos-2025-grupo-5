@@ -3,28 +3,32 @@ package es.codeurjc.practica1.model;
 import java.util.ArrayList;
 import java.util.List;
 
-import jakarta.persistence.CascadeType;
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
+import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToMany;
     
 @Entity
 public class Review {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
-	long id;
+	private long id;
 
 	private String title;
 	private String text;
-
-	@OneToMany(cascade = CascadeType.ALL)
 	private List<String> comments = new ArrayList<>();
 
+	// Cada review tiene un único autor
 	@ManyToOne
+	@JoinColumn(name = "author_id")
 	private User author;
+
+	// Cada review pertenece a un único producto
+	@ManyToOne
+	@JoinColumn(name = "product_id")
+	private Product product;
 
 	protected Review() {}
 
@@ -57,14 +61,6 @@ public class Review {
 		this.text = text;
 	}
 
-	public List<String> getComments() {
-		return comments;
-	}
-
-	public void setComments(List<String> comments) {
-		this.comments = comments;
-	}
-
 	public User getAuthor() {
 		return author;
 	}
@@ -75,9 +71,27 @@ public class Review {
 
 	@Override
 	public String toString() {
-		return "Post [id=" + id + ", title=" + title + ", text=" + text + "]";
+		return "Review [id=" + id + ", title=" + title + ", text=" + text + "]";
 	}
 
+	public Product getProduct() {
+		return product;
+	}
+
+	public void setProduct(Product product) {
+		this.product = product;
+	}
+
+	public List<String> getComments() {
+		return comments;
+	}
+	public void setComments(List<String> comments) {
+		this.comments = comments;
+	}
+	public void addComment(String comment) {
+		this.comments.add(comment);
+	}
 }
+
 
 

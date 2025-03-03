@@ -7,14 +7,14 @@ import org.springframework.stereotype.Service;
 
 import es.codeurjc.practica1.model.Review;
 import es.codeurjc.practica1.model.User;
+import es.codeurjc.practica1.repositories.ReviewRepository;
 import es.codeurjc.practica1.repositories.UserRepository;
 
 @Service
 public class ReviewService {
 
-	
 	@Autowired
-	private ReviewService reviewRepository;
+	private ReviewRepository reviewRepository;
 
 	@Autowired
 	private UserRepository userRepository;
@@ -27,35 +27,28 @@ public class ReviewService {
 		return reviewRepository.findById(id);
 	}
 
-	public void save(Review post) {
-		reviewRepository.save(post);		
+	public void save(Review review) {
+		reviewRepository.save(review);		
 	}
 
-	public void update(Review oldPost, Review updatedPost) {
-		oldPost.setTitle(updatedPost.getTitle());
-		oldPost.setText(updatedPost.getText());
-		reviewRepository.save(oldPost);
-	}
-
-	public void deleteById(long id) {
-		
+	public void update(Review oldReview, Review updatedReview) {
+		oldReview.setTitle(updatedReview.getTitle());
+		oldReview.setText(updatedReview.getText());
+		reviewRepository.save(oldReview);
 	}
 
 	public void delete(Review review) {
-
-		
 		Optional<User> user = userRepository.findById(review.getAuthor().getId());
 		if(user.isPresent()) {
 			User userAux = user.get();
 			userAux.deleteReview(review);
-			userRepository.save(user.get());
+			userRepository.save(userAux);
 			reviewRepository.delete(review);
-		}else{
+		} else {
 			System.out.println("User not found");
 		}
-
 	}
-
 }
+
     
 

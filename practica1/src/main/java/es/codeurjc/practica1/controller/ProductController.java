@@ -62,6 +62,20 @@ public class ProductController {
 		}
 	}
 
+	@GetMapping("/productReviews/{id}")
+	public String showReviews(Model model, @PathVariable long id) {
+		Optional<Product> product = productService.findById(id);
+		if (product.isPresent()) {
+			Product p = product.get();
+			//model.addAttribute("product", p.getId());
+
+			model.addAttribute("reviews", p.getReviews());
+			return "reviews";
+		} else {
+			return "redirect:/";
+		}
+	}
+
 	@GetMapping("/products/{id}/image")
 	public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException, IOException {
 
