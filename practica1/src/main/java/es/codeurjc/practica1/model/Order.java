@@ -7,10 +7,10 @@ import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
+import jakarta.persistence.ManyToMany;
 import jakarta.persistence.ManyToOne;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
-    
+
 @Entity
 @Table(name = "customer_order") // This is the name of the table in the database
 public class Order{
@@ -24,15 +24,14 @@ public class Order{
 	@JoinColumn(name = "user_id")
 	private User owner;
 
-	@OneToOne
-	@JoinColumn(name = "product_id")
-	private Product product;
+	@ManyToMany
+	private List<Product> products;
 
 	protected Order() {}
 
-	public Order(User author, Product product) {
+	public Order(User author, List<Product> product) {
 		this.owner = author;
-		this.product = product;
+		this.products = product;
 	}
 
 	public long getId() {
@@ -51,12 +50,12 @@ public class Order{
 		this.owner = author;
 	}
 
-	public Product getProducts() {
-		return product;
+	public List<Product> getProducts() {
+		return products;
 	}
 
 	public void setProducts(List<Product> products) {
-		this.product = product;
+		this.products = products;
 	}
 
 

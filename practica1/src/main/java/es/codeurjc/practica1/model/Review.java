@@ -20,12 +20,12 @@ public class Review {
 	private String text;
 	private List<String> comments = new ArrayList<>();
 
-	// Cada review tiene un único autor
+	// Each review has a single author
 	@ManyToOne
 	@JoinColumn(name = "author_id")
 	private User author;
 
-	// Cada review pertenece a un único producto
+	// Each review has a single product
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private Product product;
