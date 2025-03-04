@@ -354,8 +354,7 @@ public class ProductController {
 			List<Review> updatedReviews = reviewService.findAll();
 
 			session.setAttribute("reviews", updatedReviews);
-			return "redirect:/products/" + productAux.getId();
-
+			return "redirect:/productReviews/" + productAux.getId();
 		} catch (Exception e) {
 			return "redirect:/error";
 		}
@@ -430,7 +429,7 @@ public class ProductController {
 		reviewService.save(review);
 		productService.save(product); // Guardar el producto con la review asociada
 
-		return "redirect:/products/" + productId;
+		return "redirect:/productReviews/" + product.getId();
 	}
 
 	@PostMapping("/remove-from-products/{productId}")
