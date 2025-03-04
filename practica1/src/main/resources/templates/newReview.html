@@ -1,0 +1,19 @@
+{{>header}}
+
+<h2>New Review</h2>
+
+<form action="/newReview" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+
+  <div class="mb-3">
+    <label class="form-label">Nombre del producto</label>
+    <input type="text" class="form-control" name="titulo" id="title" required>
+  </div>
+
+  <div class="mb-3">
+    <label class="form-label">Descripción: </label>
+    <textarea class="form-control" name="comentario" id="text" required></textarea>
+  </div>
+
+</form>
+
+{{>footer}}

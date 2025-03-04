@@ -392,6 +392,31 @@ public class ProductController {
 	}
 
 
+	@PostMapping("/newReview/{productId}")
+	public String newReviewprocess(
+		@PathVariable long productId,
+		Model model,
+		@RequestParam String title,
+		@RequestParam String text,
+		@RequestParam List<String> description) throws IOException, SQLException {
+
+		Optional<Product> productAux = productService.findById(productId);
+		Product product = productAux.get();
+		Optional<User> user= userService.findById(0);
+		User author = user.get();
+		
+		Review review = new Review(title, text, author, product);
+		if (description != null) {
+			review.setComments(description);
+		}
+		product.addReview(review);
+		productService.save(product);
+		reviewService.save(review);
+
+		return "redirect:/reviews";
+	}
+
+
 
 	@PostMapping("/remove-from-products/{productId}")
 	public String removeFromProducts(@PathVariable long productId) {
