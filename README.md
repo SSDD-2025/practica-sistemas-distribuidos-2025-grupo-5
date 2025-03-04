@@ -16,7 +16,8 @@ Juan José Villanueva Molina
   - Correo de la universidad: jj.villanueva.2022@alumnos.urjc.es
   - Cuenta de GitHub: juanjouni
 ### Entidades
-La aplicación consta de varias entidades. Existe una entidad user que se relaciona con la entidad review de manera que un usuario puede escribir una reseña de un producto y un usuario tiene una lista de las reseñas hechas. La entidad producto se relaciona con review ya que un producto puede tener varias reseñas, tambien se relaciona con la entidad user ya que un usuario puede publicar varios productos y por ultimo se relaciona con la entidad order ya que se pueden ordenar varios productos. La entidad order esta relacionada con la entidad user ya que se pueden realizar varias peticiones.
+La aplicación consta de varias entidades. Existe una entidad user que se relaciona con la entidad review de manera que un usuario puede escribir una reseña de un producto y un usuario tiene una lista de las reseñas hechas. La entidad producto se relaciona con review ya que un producto puede tener varias reseñas, tambien se relaciona con la entidad user ya que un usuario puede publicar varios productos y por ultimo se relaciona con la entidad order ya que se pueden ordenar varios productos. La entidad order esta relacionada con la entidad user ya que se pueden realizar varias peticiones.  
+
 ![image](https://github.com/user-attachments/assets/8b1ebb54-e35c-484c-9dac-b564f37798b0)
 
 ### Permisos de los usuarios
