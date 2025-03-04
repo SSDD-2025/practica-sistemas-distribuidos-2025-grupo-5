@@ -42,7 +42,7 @@ public class OrderService {
     }
 
     public void delete(Order order) {
-        Optional<User> user = userRepository.findById(order.getAuthor().getId());
+        Optional<User> user = userRepository.findById(order.getOwner().getId());
         if (user.isPresent()) {
             User userAux = user.get();
             userAux.deleteOrder(order);

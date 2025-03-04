@@ -4,16 +4,23 @@
     <h1>Pasarela de pagos</h1>
     <div>
         <p><b>Ya está todo gestionado, le llegará en 10-15 días:</b></p>
-
-        {{#cartProducts}}
-        <a href="/products/{{id}}" class="product-item">
-            <img class="product-img" src="/products/{{id}}/image" alt="{{name}}">        
-            <p class="product-name">{{name}}</p>
-            <p class="product-price">{{price}} €</p>
-            <p><b>Descripción:</b> {{description}}</p>
-        </a>
-        {{/cartProducts}}
+        {{#orders}}
+            {{#products}}
+            <a href="/products/{{id}}" class="product-item">
+                <img class="product-img" src="/products/{{id}}/image" alt="{{name}}">        
+                <p class="product-name">{{name}}</p>
+                <p class="product-price">{{price}} €</p>
+                <p><b>Descripción:</b> {{description}}</p>
+            </a>
+            {{/products}}
+        {{/orders}}
         <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Volver a todos los productos</button>
+        <p><b>Tienes 20 minutos para cancelar el pedido:</b></p>
+
+        <form method="post" action="/removeOrder/{{orders.id}}" style="margin: 0;">
+            <button type="submit" class="btn btn-outline-danger">Cancelar pedido
+            </button>
+        </form>
         <p><b></b></p>
     </div>
 </div>

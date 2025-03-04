@@ -26,9 +26,11 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import es.codeurjc.practica1.model.Order;
 import es.codeurjc.practica1.model.Product;
 import es.codeurjc.practica1.model.Review;
 import es.codeurjc.practica1.model.User;
+import es.codeurjc.practica1.service.OrderService;
 import es.codeurjc.practica1.service.ProductService;
 import es.codeurjc.practica1.service.ReviewService;
 import es.codeurjc.practica1.service.UserService;
@@ -43,6 +45,10 @@ public class ProductController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private OrderService orderService;
+
 	@Autowired
 	private ImageUtils imageUtils;
 	@Autowired
@@ -50,6 +56,7 @@ public class ProductController {
 
 	@GetMapping("/")
 	public String showProducts(Model model) {
+
 		model.addAttribute("products", productService.findAll());
 		return "products";
 	}
@@ -118,7 +125,6 @@ public class ProductController {
 		if (oneUser.isPresent()) {
 			User user =oneUser.get();
 			cartProducts=user.getProducts();
-			System.out.println("LOS PRODUCTOS SON"+cartProducts);
 		}
 
 		if (cartProductIds != null && !cartProductIds.isEmpty()) {
@@ -141,47 +147,84 @@ public class ProductController {
 	public String showGateway(HttpSession session, Model model) {
 		// Get the list of product IDs in the session.
 		List<Long> cartProductIds = (List<Long>) session.getAttribute("cart");
-		List<Product> cartProducts = new ArrayList<>();
 
-		Optional<User> oneUser = userService.findById(0);
-		System.out.println("USUARIO OPCIONAL"+oneUser);
+		List<User> oneUser = userService.findAll();
+		User user= oneUser.get(0);
+		if(cartProductIds.isEmpty()){
+			return "redirect:/";
+		}else{
+			if (user!=null) {
+				List<Product> cartProducts = new ArrayList<>();
 
-		if (oneUser.isPresent()) {
-			User user =oneUser.get();
-			cartProducts=user.getProducts();
-			System.out.println("LOS PRODUCTOS SON"+cartProducts);
-		}
+				for(int i=0; i<cartProductIds.size(); i++){
+					Long productId = cartProductIds.get(i);
+            		Optional<Product> aux = productService.findById(productId);
+					Product product = aux.get();
+					if (product.getStock() > 0) {
+						product.setStock(product.getStock() - 1);
+						productService.save(product);
+						model.addAttribute("product", aux.get());
+					}
+					else{
+						throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
+					}
+					cartProducts.add(product);
+				}
 
-		if (cartProductIds != null && !cartProductIds.isEmpty()) {
-			// Search for each product by ID and add it to the list.
-			for (Long productId : cartProductIds) {
-				productService.findById(productId).ifPresent(cartProducts::add);
+				Order order = new Order(user, cartProducts);
+				orderService.save(order);
+				user.setOrder(order);
+				userService.save(user);
+				model.addAttribute("orders", order);
+				System.out.println("ORDER"+ order);
 			}
-		}
-		if (cartProducts.isEmpty()) {
-			model.addAttribute("message", "Tu carrito está vacío");
-		} else {
-			model.addAttribute("cartProducts", cartProducts);
-		}
-			model.addAttribute("cartProducts", cartProducts);
 			return "gateway";
+		}
 	}
 
 	@GetMapping("/checkoutOne/{id}")
 	public String showGatewayOne(@PathVariable Long id,HttpSession session, Model model) {
 		// Get the list of product IDs in the session.
 		Optional<Product> productOptional = productService.findById(id);	
-		System.out.println("PRODUCTO OPCIONAL "+productOptional);
 
 		if (productOptional.isPresent()) {
 			Product product = productOptional.get();
+
 			if (product.getStock() > 0) {
+				//actualizamos el stock del producto
 				product.setStock(product.getStock() - 1);
-				productService.save(product);
-				model.addAttribute("product", productOptional.get());
+				
+				//creamos una lista de productos
 				List<Product> cartProducts = new ArrayList<>();
+				//añadimos el producto a la lista
 				cartProducts.add(product);	
-				model.addAttribute("cartProducts", cartProducts);
+//-------------
+				//buscamos el usuario 0
+				List <User> oneUser = userService.findAll();
+				//Optional<User> oneUser = userService.findById(0);
+				User user= oneUser.get(0);
+				if(user==null){
+
+					throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+				}else{
+			
+					//creamos un pedido con el usuario y el producto
+					Order order = new Order(user, cartProducts);
+					//guardamos el pedido
+					orderService.save(order);
+					//guardamos el pedido en el usuario
+					user.setOrder(order);
+					userService.save(user);
+					
+					//añadimos el pedido a la lista de pedidos que tiene un producto
+					product.getOrders(order);
+					productService.save(product);	
+					model.addAttribute("orders", order);
+
+//---------------	
+				}
+
+	
 			}else{
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
 			}
@@ -191,6 +234,8 @@ public class ProductController {
 		}
 		return "gateway";
 	}
+
+
 
 	@GetMapping("/add-to-cart/{productId}")
 	public String addToCart(@PathVariable long productId, HttpSession session, Model model) {
@@ -220,36 +265,12 @@ public class ProductController {
 		if (cart == null) {
 			cart = new ArrayList<>();
 			session.setAttribute("cart", cart);
-			System.out.println("CREAMOS NUEVO CARRITO");
 		}
 
 		// Add the product to the cart.
 		cart.add(productId);
 		session.setAttribute("cart", cart);
-		System.out.println("Producto agregado al carrito: " + productId);
-		System.out.println(cart);
-
 		return "redirect:/cart";
-	}
-
-	@GetMapping("/gateway/{productId}")
-	public String showGatewayPage(@PathVariable long productId, Model model) {
-		Optional<Product> product = productService.findById(productId);
-		System.out.println("PRODUCTO OPCIONAL "+product);
-		if (product.isPresent()) {
-			Product p = product.get();
-			if (p.getStock() > 0) {
-				p.setStock(p.getStock() - 1);
-				productService.save(p);
-				model.addAttribute("product", product.get());
-				return "gateway";
-			}
-			else{
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
-			}
-		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
-		}
 	}
 
 	@PostMapping("/remove-from-cart/{productId}")
@@ -367,7 +388,6 @@ public class ProductController {
 		model.addAttribute("productId", newProduct.getId());
 		productService.save(newProduct);
 
-
 		return "redirect:/products/" + newProduct.getId();
 	}
 
@@ -385,6 +405,27 @@ public class ProductController {
 			System.out.println("Error: Producto no encontrado");
 		}
 		return "redirect:/"; // Redirect to the updated product list.
+	}
+
+	@PostMapping("/removeOrder/{orderId}")
+	public String removeOrder(@PathVariable long orderId, HttpSession session) {
+		try {
+			Optional<Order> orderAux = orderService.findById(orderId);
+			Order order = orderAux.get();
+			System.out.println("ANTES ORDER: " + order);
+			User user = order.getOwner();
+			
+			user.deleteOrder(order);
+			order.deleteAllProducts();
+			
+			userService.save(user);
+			orderService.delete(order);
+			System.out.println("DESPUES ");
+
+			return "redirect:/";
+		} catch (Exception e) {
+			return "redirect:/error"; 
+		}
 	}
 		
 	@GetMapping("/edit/{id}")

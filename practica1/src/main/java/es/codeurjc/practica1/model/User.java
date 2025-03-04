@@ -20,6 +20,8 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
+
+    
     private String name;
     private String email;
     private String password;
@@ -140,5 +142,7 @@ public class User {
     public void setOrder(Order order) {
         this.order = order;
     }
-    
+    public Order getOrders() {
+        return this.order;
+    }
 }

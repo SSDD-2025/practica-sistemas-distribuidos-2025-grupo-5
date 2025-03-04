@@ -34,6 +34,13 @@ public class Order{
 		this.products = product;
 	}
 
+	public Order(User author, Product product) {
+		this.owner = author;
+		this.products.add(product);
+		this.totalPrice=0;
+	}
+
+
 	public long getId() {
 		return id;
 	}
@@ -42,7 +49,7 @@ public class Order{
 		this.id = id;
 	}
 
-	public User getAuthor() {
+	public User getOwner() {
 		return owner;
 	}
 
@@ -62,4 +69,14 @@ public class Order{
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
+
+	public void setOrder(Order order){
+		this.owner = order.getOwner();
+	}
+
+	public void deleteAllProducts(){
+		this.products.clear();
+	}
+
+	
 }
