@@ -73,20 +73,6 @@ public class ProductController {
 		}
 	}
 
-	@GetMapping("/productReviews/{id}")
-	public String showReviews(Model model, @PathVariable long id) {
-		Optional<Product> product = productService.findById(id);
-		if (product.isPresent()) {
-			Product p = product.get();
-			// model.addAttribute("product", p.getId());
-
-			model.addAttribute("reviews", p.getReviews());
-			return "reviews";
-		} else {
-			return "redirect:/";
-		}
-	}
-
 	@GetMapping("/products/{id}/image")
 	public ResponseEntity<Object> downloadImage(@PathVariable long id) throws SQLException, IOException {
 
@@ -141,96 +127,6 @@ public class ProductController {
 		}
 
 		return "cart"; // Display the cart view.
-	}
-
-	@GetMapping("/checkout")
-	public String showGateway(HttpSession session, Model model) {
-		// Get the list of product IDs in the session.
-		List<Long> cartProductIds = (List<Long>) session.getAttribute("cart");
-
-		List<User> oneUser = userService.findAll();
-		User user = oneUser.get(0);
-		if (cartProductIds.isEmpty()) {
-			return "redirect:/";
-		} else {
-			if (user != null) {
-				List<Product> cartProducts = new ArrayList<>();
-
-				for (int i = 0; i < cartProductIds.size(); i++) {
-					Long productId = cartProductIds.get(i);
-					Optional<Product> aux = productService.findById(productId);
-					Product product = aux.get();
-					if (product.getStock() > 0) {
-						product.setStock(product.getStock() - 1);
-						productService.save(product);
-						model.addAttribute("product", aux.get());
-					} else {
-						throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
-					}
-					cartProducts.add(product);
-				}
-
-				Order order = new Order(user, cartProducts);
-				orderService.save(order);
-				user.setOrder(order);
-				userService.save(user);
-				model.addAttribute("orders", order);
-				System.out.println("ORDER" + order);
-			}
-			return "gateway";
-		}
-	}
-
-	@GetMapping("/checkoutOne/{id}")
-	public String showGatewayOne(@PathVariable Long id, HttpSession session, Model model) {
-		// Get the list of product IDs in the session.
-		Optional<Product> productOptional = productService.findById(id);
-
-		if (productOptional.isPresent()) {
-			Product product = productOptional.get();
-
-			if (product.getStock() > 0) {
-				// actualizamos el stock del producto
-				product.setStock(product.getStock() - 1);
-
-				// creamos una lista de productos
-				List<Product> cartProducts = new ArrayList<>();
-				// añadimos el producto a la lista
-				cartProducts.add(product);
-				// -------------
-				// buscamos el usuario 0
-				List<User> oneUser = userService.findAll();
-				// Optional<User> oneUser = userService.findById(0);
-				User user = oneUser.get(0);
-				if (user == null) {
-
-					throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
-				} else {
-
-					// creamos un pedido con el usuario y el producto
-					Order order = new Order(user, cartProducts);
-					// guardamos el pedido
-					orderService.save(order);
-					// guardamos el pedido en el usuario
-					user.setOrder(order);
-					userService.save(user);
-
-					// añadimos el pedido a la lista de pedidos que tiene un producto
-					product.getOrders(order);
-					productService.save(product);
-					model.addAttribute("orders", order);
-
-					// ---------------
-				}
-
-			} else {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
-			}
-
-		} else {
-			return "redirect:/";
-		}
-		return "gateway";
 	}
 
 	@GetMapping("/add-to-cart/{productId}")
@@ -294,71 +190,6 @@ public class ProductController {
 		return "redirect:/cart";
 	}
 
-	@GetMapping("/reviews/{productId}")
-	public String showReviews(@PathVariable Long productId, Model model, HttpSession session) {
-		try {
-			Optional<Product> productOpt = productService.findById(productId);
-			if (!productOpt.isPresent()) {
-				System.out.println("Producto no encontrado con ID: " + productId);
-				return "redirect:/error"; // Redirigir a una página de error si el producto no existe
-			}
-
-			Product product = productOpt.get();
-			List<Review> reviews = product.getReviews(); // Obtener las reseñas del producto
-
-			session.setAttribute("reviews", reviews); // Guardar en la sesión
-			model.addAttribute("reviews", reviews); // Pasar al modelo
-			System.out.println("Reseñas del producto ");
-			return "reviews"; // Renderizar reviews.html
-
-		} catch (Exception e) {
-			System.out.println("Error al obtener las reseñas: " + e.getMessage());
-			return "redirect:/error"; // Página de error
-		}
-	}
-
-	@PostMapping("/removeReview/{reviewId}")
-	public String removeReview(@PathVariable long reviewId, HttpSession session) {
-		try {
-			List<Review> reviews = (List<Review>) session.getAttribute("reviews");
-
-			Optional<Review> reviewAux = reviewService.findById(reviewId);
-			if (!reviewAux.isPresent()) {
-				return "redirect:/reviews";
-			}
-
-			Review review = reviewAux.get();
-			User userAux = userService.findById(review.getAuthor().getId()).orElse(null);
-			Product productAux = productService.findById(review.getProduct().getId()).orElse(null);
-
-			if (userAux == null || productAux == null) {
-				return "redirect:/reviews";
-			}
-
-			userAux.deleteReview(review);
-			productAux.removeReview(review);
-
-			userService.save(userAux);
-			productService.save(productAux);
-
-			reviewService.delete(review);
-
-			// Actualizar la lista de reseñas en la sesión
-			if (reviews != null) {
-				reviews.removeIf(r -> r.getId() == reviewId);
-			} else {
-				reviews = new ArrayList<>();
-			}
-
-			session.setAttribute("reviews", reviews);
-			List<Review> updatedReviews = reviewService.findAll();
-
-			session.setAttribute("reviews", updatedReviews);
-			return "redirect:/productReviews/" + productAux.getId();
-		} catch (Exception e) {
-			return "redirect:/error";
-		}
-	}
 
 	@PostMapping("/newproduct")
 	public String newProductProcess(
@@ -385,53 +216,6 @@ public class ProductController {
 		return "redirect:/products/" + newProduct.getId();
 	}
 
-	@GetMapping("/newReview/{productId}")
-	public String newReview(@PathVariable long productId, Model model) {
-		Optional<Product> productOpt = productService.findById(productId);
-
-		if (!productOpt.isPresent()) {
-			return "redirect:/error"; // Evita fallos si el producto no existe
-		}
-
-		model.addAttribute("product", productOpt.get());
-		model.addAttribute("productId", productId); // Asegurar que productId está en el modelo
-		return "newReview";
-	}
-
-	@PostMapping("/newReview/{productId}")
-	public String newReviewProcess(
-			@PathVariable long productId,
-			@RequestParam String title,
-			@RequestParam String text) {
-
-		System.out.println("ENTRA EN NEW REVIEW");
-
-		// Verificar si el producto existe
-		Optional<Product> productOpt = productService.findById(productId);
-		if (!productOpt.isPresent()) {
-			System.out.println("Producto no encontrado");
-			return "redirect:/error";
-		}
-		Product product = productOpt.get();
-
-		// Buscar un usuario (aquí deberías obtener el usuario autenticado, este es solo
-		// un ejemplo)
-		Optional<User> userOpt = userService.findByEmail("paula@gmail.com");
-		User author = userOpt.orElseGet(() -> {
-			User newUser = new User("paula", "paula@gmail.com", "1234", 0, 432436273);
-			return userService.save(newUser); // Guarda el usuario si no existe
-		});
-
-		// Crear y guardar la review
-		Review review = new Review(title, text, author, product);
-		product.addReview(review);
-
-		reviewService.save(review);
-		productService.save(product); // Guardar el producto con la review asociada
-
-		return "redirect:/productReviews/" + product.getId();
-	}
-
 	@PostMapping("/remove-from-products/{productId}")
 	public String removeFromProducts(@PathVariable long productId) {
 		// Search for the product in the database.
@@ -446,26 +230,6 @@ public class ProductController {
 		return "redirect:/"; // Redirect to the updated product list.
 	}
 
-	@PostMapping("/removeOrder/{orderId}")
-	public String removeOrder(@PathVariable long orderId, HttpSession session) {
-		try {
-			Optional<Order> orderAux = orderService.findById(orderId);
-			Order order = orderAux.get();
-			System.out.println("ANTES ORDER: " + order);
-			User user = order.getOwner();
-
-			user.deleteOrder(order);
-			order.deleteAllProducts();
-
-			userService.save(user);
-			orderService.delete(order);
-			System.out.println("DESPUES ");
-
-			return "redirect:/";
-		} catch (Exception e) {
-			return "redirect:/error";
-		}
-	}
 
 	@GetMapping("/edit/{id}")
 	public String getProductForEdit(@PathVariable Long id, Model model) {
@@ -507,4 +271,228 @@ public class ProductController {
 		return "redirect:/products/" + id; // Correctly redirect to the updated product.
 	}
 
+
+	//Reviwes
+
+    @GetMapping("/productReviews/{id}")
+	public String showReviews(Model model, @PathVariable long id) {
+        System.err.println("ENTRA EN SHOW REVIEWS");
+		Optional<Product> product = productService.findById(id);
+		if (product.isPresent()) {
+			Product p = product.get();
+
+			model.addAttribute("reviews", p.getReviews());
+			return "reviews";
+		} else {
+			return "redirect:/";
+		}
+	}
+
+
+	@GetMapping("/newReview/{productId}")
+	public String newReview(@PathVariable long productId, Model model) {
+		Optional<Product> productOpt = productService.findById(productId);
+
+		if (!productOpt.isPresent()) {
+			return "redirect:/error";
+		}
+
+		model.addAttribute("product", productOpt.get());
+		model.addAttribute("productId", productId);
+		return "newReview";
+	}
+
+	@PostMapping("/newReview/{productId}")
+	public String newReviewProcess(
+			@PathVariable long productId,
+			@RequestParam String title,
+			@RequestParam String text) {
+
+		System.out.println("ENTRA EN NEW REVIEW");
+
+		Optional<Product> productOpt = productService.findById(productId);
+		if (!productOpt.isPresent()) {
+			return "redirect:/error";
+		}
+		Product product = productOpt.get();
+
+		Optional<User> userOpt = userService.findByEmail("paula@gmail.com");
+		User author = userOpt.orElseGet(() -> {
+			User newUser = new User("paula", "paula@gmail.com", "1234", 0, 432436273);
+			return userService.save(newUser); // Guarda el usuario si no existe
+		});
+
+		Review review = new Review(title, text, author, product);
+		product.addReview(review);
+
+		reviewService.save(review);
+		productService.save(product);
+		return "redirect:/productReviews/" + product.getId();
+	}
+
+    
+    @PostMapping("/removeReview/{reviewId}")
+	public String removeReview(@PathVariable long reviewId, HttpSession session) {
+		try {
+			List<Review> reviews = (List<Review>) session.getAttribute("reviews");
+
+			Optional<Review> reviewAux = reviewService.findById(reviewId);
+			if (!reviewAux.isPresent()) {
+				return "redirect:/reviews";
+			}
+
+			Review review = reviewAux.get();
+			User userAux = userService.findById(review.getAuthor().getId()).orElse(null);
+			Product productAux = productService.findById(review.getProduct().getId()).orElse(null);
+
+			if (userAux == null || productAux == null) {
+				return "redirect:/reviews";
+			}
+
+			userAux.deleteReview(review);
+			productAux.removeReview(review);
+
+			userService.save(userAux);
+			productService.save(productAux);
+
+			reviewService.delete(review);
+
+			if (reviews != null) {
+				reviews.removeIf(r -> r.getId() == reviewId);
+			} else {
+				reviews = new ArrayList<>();
+			}
+
+			session.setAttribute("reviews", reviews);
+			List<Review> updatedReviews = reviewService.findAll();
+
+			session.setAttribute("reviews", updatedReviews);
+			return "redirect:/productReviews/" + productAux.getId();
+		} catch (Exception e) {
+			return "redirect:/error";
+		}
+	}
+
+    @GetMapping("/reviews/{productId}")
+	public String showReviews(@PathVariable Long productId, Model model, HttpSession session) {
+		try {
+			Optional<Product> productOpt = productService.findById(productId);
+			if (!productOpt.isPresent()) {
+				return "redirect:/error";
+			}
+
+			Product product = productOpt.get();
+			List<Review> reviews = product.getReviews();
+
+			session.setAttribute("reviews", reviews); 
+			model.addAttribute("reviews", reviews);
+			System.out.println("Reseñas del producto ");
+			return "reviews"; 
+
+		} catch (Exception e) {
+			return "redirect:/error";
+		}
+	}
+
+	//ORDER
+		@GetMapping("/checkout")
+	public String showGateway(HttpSession session, Model model) {
+		// Get the list of product IDs in the session.
+		List<Long> cartProductIds = (List<Long>) session.getAttribute("cart");
+
+		List<User> oneUser = userService.findAll();
+		User user = oneUser.get(0);
+		if (cartProductIds.isEmpty()) {
+			return "redirect:/";
+		} else {
+			if (user != null) {
+				List<Product> cartProducts = new ArrayList<>();
+
+				for (int i = 0; i < cartProductIds.size(); i++) {
+					Long productId = cartProductIds.get(i);
+					Optional<Product> aux = productService.findById(productId);
+					Product product = aux.get();
+					if (product.getStock() > 0) {
+						product.setStock(product.getStock() - 1);
+						productService.save(product);
+						model.addAttribute("product", aux.get());
+					} else {
+						throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
+					}
+					cartProducts.add(product);
+				}
+
+				Order order = new Order(user, cartProducts);
+				orderService.save(order);
+				user.setOrder(order);
+				userService.save(user);
+				model.addAttribute("orders", order);
+				System.out.println("ORDER" + order);
+			}
+			return "/gateway";
+		}
+	}
+
+	@GetMapping("/checkoutOne/{id}")
+	public String showGatewayOne(@PathVariable Long id, HttpSession session, Model model) {
+		// Get the list of product IDs in the session.
+		Optional<Product> productOptional = productService.findById(id);
+
+		if (productOptional.isPresent()) {
+			Product product = productOptional.get();
+			if (product.getStock() > 0) {
+				product.setStock(product.getStock() - 1);
+
+				List<Product> cartProducts = new ArrayList<>();
+				cartProducts.add(product);
+
+				List<User> oneUser = userService.findAll();
+				User user = oneUser.get(0);
+				if (user == null) {
+
+					throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+				} else {
+
+					Order order = new Order(user, cartProducts);
+					orderService.save(order);
+					user.setOrder(order);
+					userService.save(user);
+
+					product.getOrders(order);
+					productService.save(product);
+					model.addAttribute("orders", order);
+
+				}
+
+			} else {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
+			}
+
+		} else {
+			return "redirect:/";
+		}
+		return "/gateway";
+	}
+
+
+	@PostMapping("/removeOrder/{orderId}")
+	public String removeOrder(@PathVariable long orderId, HttpSession session) {
+		try {
+			Optional<Order> orderAux = orderService.findById(orderId);
+			Order order = orderAux.get();
+			System.out.println("ANTES ORDER: " + order);
+			User user = order.getOwner();
+
+			user.deleteOrder(order);
+			order.deleteAllProducts();
+
+			userService.save(user);
+			orderService.delete(order);
+			System.out.println("DESPUES ");
+			return "redirect:/";
+			
+		} catch (Exception e) {
+			return "redirect:/error";
+		}
+	}
 }
