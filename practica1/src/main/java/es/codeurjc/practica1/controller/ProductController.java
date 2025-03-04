@@ -151,6 +151,7 @@ public class ProductController {
 			user.addProduct(product);
 			// Save the updated user in the database.
 			userService.save(user);
+			System.out.println(user.getProducts());
 		}
 
 		if (cart == null) {
