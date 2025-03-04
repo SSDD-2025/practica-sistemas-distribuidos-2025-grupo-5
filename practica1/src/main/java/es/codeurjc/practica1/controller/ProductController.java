@@ -354,7 +354,7 @@ public class ProductController {
 			List<Review> updatedReviews = reviewService.findAll();
 
 			session.setAttribute("reviews", updatedReviews);
-			return "redirect:/reviews/" + productAux.getId();
+			return "redirect:/products/" + productAux.getId();
 
 		} catch (Exception e) {
 			return "redirect:/error";
@@ -388,39 +388,49 @@ public class ProductController {
 
 	@GetMapping("/newReview/{productId}")
 	public String newReview(@PathVariable long productId, Model model) {
-		model.addAttribute("productId", productId); // Agregar el ID al modelo
-		return "newReview"; // Asegúrate de que "newReview" es el nombre correcto de la vista
+		Optional<Product> productOpt = productService.findById(productId);
+
+		if (!productOpt.isPresent()) {
+			return "redirect:/error"; // Evita fallos si el producto no existe
+		}
+
+		model.addAttribute("product", productOpt.get());
+		model.addAttribute("productId", productId); // Asegurar que productId está en el modelo
+		return "newReview";
 	}
-	
- 
+
 	@PostMapping("/newReview/{productId}")
-	public String newReviewprocess(
-			Model model,
+	public String newReviewProcess(
 			@PathVariable long productId,
 			@RequestParam String title,
 			@RequestParam String text) {
 
 		System.out.println("ENTRA EN NEW REVIEW");
-		Optional<Product> productAux = productService.findById(productId);
 
-		if (!productAux.isPresent()) {
+		// Verificar si el producto existe
+		Optional<Product> productOpt = productService.findById(productId);
+		if (!productOpt.isPresent()) {
 			System.out.println("Producto no encontrado");
 			return "redirect:/error";
 		}
+		Product product = productOpt.get();
 
-		Product product = productAux.get();
-		Optional<User> user = userService.findById(0);
+		// Buscar un usuario (aquí deberías obtener el usuario autenticado, este es solo
+		// un ejemplo)
+		Optional<User> userOpt = userService.findByEmail("paula@gmail.com");
+		User author = userOpt.orElseGet(() -> {
+			User newUser = new User("paula", "paula@gmail.com", "1234", 0, 432436273);
+			return userService.save(newUser); // Guarda el usuario si no existe
+		});
 
-
-
-		User author = user.get();
+		// Crear y guardar la review
 		Review review = new Review(title, text, author, product);
-
 		product.addReview(review);
-		productService.save(product);
-		reviewService.save(review);
 
-		return "redirect:/reviews/" + productId;
+		reviewService.save(review);
+		productService.save(product); // Guardar el producto con la review asociada
+
+		return "redirect:/products/" + productId;
 	}
 
 	@PostMapping("/remove-from-products/{productId}")

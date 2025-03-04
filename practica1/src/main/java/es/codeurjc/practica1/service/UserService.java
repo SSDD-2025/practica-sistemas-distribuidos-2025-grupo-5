@@ -27,8 +27,12 @@ public class UserService {
 		return userRepository.findAllById(ids);
 	}
 
-	public User save(User shop) {
-		return userRepository.save(shop);
+    public Optional<User> findByEmail(String email) {
+        return userRepository.findByEmail(email);
+    }
+    
+	public User save(User user) {
+		return userRepository.save(user);
 	}
 
     public List<User> findAllById(List<Long> ids) {

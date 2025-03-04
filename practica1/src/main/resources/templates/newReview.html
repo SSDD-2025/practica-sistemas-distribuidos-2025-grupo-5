@@ -1,7 +1,7 @@
 {{>header}}
 
-<form action="/newReview/{{productId}}" method="post">
-  <input type="hidden" name="productId" value="{{productId}}">
+<form action="/newReview/{{product.id}}" method="post">
+  <input type="hidden" name="productId" value="{{product.id}}">
 
   <div class="mb-3">
       <label class="form-label">Título</label>
@@ -16,6 +16,6 @@
   <button type="submit" class="btn btn-primary">Enviar</button>
 </form>
 
-
+<a href="/products/{{product.id}}" class="btn btn-outline-secondary">Volver a productos</a>
 
 {{>footer}}
