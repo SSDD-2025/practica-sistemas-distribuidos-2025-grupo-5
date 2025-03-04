@@ -395,7 +395,7 @@ public class ProductController {
 	}
 
 	//ORDER
-		@GetMapping("/checkout")
+	@GetMapping("/checkout")
 	public String showGateway(HttpSession session, Model model) {
 		// Get the list of product IDs in the session.
 		List<Long> cartProductIds = (List<Long>) session.getAttribute("cart");
@@ -421,13 +421,11 @@ public class ProductController {
 					}
 					cartProducts.add(product);
 				}
-
 				Order order = new Order(user, cartProducts);
 				orderService.save(order);
 				user.setOrder(order);
 				userService.save(user);
 				model.addAttribute("orders", order);
-				System.out.println("ORDER" + order);
 			}
 			return "/gateway";
 		}
