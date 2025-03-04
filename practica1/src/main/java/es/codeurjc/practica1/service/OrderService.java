@@ -7,8 +7,8 @@ import org.springframework.stereotype.Service;
 
 import es.codeurjc.practica1.model.Order;
 import es.codeurjc.practica1.model.User;
-import es.codeurjc.practica1.repositories.ProductRepository;
 import es.codeurjc.practica1.repositories.OrderRepository;
+import es.codeurjc.practica1.repositories.ProductRepository;
 import es.codeurjc.practica1.repositories.UserRepository;
 
 @Service
@@ -36,8 +36,8 @@ public class OrderService {
     }
 
     public void update(Order oldOrder, Order updatedOrder) {
-        oldOrder.setProducts(updatedOrder.getProducts());
-        oldOrder.setTotalPrice(updatedOrder.getTotalPrice());
+        //oldOrder.setProducts(updatedOrder.getProducts());
+        //oldOrder.setTotalPrice(updatedOrder.getTotalPrice());
         orderRepository.save(oldOrder);
     }
 

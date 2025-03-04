@@ -10,6 +10,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
+import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -32,6 +33,9 @@ public class User {
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
     @JoinColumn(name = "user_id")  
     private List<Product> products; 
+
+    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private Order order;
 
     protected User() {}
 
@@ -121,5 +125,20 @@ public class User {
         this.reviews.clear();
     }
 
+    public void deleteAllProducts() {
+        this.products.clear();
+    }
+
+    public void deleteOrder() {
+        this.order = null;
+    }
+
+
+    public void deleteOrder(Order order) {
+        this.order = null;
+    }
+    public void setOrder(Order order) {
+        this.order = order;
+    }
     
 }

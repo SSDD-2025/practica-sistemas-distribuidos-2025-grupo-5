@@ -6,6 +6,7 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.codeurjc.practica1.model.Order;
 import es.codeurjc.practica1.model.User;
 import es.codeurjc.practica1.repositories.UserRepository;
 
@@ -36,4 +37,10 @@ public class UserService {
     public User getLoggedUser() {
         return userRepository.findAll().get(0);
     }
+
+   public void addOrder(Order order){
+        User user = getLoggedUser();
+        user.setOrder(order);
+        userRepository.save(user);
+   }
 }

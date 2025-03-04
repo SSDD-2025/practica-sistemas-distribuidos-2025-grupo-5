@@ -8,8 +8,11 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
+import jakarta.persistence.OneToOne;
+import jakarta.persistence.Table;
     
 @Entity
+@Table(name = "customer_order") // This is the name of the table in the database
 public class Order{
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
@@ -18,18 +21,18 @@ public class Order{
     private double totalPrice;
 
 	@ManyToOne
-	@JoinColumn(name = "author_id")
-	private User author;
+	@JoinColumn(name = "user_id")
+	private User owner;
 
-	@ManyToOne
+	@OneToOne
 	@JoinColumn(name = "product_id")
-	private List<Product> products;
+	private Product product;
 
 	protected Order() {}
 
-	public Order(User author, List<Product> products) {
-		this.author = author;
-		this.products = products;
+	public Order(User author, Product product) {
+		this.owner = author;
+		this.product = product;
 	}
 
 	public long getId() {
@@ -41,34 +44,22 @@ public class Order{
 	}
 
 	public User getAuthor() {
-		return author;
+		return owner;
 	}
 
 	public void setAuthor(User author) {
-		this.author = author;
+		this.owner = author;
 	}
 
-	public List<Product> getProducts() {
-		return products;
+	public Product getProducts() {
+		return product;
 	}
 
 	public void setProducts(List<Product> products) {
-		this.products = products;
+		this.product = product;
 	}
-    public void addProduct(Product product) {
-        this.products.add(product);
-    }
-    public void deleteProduct(Product product) {
-        this.products.remove(product);
-    }
-    public double getTotalPrice() {
-        double totalPrice = 0;
-        for (Product p : products) {
-            totalPrice += p.getPrice();
-        }
-        this.setTotalPrice(totalPrice);
-        return totalPrice;
-    }
+
+
     public void setTotalPrice(double totalPrice) {
         this.totalPrice = totalPrice;
     }
