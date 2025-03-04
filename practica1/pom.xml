@@ -60,14 +60,14 @@
 			<scope>runtime</scope>
 		</dependency>
 
-		<!--<dependency>
+		<dependency>
 			<groupId>mysql</groupId>
 			<artifactId>mysql-connector-java</artifactId>
 			<version>8.0.33</version>
-		</dependency>-->
+		</dependency>
 
 		<!--Esto va en application.properties
-		spring.datasource.url=jdbc:mysql://localhost/posts
+		spring.datasource.url=jdbc:mysql://localhost/myapp_db
 		spring.datasource.username=root
 		spring.datasource.password=password
 		spring.jpa.hibernate.ddl-auto=create-drop
