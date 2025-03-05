@@ -290,7 +290,7 @@ public class ProductController {
 			model.addAttribute("reviews", p.getReviews());
 			return "reviews";
 		} else {
-			return "redirect:/";
+			return "redirect:/error";
 		}
 	}
 
@@ -409,7 +409,7 @@ public class ProductController {
 		List<User> oneUser = userService.findAll();
 		User user = oneUser.get(0);
 		if (cartProductIds.isEmpty()) {
-			return "redirect:/";
+			return "redirect:/error";
 		} else {
 			if (user != null) {
 				List<Product> cartProducts = new ArrayList<>();
@@ -454,7 +454,7 @@ public class ProductController {
 				User user = oneUser.get(0);
 				if (user == null) {
 
-					throw new ResponseStatusException(HttpStatus.NOT_FOUND, "User not found");
+					return "redirect:/error";
 				} else {
 
 					Order order = new Order(user, cartProducts);
@@ -473,7 +473,7 @@ public class ProductController {
 			}
 
 		} else {
-			return "redirect:/";
+			return "redirect:/error";
 		}
 		return "/gateway";
 	}
