@@ -57,5 +57,6 @@ Juan José Villanueva Molina
   - Tareas:
   - 5 commits mas significativos:
       - [commit 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/f8e1a71eb79823efa86340fc307f0c830d3c0413)
+      - [commit 2](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/e7d863a6650a0412cf3e0716288287563db0d777)
   - 5 ficheros en los que mas se ha participado:
 ***
