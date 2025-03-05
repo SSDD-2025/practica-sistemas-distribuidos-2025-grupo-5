@@ -404,7 +404,7 @@ public class ProductController {
 
 		List<User> oneUser = userService.findAll();
 		User user = oneUser.get(0);
-		if (cartProductIds.isEmpty()) {
+		if (cartProductIds==null) {
 			return "redirect:/error";
 		} else {
 			if (user != null) {
