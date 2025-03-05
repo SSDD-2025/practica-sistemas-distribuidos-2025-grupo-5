@@ -61,17 +61,17 @@ Paula Marcela Barroso Robleda
 David Coronado Testa
   - Tareas:
   - 5 commits mas significativos:
-      - [Commit 1]()
-      - [Commit 2]()
-      - [Commit 3]()
-      - [Commit 4]()
-      - [Commit 5]()
+      - [Commit 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/4b049726490e5100933b12c4a40ad77a8cf52ce9)
+      - [Commit 2](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/077e2e168fa7606b19ec78c3e49ef0c8b1204f9c)
+      - [Commit 3](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/7cd3ce5071a1a5a3258d6d74a36cdf9ab67ea964)
+      - [Commit 4](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/b40dc773ebee72d0076e10d02c444dde883c651e)
+      - [Commit 5](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/349be22100c2d404209cdc93715f7f49fd1eba0c)
   - 5 ficheros en los que mas se ha participado:
-      - [Fichero 1]()
-      - [Fichero 2]()
-      - [Fichero 3]()
-      - [Fichero 4]()
-      - [Fichero 5]()
+      - [Fichero 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/controller/ProductController.java)
+      - [Fichero 2](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/model/Product.java)
+      - [Fichero 3](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/model/User.java)
+      - [Fichero 4](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/resources/templates/reviews.html)
+      - [Fichero 5](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/resources/templates/error.html)
 
 Juan José Villanueva Molina
   - Tareas: Documentar la práctica rellenando el readme, además de crear el diagrama de templates. Hacer que la entidad producta se pueda editar. Colaborar en el desarrollo general de las demas clases. Crear la interfaz newReview y hacer que se pueda crear una review. Rellenar la rúbrica.
