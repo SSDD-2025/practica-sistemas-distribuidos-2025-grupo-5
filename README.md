@@ -56,6 +56,6 @@ David Coronado Testa
 Juan José Villanueva Molina
   - Tareas:
   - 5 commits mas significativos:
-      - [commit 1](f8e1a71eb79823efa86340fc307f0c830d3c0413)
+      - [commit 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/f8e1a71eb79823efa86340fc307f0c830d3c0413)
   - 5 ficheros en los que mas se ha participado:
 ***
