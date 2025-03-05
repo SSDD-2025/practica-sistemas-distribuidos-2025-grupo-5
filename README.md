@@ -6,15 +6,15 @@
 ### Integrantes del equipo 
 Paula Marcela Barroso Robleda
   - Correo de la universidad: pm.barroso.2022@alumnos.urjc.es
-  - Cuenta de GitHub: paulaM04
+  - Cuenta de GitHub: [paulaM04](https://github.com/paulaM04)
 
 David Coronado Testa
   - Correo de la universidad: d.coronado.2022@alumnos.urjc.es
-  - Cuenta de GitHub: dvcoronado
+  - Cuenta de GitHub: [dvcoronado[(https://github.com/dvcoronado)
 
 Juan José Villanueva Molina
   - Correo de la universidad: jj.villanueva.2022@alumnos.urjc.es
-  - Cuenta de GitHub: juanjouni
+  - Cuenta de GitHub: [juanjouni](https://github.com/juanjouni)
 ### Entidades
 La aplicación consta de varias entidades. Existe una entidad user que se relaciona con la entidad review de manera que un usuario puede escribir una reseña de un producto y un usuario tiene una lista de las reseñas hechas. La entidad producto se relaciona con review ya que un producto puede tener varias reseñas, tambien se relaciona con la entidad user ya que un usuario puede publicar varios productos y por ultimo se relaciona con la entidad order ya que se pueden ordenar varios productos. La entidad order esta relacionada con la entidad user ya que se pueden realizar varias peticiones.  
 
