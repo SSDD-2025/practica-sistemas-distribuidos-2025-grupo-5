@@ -142,7 +142,9 @@ public class ProductController {
 			productService.save(p);
 			model.addAttribute("product", productAux.get());
 		} else {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
+			return "redirect:/error";
+			//throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
+			
 		}
 
 		if (productAux.isPresent() && oneUser.isPresent()) {
@@ -208,6 +210,9 @@ public class ProductController {
 			Blob imageBlob = imageUtils.createBlob(imageField.getInputStream());
 			product.setImageFile(imageBlob);
 		}
+		if (product.getProvider() == null || product.getName() == null || product.getDescription() == null) {
+			return "redirect:/error";
+		}
 		Product newProduct = productService.save(product);
 		newProduct.setProvider(provider);
 
@@ -226,7 +231,7 @@ public class ProductController {
 			productService.delete(productAux.get()); // Delete the product from the database.
 			System.out.println("Producto eliminado: " + productId);
 		} else {
-			System.out.println("Error: Producto no encontrado");
+			return "redirect:/error";
 		}
 		return "redirect:/"; // Redirect to the updated product list.
 	}
@@ -241,7 +246,7 @@ public class ProductController {
 		model.addAttribute("product", product.get());
 		return "editProduct";
 	}
-
+	
 	@PostMapping("/update/{id}")
 	public String updateProduct(@PathVariable Long id,
 			@ModelAttribute Product updatedProduct,
@@ -249,7 +254,7 @@ public class ProductController {
 
 		Optional<Product> existingProduct = productService.findById(id);
 		if (existingProduct.isEmpty()) {
-			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
+			return "redirect:/error";
 		}
 
 		Product product = existingProduct.get();
