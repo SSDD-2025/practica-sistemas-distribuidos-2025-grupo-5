@@ -8,7 +8,7 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "es.codeurjc.practica1.Practica1Application",
             "projectName": "practica1",
-            "args": "--server.port=8080",
+            "args": "--server.port=3306",
             "envFile": "${workspaceFolder}/.env"
         }
     ]

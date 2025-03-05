@@ -31,8 +31,8 @@ Los productos tendran asociada una imágen.
 ### Intrucciones de ejecución
 1. Descargar el repositorio y descomprimir el archivo
 2. Tener descargado MySQL Workbench: [Descargar](https://dev.mysql.com/downloads/workbench/)
-3. Usuario: root\ 
-   Contraseña: 
+3. Usuario: root\ root
+   Contraseña: Trabaj0MySQL.
 4. Crear un esquema con nombre: B&D
 5. Ejecuta el código en Visual Studio usando Spring Boot Dashboard(añadir como extensión): [Descargar VS](https://code.visualstudio.com/download)
 6. Abrelo en el navegador: puedes abrirlo directamente desde VS o escribiendo en el navegador localhost:8080
@@ -59,7 +59,7 @@ Paula Marcela Barroso Robleda
       - [Fichero 5](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/model/Product.java)
 
 David Coronado Testa
-  - Tareas:
+  - Tareas: Realizacion general de models y sus controllers y ayuda con los diagramas. Implementar la interfaz error y hacer validación de campos. Crear y conectar la base de datos MySQL. Solventar la actualización del stock y corregir pequeños errores e incongruencias a lo largo del programa. 
   - 5 commits mas significativos:
       - [Commit 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/4b049726490e5100933b12c4a40ad77a8cf52ce9)
       - [Commit 2](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/077e2e168fa7606b19ec78c3e49ef0c8b1204f9c)
