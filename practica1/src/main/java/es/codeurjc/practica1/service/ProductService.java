@@ -1,5 +1,5 @@
 package es.codeurjc.practica1.service;
-    
+
 import java.io.IOException;
 import java.util.List;
 import java.util.Optional;
@@ -20,7 +20,7 @@ public class ProductService {
     @Autowired
     private UserService userService;
 
-    public Optional<Product> findById(long id){
+    public Optional<Product> findById(long id) {
         return productRepository.findById(id);
     }
 
@@ -28,24 +28,22 @@ public class ProductService {
         return productRepository.findById(id).isPresent();
     }
 
-    public List<Product> findAll(){
+    public List<Product> findAll() {
         return productRepository.findAll();
     }
-    
-    public Product save(Product product){
+
+    public Product save(Product product) {
         return productRepository.save(product);
     }
 
     public Product save(Product product, List<Long> selectedUsers) throws IOException {
 
-		if (selectedUsers != null){
-			List<User> products = userService.findByIds(selectedUsers);
-			product.setUsers(products);
-		}
+        if (selectedUsers != null) {
+            List<User> products = userService.findByIds(selectedUsers);
+            product.setUsers(products);
+        }
         return productRepository.save(product);
-	}
-
-    
+    }
 
     public boolean delete(Product product) {
         if (productRepository.existsById(product.getId())) {
@@ -56,4 +54,3 @@ public class ProductService {
     }
 
 }
-

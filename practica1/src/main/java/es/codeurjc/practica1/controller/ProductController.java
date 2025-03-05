@@ -143,8 +143,9 @@ public class ProductController {
 			model.addAttribute("product", productAux.get());
 		} else {
 			return "redirect:/error";
-			//throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
-			
+			// throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of
+			// stock");
+
 		}
 
 		if (productAux.isPresent() && oneUser.isPresent()) {
@@ -193,7 +194,6 @@ public class ProductController {
 		return "redirect:/cart";
 	}
 
-
 	@PostMapping("/newproduct")
 	public String newProductProcess(
 			Model model,
@@ -236,7 +236,6 @@ public class ProductController {
 		return "redirect:/"; // Redirect to the updated product list.
 	}
 
-
 	@GetMapping("/edit/{id}")
 	public String getProductForEdit(@PathVariable Long id, Model model) {
 		Optional<Product> product = productService.findById(id);
@@ -246,7 +245,7 @@ public class ProductController {
 		model.addAttribute("product", product.get());
 		return "editProduct";
 	}
-	
+
 	@PostMapping("/update/{id}")
 	public String updateProduct(@PathVariable Long id,
 			@ModelAttribute Product updatedProduct,
@@ -277,12 +276,11 @@ public class ProductController {
 		return "redirect:/products/" + id; // Correctly redirect to the updated product.
 	}
 
+	// Reviwes
 
-	//Reviwes
-
-    @GetMapping("/productReviews/{id}")
+	@GetMapping("/productReviews/{id}")
 	public String showReviews(Model model, @PathVariable long id) {
-        System.err.println("ENTRA EN SHOW REVIEWS");
+		System.err.println("ENTRA EN SHOW REVIEWS");
 		Optional<Product> product = productService.findById(id);
 		if (product.isPresent()) {
 			Product p = product.get();
@@ -293,7 +291,6 @@ public class ProductController {
 			return "redirect:/error";
 		}
 	}
-
 
 	@GetMapping("/newReview/{productId}")
 	public String newReview(@PathVariable long productId, Model model) {
@@ -336,8 +333,7 @@ public class ProductController {
 		return "redirect:/productReviews/" + product.getId();
 	}
 
-    
-    @PostMapping("/removeReview/{reviewId}")
+	@PostMapping("/removeReview/{reviewId}")
 	public String removeReview(@PathVariable long reviewId, HttpSession session) {
 		try {
 			List<Review> reviews = (List<Review>) session.getAttribute("reviews");
@@ -379,7 +375,7 @@ public class ProductController {
 		}
 	}
 
-    @GetMapping("/reviews/{productId}")
+	@GetMapping("/reviews/{productId}")
 	public String showReviews(@PathVariable Long productId, Model model, HttpSession session) {
 		try {
 			Optional<Product> productOpt = productService.findById(productId);
@@ -390,17 +386,17 @@ public class ProductController {
 			Product product = productOpt.get();
 			List<Review> reviews = product.getReviews();
 
-			session.setAttribute("reviews", reviews); 
+			session.setAttribute("reviews", reviews);
 			model.addAttribute("reviews", reviews);
 			System.out.println("Reseñas del producto ");
-			return "reviews"; 
+			return "reviews";
 
 		} catch (Exception e) {
 			return "redirect:/error";
 		}
 	}
 
-	//ORDER
+	// ORDER
 	@GetMapping("/checkout")
 	public String showGateway(HttpSession session, Model model) {
 		// Get the list of product IDs in the session.
@@ -478,7 +474,6 @@ public class ProductController {
 		return "/gateway";
 	}
 
-
 	@PostMapping("/removeOrder/{orderId}")
 	public String removeOrder(@PathVariable long orderId, HttpSession session) {
 		try {
@@ -494,7 +489,7 @@ public class ProductController {
 			orderService.delete(order);
 			System.out.println("DESPUES ");
 			return "redirect:/";
-			
+
 		} catch (Exception e) {
 			return "redirect:/error";
 		}

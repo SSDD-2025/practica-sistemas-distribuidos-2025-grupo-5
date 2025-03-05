@@ -16,35 +16,37 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-    public List<User> findAll(){
+    public List<User> findAll() {
         return userRepository.findAll();
     }
 
-    public Optional<User> findById(long id){
+    public Optional<User> findById(long id) {
         return userRepository.findById(id);
     }
-	public List<User> findByIds(List<Long> ids){
-		return userRepository.findAllById(ids);
-	}
+
+    public List<User> findByIds(List<Long> ids) {
+        return userRepository.findAllById(ids);
+    }
 
     public Optional<User> findByEmail(String email) {
         return userRepository.findByEmail(email);
     }
-    
-	public User save(User user) {
-		return userRepository.save(user);
-	}
+
+    public User save(User user) {
+        return userRepository.save(user);
+    }
 
     public List<User> findAllById(List<Long> ids) {
         return userRepository.findAllById(ids);
     }
+
     public User getLoggedUser() {
         return userRepository.findAll().get(0);
     }
 
-   public void addOrder(Order order){
+    public void addOrder(Order order) {
         User user = getLoggedUser();
         user.setOrder(order);
         userRepository.save(user);
-   }
+    }
 }

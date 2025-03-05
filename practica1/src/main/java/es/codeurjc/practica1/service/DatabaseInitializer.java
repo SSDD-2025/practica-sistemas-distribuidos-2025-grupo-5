@@ -1,4 +1,5 @@
 package es.codeurjc.practica1.service;
+
 import java.io.IOException;
 import java.io.InputStream;
 import java.net.URL;
@@ -15,6 +16,7 @@ import es.codeurjc.practica1.model.Review;
 import es.codeurjc.practica1.model.User;
 import es.codeurjc.practica1.utils.ImageUtils;
 import jakarta.annotation.PostConstruct;
+
 @Component
 public class DatabaseInitializer {
 
@@ -28,27 +30,27 @@ public class DatabaseInitializer {
     private ReviewService reviewService;
 
     @Autowired
-	private ImageUtils imageUtils;
+    private ImageUtils imageUtils;
 
     @PostConstruct
     public void init() throws IOException {
-        User user1 = new User( "paula", "paula@gmail.com", "567",0, 123456789 );
-        System.out.println("ID USUARIO: "+user1.getId());
+        User user1 = new User("paula", "paula@gmail.com", "567", 0, 123456789);
+        System.out.println("ID USUARIO: " + user1.getId());
 
         UserService.save(user1);
         List<Long> set = List.of(user1.getId());
 
-        //User user2 = new User( "juanjo", "juanjo@gmail.com", "567",0, 987654321 );
-        //UserService.save(user2);
-        //set = List.of(user2.getId());
+        // User user2 = new User( "juanjo", "juanjo@gmail.com", "567",0, 987654321 );
+        // UserService.save(user2);
+        // set = List.of(user2.getId());
 
-        Product product1 = new Product("Cuerda","resistente", 12.3, 123,"ES_factory");
-        saveProductWithURLImage(product1,set,"rope.jpg");
+        Product product1 = new Product("Cuerda", "resistente", 12.3, 123, "ES_factory");
+        saveProductWithURLImage(product1, set, "rope.jpg");
         Review review2 = new Review("Cuerda", "no aguanta", user1, product1);
         reviewService.save(review2);
 
-        Product product2 = new Product("Gafas","para el sol", 56.3, 123,"GLLASSES_factory");
-        saveProductWithURLImage(product2,set,"glasses.jpg");
+        Product product2 = new Product("Gafas", "para el sol", 56.3, 123, "GLLASSES_factory");
+        saveProductWithURLImage(product2, set, "glasses.jpg");
         Review review1 = new Review("Gafas", "no son de sol", user1, product2);
         Review review3 = new Review("ggg", "ggg", user1, product2);
         reviewService.save(review3);
@@ -60,7 +62,8 @@ public class DatabaseInitializer {
     private Product saveProductWithURLImage(Product product, List<Long> selectedUsers, String image) {
         try {
             // GitHub RAW URL to access the image.
-            String imageUrl = "https://raw.githubusercontent.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/main/images/" + image;
+            String imageUrl = "https://raw.githubusercontent.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/main/images/"
+                    + image;
 
             // Download the image from the URL.
             InputStream imageStream = new URL(imageUrl).openStream();
@@ -74,7 +77,7 @@ public class DatabaseInitializer {
             return productService.save(product, selectedUsers);
         } catch (Exception e) {
             e.printStackTrace(); // Print error in console for debugging.
-            return null; //Or handle with a custom exception.
+            return null; // Or handle with a custom exception.
         }
     }
 

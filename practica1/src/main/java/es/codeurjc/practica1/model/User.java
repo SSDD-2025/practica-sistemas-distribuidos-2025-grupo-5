@@ -1,4 +1,5 @@
 package es.codeurjc.practica1.model;
+
 import java.util.ArrayList;
 import java.util.List;
 
@@ -16,12 +17,11 @@ import jakarta.persistence.Table;
 @Entity
 @Table(name = "app_user")
 public class User {
-    
+
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
 
-    
     private String name;
     private String email;
     private String password;
@@ -33,13 +33,14 @@ public class User {
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY, cascade = CascadeType.ALL)
-    @JoinColumn(name = "user_id")  
-    private List<Product> products; 
+    @JoinColumn(name = "user_id")
+    private List<Product> products;
 
     @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
     private Order order;
 
-    protected User() {}
+    protected User() {
+    }
 
     public User(String name, String email, String password, int rol, int phoneNumber) {
         this.name = name;
@@ -47,7 +48,7 @@ public class User {
         this.password = password;
         this.rol = rol;
         this.phoneNumber = phoneNumber;
-        this.products = new ArrayList<>();  
+        this.products = new ArrayList<>();
         this.reviews = new ArrayList<>();
     }
 
@@ -62,7 +63,7 @@ public class User {
     public void removeProduct(Product product) {
         this.products.remove(product);
     }
-    
+
     public long getId() {
         return id;
     }
@@ -135,13 +136,14 @@ public class User {
         this.order = null;
     }
 
-
     public void deleteOrder(Order order) {
         this.order = null;
     }
+
     public void setOrder(Order order) {
         this.order = order;
     }
+
     public Order getOrders() {
         return this.order;
     }

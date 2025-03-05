@@ -9,7 +9,7 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.ManyToOne;
-    
+
 @Entity
 public class Review {
 	@Id
@@ -30,7 +30,8 @@ public class Review {
 	@JoinColumn(name = "product_id")
 	private Product product;
 
-	protected Review() {}
+	protected Review() {
+	}
 
 	public Review(String title, String text, User author, Product product) {
 		this.title = title;
@@ -87,13 +88,12 @@ public class Review {
 	public List<String> getComments() {
 		return comments;
 	}
+
 	public void setComments(List<String> comments) {
 		this.comments = comments;
 	}
+
 	public void addComment(String comment) {
 		this.comments.add(comment);
 	}
 }
-
-
-

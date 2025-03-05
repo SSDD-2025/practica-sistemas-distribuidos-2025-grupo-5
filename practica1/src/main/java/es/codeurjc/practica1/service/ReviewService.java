@@ -1,4 +1,5 @@
 package es.codeurjc.practica1.service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -28,7 +29,7 @@ public class ReviewService {
 	}
 
 	public void save(Review review) {
-		reviewRepository.save(review);		
+		reviewRepository.save(review);
 	}
 
 	public void update(Review oldReview, Review updatedReview) {
@@ -39,7 +40,7 @@ public class ReviewService {
 
 	public void delete(Review review) {
 		Optional<User> user = userRepository.findById(review.getAuthor().getId());
-		if(user.isPresent()) {
+		if (user.isPresent()) {
 			User userAux = user.get();
 			userAux.deleteReview(review);
 			userRepository.save(userAux);
@@ -49,6 +50,3 @@ public class ReviewService {
 		}
 	}
 }
-
-    
-

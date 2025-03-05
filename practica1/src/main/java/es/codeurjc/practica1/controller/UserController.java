@@ -13,11 +13,11 @@ import es.codeurjc.practica1.service.UserService;
 
 @Controller
 public class UserController {
-    
-    @Autowired
-    private UserService userService;
 
-    @GetMapping("/users/")
+	@Autowired
+	private UserService userService;
+
+	@GetMapping("/users/")
 	public String showUsers(Model model) {
 
 		model.addAttribute("users", userService.findAll());

@@ -13,12 +13,12 @@ import jakarta.persistence.Table;
 
 @Entity
 @Table(name = "customer_order") // This is the name of the table in the database
-public class Order{
+public class Order {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
 
-    private double totalPrice;
+	private double totalPrice;
 
 	@ManyToOne
 	@JoinColumn(name = "user_id")
@@ -27,7 +27,8 @@ public class Order{
 	@ManyToMany
 	private List<Product> products;
 
-	protected Order() {}
+	protected Order() {
+	}
 
 	public Order(User author, List<Product> product) {
 		this.owner = author;
@@ -37,9 +38,8 @@ public class Order{
 	public Order(User author, Product product) {
 		this.owner = author;
 		this.products.add(product);
-		this.totalPrice=0;
+		this.totalPrice = 0;
 	}
-
 
 	public long getId() {
 		return id;
@@ -65,18 +65,16 @@ public class Order{
 		this.products = products;
 	}
 
+	public void setTotalPrice(double totalPrice) {
+		this.totalPrice = totalPrice;
+	}
 
-    public void setTotalPrice(double totalPrice) {
-        this.totalPrice = totalPrice;
-    }
-
-	public void setOrder(Order order){
+	public void setOrder(Order order) {
 		this.owner = order.getOwner();
 	}
 
-	public void deleteAllProducts(){
+	public void deleteAllProducts() {
 		this.products.clear();
 	}
 
-	
 }

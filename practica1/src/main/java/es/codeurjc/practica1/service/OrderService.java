@@ -1,4 +1,5 @@
 package es.codeurjc.practica1.service;
+
 import java.util.List;
 import java.util.Optional;
 
@@ -36,8 +37,8 @@ public class OrderService {
     }
 
     public void update(Order oldOrder, Order updatedOrder) {
-        //oldOrder.setProducts(updatedOrder.getProducts());
-        //oldOrder.setTotalPrice(updatedOrder.getTotalPrice());
+        // oldOrder.setProducts(updatedOrder.getProducts());
+        // oldOrder.setTotalPrice(updatedOrder.getTotalPrice());
         orderRepository.save(oldOrder);
     }
 
