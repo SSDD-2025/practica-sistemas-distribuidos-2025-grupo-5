@@ -58,7 +58,7 @@ Juan José Villanueva Molina
   - 5 commits mas significativos:
       - [commit 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/f8e1a71eb79823efa86340fc307f0c830d3c0413)
       - [commit 2](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/e7d863a6650a0412cf3e0716288287563db0d777)
-      - [commit 3[(https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/2822d5b4ca8b2940bb84e23c4518d12edbf12d06)
+      - [commit 3](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/2822d5b4ca8b2940bb84e23c4518d12edbf12d06)
       - [commit 4](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/9bdaddf7efa007340e63b10ed0b7cbaf1229e468)
   - 5 ficheros en los que mas se ha participado:
 ***
