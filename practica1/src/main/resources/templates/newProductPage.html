@@ -3,7 +3,7 @@
 <p></p>
 <h2>Nuevo Producto</h2>
 
-<form action="/newproduct" method="post" enctype="multipart/form-data" onsubmit="return validateForm()">
+<form action="/newproduct" method="post" enctype="multipart/form-data">
 
   <div class="mb-3">
     <label class="form-label">Nombre del producto</label>
@@ -38,27 +38,6 @@
   <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Cancelar</button>
   <button class="btn btn-primary" type="submit">Guardar</button>
 </form>
-
-<script>
-  function validateForm() {
-    // Get all form elements.
-    var name = document.getElementById('name');
-    var description = document.getElementById('description');
-    var price = document.getElementById('price');
-    var stock = document.getElementById('stock');
-    var provider = document.getElementById('provider');
-    var imageField = document.getElementById('imageField');
-    var selectedUsers = document.getElementById('selectedUsers');
-
-    // Check if any field is empty.
-    if (!name.value || !description.value || !price.value || !stock.value || !provider.value || !imageField.value || selectedUsers.selectedOptions.length === 0) {
-      alert('Por favor, rellena todos los campos antes de enviar.');
-      return false; // Prevent form submission.
-    }
-
-    return true; // Allow form submission.
-  }
-</script>
 
 
 {{>footer}}

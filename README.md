@@ -10,7 +10,7 @@ Paula Marcela Barroso Robleda
 
 David Coronado Testa
   - Correo de la universidad: d.coronado.2022@alumnos.urjc.es
-  - Cuenta de GitHub: [dvcoronado[(https://github.com/dvcoronado)
+  - Cuenta de GitHub: [dvcoronado](https://github.com/dvcoronado)
 
 Juan José Villanueva Molina
   - Correo de la universidad: jj.villanueva.2022@alumnos.urjc.es
@@ -27,12 +27,12 @@ Los productos tendran asociada una imágen.
 ***
 ## Práctica 1: Web con HTML y Base de Datos
 ### Navegación
-
+![image](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Diagrama%20de%20navegacion.png)
 ### Intrucciones de ejecución
 1. Descargar el repositorio y descomprimir el archivo
 2. Tener descargado MySQL Workbench: [Descargar](https://dev.mysql.com/downloads/workbench/)
-3. Usuario: root\ 
-   Contraseña: 
+3. Usuario: root\ root
+   Contraseña: Trabaj0MySQL.
 4. Crear un esquema con nombre: B&D
 5. Ejecuta el código en Visual Studio usando Spring Boot Dashboard(añadir como extensión): [Descargar VS](https://code.visualstudio.com/download)
 6. Abrelo en el navegador: puedes abrirlo directamente desde VS o escribiendo en el navegador localhost:8080
@@ -44,22 +44,22 @@ Los productos tendran asociada una imágen.
 
 ### Participación de miembros
 Paula Marcela Barroso Robleda
-  - Tareas:
+  - Tareas: implementación general de las clases, entre las que destacan el productController donde se realizaron las redirecciones y funcionalidades solicitadas. Además, gran participación en el mapeo y creación de entidades. Consolidación de los html con el css.
   - 5 commits mas significativos:
-      - [Commit 1]()
-      - [Commit 2]()
-      - [Commit 3]()
-      - [Commit 4]()
-      - [Commit 5]()
+      - [Commit 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/d6800596b75fcf45c7a99bb35c241a2fcfbf6ba6)
+      - [Commit 2](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/ef9d78302c98e20298043d632421c1a4ee7c4208)
+      - [Commit 3](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/bdb9765caefcee6a730d93d610cbc38496bb4e06)
+      - [Commit 4](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/e95afbc46eda3a9a03a84e9338f3028c92cf2802)
+      - [Commit 5](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/5e0fe537a384dcd9ad7f8ad808c09078191bff60)
   - 5 ficheros en los que mas se ha participado:
-      - [Fichero 1]()
-      - [Fichero 2]()
-      - [Fichero 3]()
-      - [Fichero 4]()
-      - [Fichero 5]()
+      - [Fichero 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/controller/ProductController.java)
+      - [Fichero 2](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/service/DatabaseInitializer.java)
+      - [Fichero 3](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/resources/static/style.css)
+      - [Fichero 4](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/service/ProductService.java)
+      - [Fichero 5](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/model/Product.java)
 
 David Coronado Testa
-  - Tareas:
+  - Tareas: Realizacion general de models y sus controllers y ayuda con los diagramas. Implementar la interfaz error y hacer validación de campos. Crear y conectar la base de datos MySQL. Solventar la actualización del stock y corregir pequeños errores e incongruencias a lo largo del programa. 
   - 5 commits mas significativos:
       - [Commit 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/4b049726490e5100933b12c4a40ad77a8cf52ce9)
       - [Commit 2](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/077e2e168fa7606b19ec78c3e49ef0c8b1204f9c)
