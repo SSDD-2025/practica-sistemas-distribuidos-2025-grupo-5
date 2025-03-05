@@ -7,26 +7,26 @@
         <img class="img-thumbnail" src="/products/{{product.id}}/image" style="width: 100%; height: auto;">
       </div>
       <div class="col-8">
-        <h2>Product "{{product.name}}"</h2>
-        
+        <p><b></b></p>
+        <h2>Nombre del producto: "{{product.name}}"</h2>
         <div>
-          <p>{{{product.description}}}</p>
+          <p><b>Descripción:</b>{{{product.description}}}</p>
         </div>
-        <p><b>Price: </b>{{product.price}} €</p>
+        <p><b>Precio: </b>{{product.price}} €</p>
 
-        <p><b>The Stock available is:</b> {{{product.stock}}} units</p>
+        <p><b>Stock disponible:</b> {{{product.stock}}} units</p>
         <div>
-        <p><b>The provider is:</b> {{{product.provider}}}</p>
+        <p><b>Marca:</b> {{{product.provider}}}</p>
         </div>
 
-        <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Back to all products</button>
+        <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Volver a todos los productos</button>
         <button class="btn btn-outline-dark" onclick="location.href='/productReviews/{{product.id}} '">Ver comentarios</button>
 
       </div>
       <p><b></b></p>
       <p><b>¿Quieres añadirlo al carrito?</b></p> 
       <button id="add-to-cart" class="btn btn-success" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/add-to-cart/{{product.id}}'">AÑADIR AL CARRITO</button>
-      <p><b></b></p>
+      <p></p>
       
       <p><b>¿Quieres comprarlo ahora?</b></p>
       <div style="justify-content: center;">
@@ -41,6 +41,7 @@
         </form>
         <p id="out-of-stock-message" style="color: red; font-weight: bold; display: none;">Lo sentimos, este producto está agotado.</p>
     </div>
+    <p><b></b></p>
     <p><b>¿Quieres editarlo?</b></p>
       <button class="btn btn-primary" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/edit/{{product.id}}'">EDITAR</button>
       <p><b></b></p>
@@ -59,20 +60,15 @@
 {{>footer}}
 
 <script>
-    // Asegurarse de que el valor de stock esté correctamente inyectado y convertido a número
-    const stock =  parseInt("{{product.stock}}", 10); // Asegúrate de que product.stock es un número
+    const stock =  parseInt("{{product.stock}}", 10);
     
-    // Obtener los botones y el mensaje
     const addToCartButton = document.getElementById('add-to-cart');
     const buyNowButton = document.getElementById('buy-now');
     const outOfStockMessage = document.getElementById('out-of-stock-message');
     
-    // Verificar si el stock es 0
     if (typeof stock === 'number' && stock === 0) {
-        // Deshabilitar los botones
         addToCartButton.disabled = true;
         buyNowButton.disabled = true;
-        // Mostrar el mensaje de agotado
         outOfStockMessage.style.display = 'block';
     }
 </script>

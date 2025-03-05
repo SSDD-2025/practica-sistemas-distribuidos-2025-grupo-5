@@ -1,39 +1,5 @@
 {{>header}}
 
-<style>
-    /* Contenedor de reseñas en bloque */
-    .review-container {
-        display: block;
-        margin-top: 20px;
-    }
-
-    /* Ajustes en cada reseña */
-    .review-item-content {
-        background-color: #fff;
-        border-radius: 12px;
-        box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-        padding: 15px; /* Reducir padding */
-        text-align: left;
-        margin-bottom: 20px; /* Espaciado entre reseñas */
-    }
-
-    /* Reducir tamaño de los títulos */
-    .review-title {
-        font-size: 1.2em; /* Más pequeño */
-        font-weight: bold;
-        color: #333;
-        margin-top: 5px;
-    }
-
-    /* Reducir tamaño del texto */
-    .review-text {
-        font-size: 0.9em; /* Más pequeño */
-        color: #666;
-        line-height: 1.4;
-    }
-
-
-</style>
 
 <div class="review-container">
     {{#reviews}}
@@ -42,22 +8,22 @@
         <p class="review-title">Título:{{title}}</p>
         <p class="review-text">Comentario: {{text}}</p>
         <form method="post" action="/removeReview/{{id}}" style="margin: 0;">
-            <button type="submit" class="btn btn-outline-danger" style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">Borrar
+            <button type="submit" class="btn btn-danger remove-button" style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">Borrar
             </button>
         </form>
     </div>
     {{/reviews}}
 
     {{^reviews}}
+    <p></p>
     <p>No hay reseñas disponibles.</p>
     {{/reviews}}
     <p></p>
 
-    <button class="btn btn-outline-dark" onclick="location.href='/newReview/{{id}}'">Añadir comentario</button>
+    <button class="btn add-to-cart" onclick="location.href='/newReview/{{id}}'">Añadir comentario</button>
 
-    <button class="btn btn-outline-secondary" onclick="location.href='/products/{{id}}'">Back to all products</button>
+    <button class="btn btn-outline-secondary" onclick="location.href='/products/{{id}}'">Volver a todos los productos</button>
 
-    
 </div>
 
 

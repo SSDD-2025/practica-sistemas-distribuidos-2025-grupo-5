@@ -33,8 +33,6 @@ public class Product {
 
     @Lob
     private Blob imageFile;
-    private int publicationYear;
-    private String lang;
 
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
@@ -76,7 +74,7 @@ public class Product {
         return stock;
     }
 
-    public List<User> getShops() {
+    public List<User> getUsers() {
         return users;
     }
 

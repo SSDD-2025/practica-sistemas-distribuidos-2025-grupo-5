@@ -42,7 +42,6 @@ public class DatabaseInitializer {
         //UserService.save(user2);
         //set = List.of(user2.getId());
 
-        // Create some books
         Product product1 = new Product("Cuerda","resistente", 12.3, 123,"ES_factory");
         saveProductWithURLImage(product1,set,"rope.jpg");
         Review review2 = new Review("Cuerda", "no aguanta", user1, product1);

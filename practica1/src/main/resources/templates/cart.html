@@ -1,6 +1,8 @@
 {{>header}}
 
 <div class="content">
+    <p></p>
+<p></p>
     <h1>Carrito de la Compra</h1>
 
     <div class="container">
@@ -12,7 +14,7 @@
                     <a href="/products/{{id}}" style="text-decoration: none; color: #007bff;">{{name}}</a> - {{price}} €
                 </div>
                 <form method="post" action="/remove-from-cart/{{id}}" style="margin: 0;">
-                    <button type="submit" class="btn btn-outline-danger" style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">Borrar
+                    <button type="submit" class="btn btn-danger" style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">Borrar
                     </button>
                 </form>
             </li>
@@ -20,7 +22,7 @@
         
         <div style="margin-top: 20px;"></div>
 
-        <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Back to all products</button>
+        <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Volver a todos los productos</button>
 
         <div style="margin-top: 20px;"></div>
 
