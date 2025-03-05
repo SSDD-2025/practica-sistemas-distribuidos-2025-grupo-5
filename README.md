@@ -27,7 +27,7 @@ Los productos tendran asociada una imágen.
 ***
 ## Práctica 1: Web con HTML y Base de Datos
 ### Navegación
-
+![image](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Diagrama%20de%20navegacion.png)
 ### Intrucciones de ejecución
 1. Descargar el repositorio y descomprimir el archivo
 2. Tener descargado MySQL Workbench: [Descargar](https://dev.mysql.com/downloads/workbench/)
