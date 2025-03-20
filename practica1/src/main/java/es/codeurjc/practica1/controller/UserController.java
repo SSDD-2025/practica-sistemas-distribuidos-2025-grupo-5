@@ -35,6 +35,18 @@ public class UserController {
 		} else {
 			return "users";
 		}
+	}
+	@GetMapping("/login")
+	public String login() {
+		return "login";
+	}
 
+	@GetMapping("/loginerror")
+	public String loginerror() {
+		return "loginerror";
+	}
+	@GetMapping("/private")
+	public String privatePage() {
+		return "private";
 	}
 }
