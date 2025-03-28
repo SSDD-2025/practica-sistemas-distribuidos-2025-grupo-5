@@ -10,6 +10,7 @@ import org.springframework.web.bind.annotation.PathVariable;
 
 import es.codeurjc.practica1.model.User;
 import es.codeurjc.practica1.service.UserService;
+import jakarta.servlet.http.HttpServletRequest;
 
 @Controller
 public class UserController {
@@ -45,8 +46,14 @@ public class UserController {
 	public String loginerror() {
 		return "loginerror";
 	}
+
 	@GetMapping("/private")
-	public String privatePage() {
-		return "private";
-	}
+	public String privatePage(Model model, HttpServletRequest request) {
+
+		model.addAttribute("username",request.getUserPrincipal().getName());
+		model.addAttribute("admin", request.isUserInRole("ADMIN"));
+
+	return "private";
+}
+
 }

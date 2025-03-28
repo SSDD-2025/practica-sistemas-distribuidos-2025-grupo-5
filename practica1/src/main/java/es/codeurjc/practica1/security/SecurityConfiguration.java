@@ -1,5 +1,6 @@
 package es.codeurjc.practica1.security;
 
+import org.springframework.beans.factory.annotation.Value;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -16,6 +17,12 @@ import org.springframework.security.web.SecurityFilterChain;
 @EnableWebSecurity
 public class SecurityConfiguration {
 
+    //Datos de usuario en fichero
+    @Value("${security.user}")
+    private String username;
+    @Value("${security.encodedPassword}")
+    private String encodedPassword;
+
     @Bean
     public PasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
@@ -29,8 +36,19 @@ public class SecurityConfiguration {
     }
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
-        UserDetails user = User.builder().username("user").password(passwordEncoder().encode("pass")).roles("USER").build();
-        return new InMemoryUserDetailsManager(user);
+        //UserDetails user = User.builder().username(username).password(passwordEncoder().encode(encodedPassword)).roles("USER").build(); //Sacardatos del usuario de fichero
+        UserDetails user = User.builder()
+        .username("user")
+        .password(passwordEncoder().encode("pass"))
+        .roles("USER")
+        .build();
+        UserDetails admin = User.builder()
+        .username("admin")
+        .password(passwordEncoder().encode("adminpass"))
+        .roles("USER","ADMIN")
+        .build();
+
+        return new InMemoryUserDetailsManager(user,admin);
     }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
@@ -46,6 +64,19 @@ public class SecurityConfiguration {
         .permitAll());
         // Disable CSRF at the moment
         http.csrf(csrf -> csrf.disable());
+        //Igual da fallo
+        http.authenticationProvider(authenticationProvider());
+        http
+        .authorizeHttpRequests(authorize -> authorize
+        // PUBLIC PAGES
+        .requestMatchers("/").permitAll()
+        .requestMatchers("/css/**").permitAll()
+        .requestMatchers("/images/public/**").permitAll()
+        // PRIVATE PAGES
+        .requestMatchers("/private").hasAnyRole("USER")
+        .requestMatchers("/admin").hasAnyRole("ADMIN"));
+        //.anyRequest().authenticated());
+        //Final posible fallo
         return http.build();
     }
 }
