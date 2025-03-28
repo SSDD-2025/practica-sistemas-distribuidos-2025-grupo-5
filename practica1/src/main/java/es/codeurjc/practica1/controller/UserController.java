@@ -46,14 +46,14 @@ public class UserController {
 	public String loginerror() {
 		return "loginerror";
 	}
-
+	
 	@GetMapping("/private")
-	public String privatePage(Model model, HttpServletRequest request) {
-
-		model.addAttribute("username",request.getUserPrincipal().getName());
+		public String privatePage(Model model, HttpServletRequest request) {
+		String name = request.getUserPrincipal().getName();
+		User user = userService.findByName(name).orElseThrow();
+		model.addAttribute("username", user.getName());
 		model.addAttribute("admin", request.isUserInRole("ADMIN"));
-
-	return "private";
-}
+		return "private";
+	}
 
 }

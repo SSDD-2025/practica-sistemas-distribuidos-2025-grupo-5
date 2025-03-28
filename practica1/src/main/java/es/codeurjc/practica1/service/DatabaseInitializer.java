@@ -9,6 +9,7 @@ import java.util.List;
 import javax.sql.rowset.serial.SerialBlob;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Component;
 
 import es.codeurjc.practica1.model.Product;
@@ -21,7 +22,7 @@ import jakarta.annotation.PostConstruct;
 public class DatabaseInitializer {
 
     @Autowired
-    private UserService UserService;
+    private UserService userService;
 
     @Autowired
     private ProductService productService;
@@ -30,16 +31,21 @@ public class DatabaseInitializer {
     private ReviewService reviewService;
 
     @Autowired
+    private PasswordEncoder passwordEncoder;
+
+    @Autowired
     private ImageUtils imageUtils;
 
     @PostConstruct
     public void init() throws IOException {
-        User user1 = new User("paula", "paula@gmail.com", "567", 0, 123456789);
+        List<String> rolUser = List.of("USER");
+        List<String> rolAdmin = List.of( "ADMIN");
+        userService.save(new User("user","paula@gmail.com", passwordEncoder.encode("pass"), rolUser,912)); // Puede que haya que guardarlos desde repositorio
+        userService.save(new User("admin","juanjo@gmail.com",passwordEncoder.encode("adminpass"), rolAdmin,112));
+        User user1 = userService.findByName("user").get();
         System.out.println("ID USUARIO: " + user1.getId());
-
-        UserService.save(user1);
+        
         List<Long> set = List.of(user1.getId());
-
         // User user2 = new User( "juanjo", "juanjo@gmail.com", "567",0, 987654321 );
         // UserService.save(user2);
         // set = List.of(user2.getId());

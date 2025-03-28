@@ -1,6 +1,6 @@
 package es.codeurjc.practica1.security;
 
-import org.springframework.beans.factory.annotation.Value;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.authentication.dao.DaoAuthenticationProvider;
@@ -13,15 +13,14 @@ import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.provisioning.InMemoryUserDetailsManager;
 import org.springframework.security.web.SecurityFilterChain;
 
+import es.codeurjc.practica1.service.UserService;
+
 @Configuration
 @EnableWebSecurity
 public class SecurityConfiguration {
 
-    //Datos de usuario en fichero
-    @Value("${security.user}")
-    private String username;
-    @Value("${security.encodedPassword}")
-    private String encodedPassword;
+    @Autowired
+    private UserService userService;
 
     @Bean
     public PasswordEncoder passwordEncoder() {
@@ -30,13 +29,12 @@ public class SecurityConfiguration {
     @Bean
     public DaoAuthenticationProvider authenticationProvider() {
         DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
-        authProvider.setUserDetailsService(userDetailsService());
+        authProvider.setUserDetailsService(userService);
         authProvider.setPasswordEncoder(passwordEncoder());
         return authProvider;
     }
     @Bean
     public InMemoryUserDetailsManager userDetailsService() {
-        //UserDetails user = User.builder().username(username).password(passwordEncoder().encode(encodedPassword)).roles("USER").build(); //Sacardatos del usuario de fichero
         UserDetails user = User.builder()
         .username("user")
         .password(passwordEncoder().encode("pass"))
@@ -45,15 +43,24 @@ public class SecurityConfiguration {
         UserDetails admin = User.builder()
         .username("admin")
         .password(passwordEncoder().encode("adminpass"))
-        .roles("USER","ADMIN")
+        .roles("ADMIN")
         .build();
-
-        return new InMemoryUserDetailsManager(user,admin);
+        return new InMemoryUserDetailsManager(user, admin);
     }
     @Bean
     public SecurityFilterChain filterChain(HttpSecurity http) throws Exception {
         http.authenticationProvider(authenticationProvider());
-        http.authorizeHttpRequests(authorize -> authorize.requestMatchers("/").permitAll().anyRequest().authenticated()).formLogin(formLogin -> formLogin
+        http.authorizeHttpRequests(authorize -> authorize
+        // PUBLIC PAGES
+        .requestMatchers("/").permitAll()
+        .requestMatchers("/products/**").permitAll()
+        .requestMatchers("/products/product/").permitAll()
+        .requestMatchers("/css/**").permitAll()
+        .requestMatchers("/images/public/**").permitAll()
+        // PRIVATE PAGES
+        .requestMatchers("/private").hasAnyRole("USER")
+        .requestMatchers("/admin").hasAnyRole("ADMIN"))
+        .formLogin(formLogin -> formLogin
         .loginPage("/login")
         .failureUrl("/loginerror")
         .defaultSuccessUrl("/private")
@@ -64,19 +71,6 @@ public class SecurityConfiguration {
         .permitAll());
         // Disable CSRF at the moment
         http.csrf(csrf -> csrf.disable());
-        //Igual da fallo
-        http.authenticationProvider(authenticationProvider());
-        http
-        .authorizeHttpRequests(authorize -> authorize
-        // PUBLIC PAGES
-        .requestMatchers("/").permitAll()
-        .requestMatchers("/css/**").permitAll()
-        .requestMatchers("/images/public/**").permitAll()
-        // PRIVATE PAGES
-        .requestMatchers("/private").hasAnyRole("USER")
-        .requestMatchers("/admin").hasAnyRole("ADMIN"));
-        //.anyRequest().authenticated());
-        //Final posible fallo
         return http.build();
     }
 }

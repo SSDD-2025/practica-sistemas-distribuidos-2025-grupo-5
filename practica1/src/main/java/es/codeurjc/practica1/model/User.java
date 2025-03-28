@@ -4,6 +4,7 @@ import java.util.ArrayList;
 import java.util.List;
 
 import jakarta.persistence.CascadeType;
+import jakarta.persistence.ElementCollection;
 import jakarta.persistence.Entity;
 import jakarta.persistence.FetchType;
 import jakarta.persistence.GeneratedValue;
@@ -24,8 +25,10 @@ public class User {
 
     private String name;
     private String email;
-    private String password;
-    private int rol; // 0 = Admin, 1 = User, 2 = Company.
+    private String encodedPassword;
+    @ElementCollection(fetch = FetchType.EAGER)
+    private List<String> roles;
+
     private int phoneNumber;
 
     // Un usuario puede crear muchas reviews
@@ -42,11 +45,11 @@ public class User {
     protected User() {
     }
 
-    public User(String name, String email, String password, int rol, int phoneNumber) {
+    public User(String name, String email, String password, List<String> roles, int phoneNumber) {
         this.name = name;
         this.email = email;
-        this.password = password;
-        this.rol = rol;
+        this.encodedPassword = password;
+        this.roles = roles;
         this.phoneNumber = phoneNumber;
         this.products = new ArrayList<>();
         this.reviews = new ArrayList<>();
@@ -77,11 +80,11 @@ public class User {
     }
 
     public String getPassword() {
-        return password;
+        return encodedPassword;
     }
 
-    public int getRol() {
-        return rol;
+    public List<String> getRoles() {
+        return roles;
     }
 
     public int getPhoneNumber() {
@@ -97,11 +100,11 @@ public class User {
     }
 
     public void setPassword(String password) {
-        this.password = password;
+        this.encodedPassword = password;
     }
 
-    public void setRol(int rol) {
-        this.rol = rol;
+    public void setRoles(List<String> roles) {
+        this.roles = roles;
     }
 
     public void setPhoneNumber(int phoneNumber) {

@@ -320,10 +320,7 @@ public class ProductController {
 		Product product = productOpt.get();
 
 		Optional<User> userOpt = userService.findByEmail("paula@gmail.com");
-		User author = userOpt.orElseGet(() -> {
-			User newUser = new User("paula", "paula@gmail.com", "1234", 0, 432436273);
-			return userService.save(newUser); // Guarda el usuario si no existe
-		});
+		User author = userOpt.get();
 
 		Review review = new Review(title, text, author, product);
 		product.addReview(review);
