@@ -16,6 +16,8 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -101,13 +103,14 @@ public class ProductController {
 	}
 
 	@GetMapping("/cart")
-	public String showCart(HttpSession session, Model model) {
+	public String showCart(HttpSession session, Model model,@AuthenticationPrincipal UserDetails userDetails) {
 		// Get the list of product IDs in the session.
 		List<Long> cartProductIds = (List<Long>) session.getAttribute("cart");
 		List<Product> cartProducts = new ArrayList<>();
 
-		Optional<User> oneUser = userService.findById(0);
 
+		Optional<User> oneUser = userService.findByName(userDetails.getUsername());
+		System.out.println("USUARIO ESTA EN EL CARRITO");
 		if (oneUser.isPresent()) {
 			User user = oneUser.get();
 			cartProducts = user.getProducts();
@@ -129,12 +132,40 @@ public class ProductController {
 		return "cart"; // Display the cart view.
 	}
 
+	@GetMapping("/showOrders")
+	public String showOrders(HttpSession session, Model model,@AuthenticationPrincipal UserDetails userDetails) {
+		System.out.println("USUARIO ESTA EN EL SHOW ORDERS");
+
+		if (userDetails == null) {
+			return "redirect:/login"; // o manejar el caso de usuario no autenticado
+		}
+
+		// Get the list of product IDs in the session.
+		Optional<User> oneUser = userService.findByName(userDetails.getUsername());
+		List<Order> orderList = null;
+		System.out.println("USUARIO ESTA EN EL SHOW ORDERS");
+		
+		if (oneUser.isPresent()) {
+			User user = oneUser.get();
+			orderList = user.getOrders();
+		}
+
+		if (orderList.isEmpty()) {
+			model.addAttribute("message", "No tienes ningún pedido de momento");
+		} else {
+			model.addAttribute("orderList", orderList);
+		}
+
+		return "orders"; // Display the cart view.
+	}
+
 	@GetMapping("/add-to-cart/{productId}")
 	public String addToCart(@PathVariable long productId, HttpSession session, Model model) {
 		// Get or initialize the cart in the session.
 		List<Long> cart = (List<Long>) session.getAttribute("cart");
 		Optional<User> oneUser = userService.findById(0);
 		Optional<Product> productAux = productService.findById(productId);
+		System.out.println("USUARIO añade producto EN EL CARRITO");
 
 		Product p = productAux.get();
 		if (p.getStock() > 0) {
@@ -170,10 +201,14 @@ public class ProductController {
 
 	@PostMapping("/remove-from-cart/{productId}")
 	public String removeFromCart(@PathVariable long productId, HttpSession session) {
+		System.out.println("USUARIO BORRA DEL CARRITO");
+
 		// Get or initialize the cart in the session.
 		List<Long> cart = (List<Long>) session.getAttribute("cart");
+
 		Optional<User> oneUser = userService.findById(0);
 		Optional<Product> productAux = productService.findById(productId);
+		System.out.println("USUARIO BORRA DEL CARRITO");
 
 		if (productAux.isPresent() && oneUser.isPresent()) {
 			Product product = productAux.get();
@@ -395,15 +430,15 @@ public class ProductController {
 
 	// ORDER
 	@GetMapping("/checkout")
-	public String showGateway(HttpSession session, Model model) {
+	public String showGateway(@AuthenticationPrincipal User user, HttpSession session, Model model) {
 		// Get the list of product IDs in the session.
 		List<Long> cartProductIds = (List<Long>) session.getAttribute("cart");
 
-		List<User> oneUser = userService.findAll();
-		User user = oneUser.get(0);
 		if (cartProductIds==null) {
 			return "redirect:/error";
 		} else {
+			System.out.println("ENTRA EN CHECKOUT ADIOS CARRITO");
+
 			if (user != null) {
 				List<Product> cartProducts = new ArrayList<>();
 
@@ -411,6 +446,7 @@ public class ProductController {
 					Long productId = cartProductIds.get(i);
 					Optional<Product> aux = productService.findById(productId);
 					Product product = aux.get();
+					
 					if (product.getStock() > 0) {
 						product.setStock(product.getStock() - 1);
 						productService.save(product);
@@ -422,8 +458,9 @@ public class ProductController {
 				}
 				Order order = new Order(user, cartProducts);
 				orderService.save(order);
-				user.setOrder(order);
+				userService.addOrder(user.getId(), order);
 				userService.save(user);
+				System.out.println("EL PEDIDO ES: "+order);
 				model.addAttribute("orders", order);
 			}
 			return "/gateway";
@@ -431,36 +468,39 @@ public class ProductController {
 	}
 
 	@GetMapping("/checkoutOne/{id}")
-	public String showGatewayOne(@PathVariable Long id, HttpSession session, Model model) {
+	public String showGatewayOne(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long id, HttpSession session, Model model) {
 		// Get the list of product IDs in the session.
 		Optional<Product> productOptional = productService.findById(id);
 
+		//System.out.println(SecurityContextHolder.getContext().getAuthentication());
+
 		if (productOptional.isPresent()) {
 			Product product = productOptional.get();
-			if (product.getStock() > 0) {
-				product.setStock(product.getStock() - 1);
 
+			if (product.getStock() > 0) {
+
+				//System.out.println("PRODUCT EXISTE");
+				product.setStock(product.getStock() - 1);
 				List<Product> cartProducts = new ArrayList<>();
 				cartProducts.add(product);
+				Optional<User> optionalUser = userService.findByName(userDetails.getUsername());
 
-				List<User> oneUser = userService.findAll();
-				User user = oneUser.get(0);
-				if (user == null) {
-
+				if (optionalUser.isEmpty()) {
+					//System.out.println("USER NULO");
 					return "redirect:/error";
 				} else {
 
-					Order order = new Order(user, cartProducts);
+					Order order = new Order(optionalUser.get(), cartProducts);
 					orderService.save(order);
-					user.setOrder(order);
-					userService.save(user);
+					System.out.println("Order id (checkoutOne) ="+order.getId());
+
+					userService.addOrder(optionalUser.get().getId(), order);
+					userService.save(optionalUser.get());
 
 					product.getOrders(order);
 					productService.save(product);
 					model.addAttribute("orders", order);
-
 				}
-
 			} else {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
 			}
@@ -472,23 +512,27 @@ public class ProductController {
 	}
 
 	@PostMapping("/removeOrder/{orderId}")
-	public String removeOrder(@PathVariable long orderId, HttpSession session) {
+	public String removeOrder(@PathVariable long orderId, HttpSession session, @AuthenticationPrincipal UserDetails userDetails) {
+		System.out.println("Order id (remove)"+orderId);
+
+		Optional<User> optionalUser = userService.findByName(userDetails.getUsername());
+
 		try {
 			Optional<Order> orderAux = orderService.findById(orderId);
-			Order order = orderAux.get();
-			System.out.println("ANTES ORDER: " + order);
-			User user = order.getOwner();
+			System.out.println("Order id (remove)"+orderAux.get().getId());
 
-			user.deleteOrder(order);
-			order.deleteAllProducts();
 
-			userService.save(user);
-			orderService.delete(order);
-			System.out.println("DESPUES ");
+			optionalUser.get().deleteOrder(orderAux.get());
+			orderAux.get().deleteAllProducts();
+
+			userService.save(optionalUser.get());
+			orderService.delete(orderAux.get());
 			return "redirect:/";
 
 		} catch (Exception e) {
+			System.out.println("SALTA EXCEPCION");
 			return "redirect:/error";
 		}
 	}
+
 }

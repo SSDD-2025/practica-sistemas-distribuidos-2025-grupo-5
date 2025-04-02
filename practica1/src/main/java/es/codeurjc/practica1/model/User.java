@@ -25,6 +25,7 @@ public class User {
     private String name;
     private String email;
     private String encodedPassword;
+    
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
 
@@ -39,7 +40,7 @@ public class User {
     private List<Product> products;
 
     @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private List<Order> orders = new ArrayList<>();
+    private List<Order> orders;
 
     protected User() {
     }
@@ -52,6 +53,7 @@ public class User {
         this.phoneNumber = phoneNumber;
         this.products = new ArrayList<>();
         this.reviews = new ArrayList<>();
+        this.orders = new ArrayList<>();
     }
 
     public List<Product> getProducts() {
@@ -143,11 +145,13 @@ public class User {
        // this.orders.setAuthor(null);
     }
 
-    public void setOrder(Order order) {
-        this.orders.add(order);
-    }
 
     public List<Order> getOrders() {
         return this.orders;
     }
+
+    public void addOrder(Order order){
+        this.orders.add(order);
+    }
+
 }

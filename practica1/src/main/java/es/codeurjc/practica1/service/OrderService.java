@@ -24,33 +24,44 @@ public class OrderService {
     @Autowired
     private ProductRepository productRepository;
 
+    //Obtener todos los pedidos
     public List<Order> findAll() {
         return orderRepository.findAll();
     }
 
+    //Buscar un pedido por ID
     public Optional<Order> findById(long id) {
         return orderRepository.findById(id);
     }
 
+    //Guardar un pedido en la base de datos
     public void save(Order order) {
         orderRepository.save(order);
     }
 
+    //Actualizar un pedido existente con nuevos datos
     public void update(Order oldOrder, Order updatedOrder) {
-        // oldOrder.setProducts(updatedOrder.getProducts());
-        // oldOrder.setTotalPrice(updatedOrder.getTotalPrice());
+        oldOrder.setProducts(updatedOrder.getProducts());
+        oldOrder.setTotalPrice(updatedOrder.getTotalPrice());
         orderRepository.save(oldOrder);
     }
 
+    //Eliminar un pedido asegurando que se elimine de la lista del usuario
     public void delete(Order order) {
-        Optional<User> user = userRepository.findById(order.getOwner().getId());
-        if (user.isPresent()) {
-            User userAux = user.get();
-            userAux.deleteOrder(order);
-            userRepository.save(userAux);
+        Optional<User> userOptional = userRepository.findById(order.getOwner().getId());
+        if (userOptional.isPresent()) {
+            User user = userOptional.get();
+            user.deleteOrder(order);
+            userRepository.save(user);
             orderRepository.delete(order);
         } else {
-            System.out.println("User not found");
+            throw new RuntimeException("User not found, cannot delete order");
         }
+    }
+
+    //Obtener todos los pedidos de un usuario específico
+    public List<Order> findOrdersByUserId(Long userId) {
+        Optional<User> userOptional = userRepository.findById(userId);
+        return userOptional.map(User::getOrders).orElseThrow(() -> new RuntimeException("User not found"));
     }
 }

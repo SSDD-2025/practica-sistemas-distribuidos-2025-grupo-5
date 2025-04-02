@@ -17,4 +17,9 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     Optional<User> findByEmail(String email);
 
+    //obtener solo los pedidos de un usuario directamente desde la base de datos
+    //@Query("SELECT u.orders FROM User u WHERE u.id = :userId")
+    //List<Order> findOrdersByUserId(@Param("userId") Long userId);
+
+
 }

@@ -62,11 +62,16 @@ public class SecurityConfiguration {
         // PRIVATE PAGES
         .requestMatchers("/private").hasAnyRole("USER")
         .requestMatchers("/checkoutOne/**").hasAnyRole("USER")
+        .requestMatchers("/checkout/**").hasAnyRole("USER")
         .requestMatchers("/edit/**").hasAnyRole("USER")
         .requestMatchers("/add-to-cart/**").hasAnyRole("USER")
         .requestMatchers("/cart/**").hasAnyRole("USER")
         .requestMatchers("/newproduct/**").hasAnyRole("USER")
         .requestMatchers("/remove-from-products/**").hasAnyRole("USER")
+        .requestMatchers("/remove-from-cart/**").hasAnyRole("USER")
+        .requestMatchers("/showOrders/**").hasAnyRole("USER")
+        .requestMatchers("/removeOrder/**").hasAnyRole("USER")
+
         .requestMatchers("/products/1/gateway").hasAnyRole("USER")
         .requestMatchers("/gateway").hasAnyRole("USER")
         .requestMatchers("/admin").hasAnyRole("ADMIN"))

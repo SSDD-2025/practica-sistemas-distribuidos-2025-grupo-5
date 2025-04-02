@@ -14,16 +14,16 @@
             </a>
             {{/products}}
         {{/orders}}
+
+            <p><b>Pulsa para cancelar el pedido:</b></p>
+            <button class="btn btn-outline-secondary" onclick="location.href='/removeOrder/{{orders.id}}'; return false;">Cancelar pedido</button>
+            <p><b></b></p>
+
         <p><b></b></p>
         <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Volver a todos los productos</button>
         <p></p>
 
-        <p><b>Pulsa para cancelar el pedido:</b></p>
-        <form method="post" action="/removeOrder/{{orders.id}}" style="margin: 0;">
-            <button type="submit" class="btn btn-danger">Cancelar pedido
-            </button>
-        </form>
-        <p><b></b></p>
+
     </div>
 </div>
 
