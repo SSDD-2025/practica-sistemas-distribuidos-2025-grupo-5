@@ -57,15 +57,18 @@ public class SecurityConfiguration {
         .requestMatchers("/products/product/").permitAll()
         .requestMatchers("/css/**").permitAll()
         .requestMatchers("/images/public/**").permitAll()
+        .requestMatchers("/error").permitAll()
+
         // PRIVATE PAGES
         .requestMatchers("/private").hasAnyRole("USER")
+        .requestMatchers("/checkoutOne/**").hasAnyRole("USER")
         .requestMatchers("/products/1/gateway").hasAnyRole("USER")
         .requestMatchers("/gateway").hasAnyRole("USER")
         .requestMatchers("/admin").hasAnyRole("ADMIN"))
         .formLogin(formLogin -> formLogin
         .loginPage("/login")
         .failureUrl("/loginerror")
-        .defaultSuccessUrl("/private")
+        .defaultSuccessUrl("/")
         .permitAll())
         .logout(logout -> logout
         .logoutUrl("/logout")
