@@ -12,7 +12,6 @@ import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
 import jakarta.persistence.JoinColumn;
 import jakarta.persistence.OneToMany;
-import jakarta.persistence.OneToOne;
 import jakarta.persistence.Table;
 
 @Entity
@@ -39,8 +38,8 @@ public class User {
     @JoinColumn(name = "user_id")
     private List<Product> products;
 
-    @OneToOne(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
-    private Order order;
+    @OneToMany(mappedBy = "owner", cascade = CascadeType.ALL, orphanRemoval = true)
+    private List<Order> orders = new ArrayList<>();
 
     protected User() {
     }
@@ -136,18 +135,19 @@ public class User {
     }
 
     public void deleteOrder() {
-        this.order = null;
+        this.orders.clear();
     }
 
     public void deleteOrder(Order order) {
-        this.order = null;
+        this.orders.remove(order);
+       // this.orders.setAuthor(null);
     }
 
     public void setOrder(Order order) {
-        this.order = order;
+        this.orders.add(order);
     }
 
-    public Order getOrders() {
-        return this.order;
+    public List<Order> getOrders() {
+        return this.orders;
     }
 }

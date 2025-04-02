@@ -59,6 +59,8 @@ public class SecurityConfiguration {
         .requestMatchers("/images/public/**").permitAll()
         // PRIVATE PAGES
         .requestMatchers("/private").hasAnyRole("USER")
+        .requestMatchers("/products/1/gateway").hasAnyRole("USER")
+        .requestMatchers("/gateway").hasAnyRole("USER")
         .requestMatchers("/admin").hasAnyRole("ADMIN"))
         .formLogin(formLogin -> formLogin
         .loginPage("/login")
