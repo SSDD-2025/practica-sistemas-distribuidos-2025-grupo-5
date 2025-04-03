@@ -13,7 +13,6 @@
                 <div>
                     <a href="/products/{{id}}" style="text-decoration: none; color: #007bff;">{{name}}</a> - {{price}} €
                 </div>
-
                 <form method="post" action="/remove-from-cart/{{id}}" style="margin: 0;">
                     <button type="submit" class="btn btn-danger" style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">Borrar
                     </button>
@@ -26,8 +25,10 @@
         <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Volver a todos los productos</button>
 
         <div style="margin-top: 20px;"></div>
-        <button class="btn btn-outline-secondary" onclick="location.href='/checkout'; return false;">Realizar compra</button>
 
+        <form method="get" action="/checkout">
+            <button type="submit" class="btn btn-primary">Realizar compra</button>
+        </form>
     </div>
 </div>
 

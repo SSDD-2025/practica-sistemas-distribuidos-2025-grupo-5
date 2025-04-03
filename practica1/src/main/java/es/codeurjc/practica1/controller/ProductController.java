@@ -163,43 +163,40 @@ public class ProductController {
 	}
 
 	@GetMapping("/add-to-cart/{productId}")
-	public String addToCart(@PathVariable long productId, HttpSession session, Model model, @AuthenticationPrincipal UserDetails userDetails) {
-		// Get or initialize the cart in the session.
-		Optional<User> optionalUser = userService.findByName(userDetails.getUsername());
+	public String addToCart(@PathVariable long productId, HttpSession session, Model model) {
+		// Get the list of product IDs in the session.
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Optional<User> user = userService.findByName(authentication.getName());
 
-		List<Long> cart = (List<Long>) session.getAttribute("cart");
+		List<Long> cart = new ArrayList();
+
+		for(Product aux:user.get().getProducts()){
+			cart.add(aux.getId());
+		}
+		System.out.println("TAMAÑO CARRITO"+cart.size());
+
+		cart.add(productId);
+
 		Optional<Product> productAux = productService.findById(productId);
-		System.out.println("USUARIO añade producto EN EL CARRITO");
-
 		Product p = productAux.get();
 		if (p.getStock() > 0) {
 			p.setStock(p.getStock() - 1);
 			productService.save(p);
-			model.addAttribute("product", productAux.get());
+			//model.addAttribute("product", productAux.get());
 		} else {
 			return "redirect:/error";
 			// throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of
 			// stock");
-
 		}
 
-		if (productAux.isPresent() && optionalUser.isPresent()) {
+		if (productAux.isPresent()) {
 			Product product = productAux.get();
-			User user = optionalUser.get();
-			user.addProduct(product);
-			// Save the updated user in the database.
-			userService.save(user);
-			System.out.println(user.getProducts());
-		}
-
-		if (cart == null) {
-			cart = new ArrayList<>();
-			session.setAttribute("cart", cart);
+			user.get().addProduct(product);
+			userService.save(user.get());
 		}
 
 		// Add the product to the cart.
-		cart.add(productId);
-		session.setAttribute("cart", cart);
+		session.setAttribute("cartProducts", cart);
 		return "redirect:/cart";
 	}
 
@@ -444,15 +441,18 @@ public class ProductController {
 			if (user != null) {
 				User userAux=user.get();
 				List<Product> cartProduct= userAux.getProducts();
-				System.out.println("CARRITO PARA COMPRAR"+cartProduct);
+				System.out.println("TAMAÑOOOOOOO"+cartProduct.size());
 	
 				for (int i = 0; i < cartProduct.size(); i++) {
 					Product product =cartProduct.get(i);
-					
+					System.out.println("CARRITO PARA COMPRAR"+product);
+
 					if (product.getStock() > 0) {
+
 						product.setStock(product.getStock() - 1);
 						productService.save(product);
-						//model.addAttribute("product", product);
+						model.addAttribute("product", product);
+
 					} else {
 						throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
 					}
