@@ -160,10 +160,11 @@ public class ProductController {
 	}
 
 	@GetMapping("/add-to-cart/{productId}")
-	public String addToCart(@PathVariable long productId, HttpSession session, Model model) {
+	public String addToCart(@PathVariable long productId, HttpSession session, Model model, @AuthenticationPrincipal UserDetails userDetails) {
 		// Get or initialize the cart in the session.
+		Optional<User> optionalUser = userService.findByName(userDetails.getUsername());
+
 		List<Long> cart = (List<Long>) session.getAttribute("cart");
-		Optional<User> oneUser = userService.findById(0);
 		Optional<Product> productAux = productService.findById(productId);
 		System.out.println("USUARIO añade producto EN EL CARRITO");
 
@@ -179,9 +180,9 @@ public class ProductController {
 
 		}
 
-		if (productAux.isPresent() && oneUser.isPresent()) {
+		if (productAux.isPresent() && optionalUser.isPresent()) {
 			Product product = productAux.get();
-			User user = oneUser.get();
+			User user = optionalUser.get();
 			user.addProduct(product);
 			// Save the updated user in the database.
 			userService.save(user);
@@ -432,31 +433,32 @@ public class ProductController {
 	@GetMapping("/checkout")
 	public String showGateway(@AuthenticationPrincipal User user, HttpSession session, Model model) {
 		// Get the list of product IDs in the session.
-		List<Long> cartProductIds = (List<Long>) session.getAttribute("cart");
+		Optional<User> optionalUser = userService.findByName(user.getName());
 
-		if (cartProductIds==null) {
+		List<Product> cartProduct = (List<Product>) session.getAttribute("cartProducts");
+		System.out.println("CARRITO PARA COMPRAR"+cartProduct);
+
+		if (cartProduct==null) {
 			return "redirect:/error";
 		} else {
 			System.out.println("ENTRA EN CHECKOUT ADIOS CARRITO");
 
 			if (user != null) {
-				List<Product> cartProducts = new ArrayList<>();
 
-				for (int i = 0; i < cartProductIds.size(); i++) {
-					Long productId = cartProductIds.get(i);
-					Optional<Product> aux = productService.findById(productId);
-					Product product = aux.get();
+				for (int i = 0; i < cartProduct.size(); i++) {
+					Product product =cartProduct.get(i);
 					
 					if (product.getStock() > 0) {
 						product.setStock(product.getStock() - 1);
 						productService.save(product);
-						model.addAttribute("product", aux.get());
+						model.addAttribute("product", product);
 					} else {
 						throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
 					}
-					cartProducts.add(product);
+					cartProduct.add(product);
 				}
-				Order order = new Order(user, cartProducts);
+
+				Order order = new Order(user, cartProduct);
 				orderService.save(order);
 				userService.addOrder(user.getId(), order);
 				userService.save(user);
