@@ -173,7 +173,6 @@ public class ProductController {
 		for(Product aux:user.get().getProducts()){
 			cart.add(aux.getId());
 		}
-		System.out.println("TAMAÑO CARRITO"+cart.size());
 
 		cart.add(productId);
 
@@ -313,7 +312,6 @@ public class ProductController {
 	}
 
 	// Reviwes
-
 	@GetMapping("/productReviews/{id}")
 	public String showReviews(Model model, @PathVariable long id) {
 		System.err.println("ENTRA EN SHOW REVIEWS");
@@ -435,32 +433,45 @@ public class ProductController {
 		// Get the list of product IDs in the session.
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Optional<User> user = userService.findByName(authentication.getName());
-
+		Order order;
 			if (user != null) {
 				User userAux=user.get();
 				List<Product> cartProduct= userAux.getProducts();
-				System.out.println("TAMAÑOOOOOOO"+cartProduct.size());
+				
+				if(cartProduct.size()==1){
+					order= new Order(userAux, cartProduct.get(0));
+					cartProduct.get(0).setStock(cartProduct.get(0).getStock() - 1);
+					productService.save(cartProduct.get(0));
+					cartProduct.get(0).setOrder(order);
+					model.addAttribute("product", cartProduct.get(0));
+
+				}else{
+
+					order= new Order(userAux, cartProduct.get(0));
+					for (int i = 1; i < cartProduct.size(); i++) {
+						Product product =cartProduct.get(i);
 	
-				for (int i = 0; i < cartProduct.size(); i++) {
-					Product product =cartProduct.get(i);
-					System.out.println("CARRITO PARA COMPRAR"+product);
-
-					if (product.getStock() > 0) {
-
-						product.setStock(product.getStock() - 1);
-						productService.save(product);
-						model.addAttribute("product", product);
-
-					} else {
-						throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
+						if (product.getStock() > 0) {
+							order.addProduct(product);
+							product.setStock(product.getStock() - 1);
+							product.setOrder(order);
+							productService.save(product);
+							model.addAttribute("product", product);
+	
+						} else {
+							throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
+						}
 					}
 				}
+				
+				orderService.save(order);
+				//System.out.println("Order id (checkoutOne) ="+order.getId());
 
-				Order order = new Order(userAux, cartProduct);
-
-				userService.addOrder(userAux.getId(), order);
-				userService.save(userAux);
+				userService.addOrder(user.get().getId(), order);
+				userService.save(user.get());
 				model.addAttribute("orders", order);
+				//System.out.println("ORDER ID ANTES GATEWAY EN CHECK OUT"+order.getId());
+
 			}
 			return "/gateway";
 	}
@@ -495,7 +506,7 @@ public class ProductController {
 					userService.addOrder(optionalUser.get().getId(), order);
 					userService.save(optionalUser.get());
 
-					product.getOrders(order);
+					product.setOrder(order);
 					productService.save(product);
 					model.addAttribute("orders", order);
 				}
@@ -509,28 +520,34 @@ public class ProductController {
 		return "/gateway";
 	}
 
-	@PostMapping("/removeOrder/{orderId}")
-	public String removeOrder(@PathVariable long orderId, HttpSession session, @AuthenticationPrincipal UserDetails userDetails) {
-		System.out.println("Order id (remove)"+orderId);
+	@PostMapping("/removeOrder/{id}")
+	public String removeOrder(@PathVariable Long id) {
 
-		Optional<User> optionalUser = userService.findByName(userDetails.getUsername());
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Optional<User> userA = userService.findByName(authentication.getName());
+		Optional<Order> order = orderService.findById(id);
 
 		try {
-			Optional<Order> orderAux = orderService.findById(orderId);
-			System.out.println("Order id (remove)"+orderAux.get().getId());
+			if (order!=null) {
 
+				User user = userA.get();
+				user.deleteOrder(order.get());  //Elimina de la lista de órdenes
+				order.get().deleteAllProducts();  // Limpia productos si es necesario
 
-			optionalUser.get().deleteOrder(orderAux.get());
-			orderAux.get().deleteAllProducts();
-
-			userService.save(optionalUser.get());
-			orderService.delete(orderAux.get());
-			return "redirect:/";
-
+				userService.save(user);  // Guarda cambios en el usuario
+				orderService.delete(order.get());  // Ahora sí borra la orden
+		
+				return "redirect:/";
+			} else {
+				System.out.println("Orden no encontrada");
+				return "redirect:/error";
+			}
+		
 		} catch (Exception e) {
-			System.out.println("SALTA EXCEPCION");
+			System.out.println("SALTA EXCEPCIÓN: " + e.getMessage());
 			return "redirect:/error";
 		}
+		
 	}
 
 }

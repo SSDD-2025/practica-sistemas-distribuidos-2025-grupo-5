@@ -135,7 +135,7 @@ public class Product {
         return reviews;
     }
 
-    public void getOrders(Order order) {
+    public void setOrder(Order order) {
         orders.add(order);
     }
 

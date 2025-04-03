@@ -15,10 +15,13 @@
             {{/products}}
         {{/orders}}
 
-            <p><b>Pulsa para cancelar el pedido:</b></p>
-            <button class="btn btn-outline-secondary" onclick="location.href='/removeOrder/{{orders.id}}'; return false;">Cancelar pedido</button>
-            <p><b></b></p>
-
+        <p><b>Pulsa para cancelar el pedido:</b></p>
+        <form action="/removeOrder/{{orders.id}}" method="post">
+            <button type="submit" class="btn btn-outline-secondary">Cancelar pedido</button>
+            <input type="hidden" name="_csrf" value="{{token}}"/>
+        </form>
+        
+        <p><b></b></p>
         <p><b></b></p>
         <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Volver a todos los productos</button>
         <p></p>
