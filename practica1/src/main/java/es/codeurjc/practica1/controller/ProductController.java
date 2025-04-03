@@ -201,31 +201,22 @@ public class ProductController {
 
 	@PostMapping("/remove-from-cart/{productId}")
 	public String removeFromCart(@PathVariable long productId, HttpSession session) {
-		System.out.println("USUARIO BORRA DEL CARRITO");
 
-		// Get or initialize the cart in the session.
-		List<Long> cart = (List<Long>) session.getAttribute("cart");
-
-		Optional<User> oneUser = userService.findById(0);
+		// Get the list of product IDs in the session.
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Optional<User> user = userService.findByName(authentication.getName());
 		Optional<Product> productAux = productService.findById(productId);
-		System.out.println("USUARIO BORRA DEL CARRITO");
 
-		if (productAux.isPresent() && oneUser.isPresent()) {
-			Product product = productAux.get();
-			User user = oneUser.get();
-			user.removeProduct(product);
-			// Save the updated user in the database.
-			userService.save(user);
+		if (productAux.isPresent()) {
+			Product p = productAux.get();
+			p.setStock(p.getStock() +1);
+			productService.save(p);
+
+			user.get().removeProduct(p);
+			userService.save(user.get());
 		}
 
-		if (cart == null) {
-			cart = new ArrayList<>();
-			session.setAttribute("cart", cart);
-			System.out.println("CREAMOS NUEVO CARRITO");
-		}
-		// Remove the product from the cart.
-		cart.remove(productId);
-		session.setAttribute("cart", cart);
+		session.setAttribute("cartProducts", user.get().getProducts());
 		return "redirect:/cart";
 	}
 
@@ -261,6 +252,7 @@ public class ProductController {
 	public String removeFromProducts(@PathVariable long productId) {
 		// Search for the product in the database.
 		Optional<Product> productAux = productService.findById(productId);
+		System.out.println("ENTRA EN REMOVE FROM PRODUCTS");
 
 		if (productAux.isPresent()) {
 			productService.delete(productAux.get()); // Delete the product from the database.
