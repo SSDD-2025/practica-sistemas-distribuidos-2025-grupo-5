@@ -1,11 +1,14 @@
 package es.codeurjc.practica1.controller;
 
+import java.security.Principal;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 
 import es.codeurjc.practica1.model.User;
@@ -17,6 +20,19 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+	@ModelAttribute
+	public void addAttributes(Model model, HttpServletRequest request) {
+		Principal principal = request.getUserPrincipal();
+		if(principal != null) {
+			model.addAttribute("logged", true);
+			model.addAttribute("userName", principal.getName());
+			model.addAttribute("admin", request.isUserInRole("ADMIN"));
+		} else {
+			model.addAttribute("logged", false);
+		}
+	}
+
 
 	@GetMapping("/users/")
 	public String showUsers(Model model) {
@@ -38,8 +54,13 @@ public class UserController {
 		}
 	}
 	@GetMapping("/login")
-	public String login() {
+	public String login(Model model, HttpServletRequest request) {
+		
+		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+		model.addAttribute("token", token.getToken());
+
 		return "login";
+
 	}
 
 	@GetMapping("/loginerror")

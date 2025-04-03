@@ -57,6 +57,8 @@
         <h2>Página privada</h2>
         <p>Estás dentro de una página privada. Si deseas salir, haz clic en el botón.</p>
         <form action="/logout" method="post">
+            <input type="submit" value="Sign Out" />
+            <input type="hidden" name="_csrf" value="{{token}}"/>
             <input type="submit" value="Cerrar sesión">
         </form>
     </div>

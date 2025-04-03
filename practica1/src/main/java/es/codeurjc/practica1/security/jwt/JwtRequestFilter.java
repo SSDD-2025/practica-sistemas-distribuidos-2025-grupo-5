@@ -1,4 +1,4 @@
-package es.securityProfe.jwt;
+package es.codeurjc.practica1.security.jwt;
 
 import java.io.IOException;
 

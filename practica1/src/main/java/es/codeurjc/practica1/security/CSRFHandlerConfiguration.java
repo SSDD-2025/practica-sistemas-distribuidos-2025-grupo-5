@@ -1,4 +1,4 @@
-package es.securityProfe;
+package es.codeurjc.practica1.security;
 
 import org.springframework.context.annotation.Configuration;
 import org.springframework.security.web.csrf.CsrfToken;

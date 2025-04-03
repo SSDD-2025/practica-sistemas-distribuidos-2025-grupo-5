@@ -1,4 +1,4 @@
-package es.securityProfe;
+package es.codeurjc.practica1.security;
 
 import java.util.ArrayList;
 import java.util.List;
@@ -11,8 +11,8 @@ import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
-import es.codeurjc.daw.library.model.User;
-import es.codeurjc.daw.library.repository.UserRepository;
+import es.codeurjc.practica1.model.User;
+import es.codeurjc.practica1.repositories.UserRepository;
 
 @Service
 public class RepositoryUserDetailsService implements UserDetailsService {
@@ -32,7 +32,7 @@ public class RepositoryUserDetailsService implements UserDetailsService {
 		}
 
 		return new org.springframework.security.core.userdetails.User(user.getName(), 
-				user.getEncodedPassword(), roles);
+				user.getPassword(), roles);
 
 	}
 }
