@@ -51,10 +51,13 @@ public class UserService {
 
     public void addOrder(Long userId, Order order) {
         Optional<User> userOptional = userRepository.findById(userId);
+
         if (userOptional.isPresent()) {
+            
             User user = userOptional.get();
-            user.addOrder(order);
+            user.addAnOrder(order);
             userRepository.save(user);
+
         } else {
             throw new RuntimeException("User not found");
         }

@@ -436,8 +436,6 @@ public class ProductController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Optional<User> user = userService.findByName(authentication.getName());
 
-		System.out.println("ENTRA EN CHECKOUT ADIOS CARRITO");
-
 			if (user != null) {
 				User userAux=user.get();
 				List<Product> cartProduct= userAux.getProducts();
@@ -460,20 +458,11 @@ public class ProductController {
 
 				Order order = new Order(userAux, cartProduct);
 
-				orderService.save(order);
-				System.out.println("NO FALLA SAVE DE ORDER");
-
 				userService.addOrder(userAux.getId(), order);
-				System.out.println("NO FALLA ADD DE ORDER");
-
 				userService.save(userAux);
-				System.out.println("NO FALLA SAVE DE USER");
-
-				System.out.println("EL PEDIDO ES: "+order);
 				model.addAttribute("orders", order);
 			}
 			return "/gateway";
-		
 	}
 
 	@GetMapping("/checkoutOne/{id}")

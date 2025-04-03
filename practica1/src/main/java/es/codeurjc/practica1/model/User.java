@@ -150,7 +150,7 @@ public class User {
         return this.orders;
     }
 
-    public void addOrder(Order order){
+    public void addAnOrder(Order order){
         this.orders.add(order);
     }
 

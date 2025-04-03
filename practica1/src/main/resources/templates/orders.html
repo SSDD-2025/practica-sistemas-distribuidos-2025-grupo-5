@@ -3,10 +3,12 @@
 <div class="content">
     <p></p>
     <h1>Tus pedidos</h1>
-    <div class="container" style="background-color: #eee4e4; padding: 20px; border-radius: 5px;">
+    <div class="container" style="background-color: #ffffff; padding: 20px; border-radius: 5px;">
 
         {{#orderList}}
-                <div class="container" style="background-color: #c9c2c2; padding: 20px; border-radius: 5px;">
+                <div class="container" style="background-color: #e1dada; padding: 20px; border-radius: 5px;">
+                    <p class="order-id">Pedido: {{id}}</p>
+
                     {{#products}}
                         <a href="/products/{{id}}" class="product-item">
                             <img class="product-img" src="/products/{{id}}/image" alt="{{name}}">        
@@ -15,6 +17,8 @@
                             <p><b>Descripción:</b> {{description}}</p>
                         </a>
                     {{/products}}
+                </div>
+                <div class="container" style="background-color: #ffffff; padding: 20px; border-radius: 5px;">
                 </div>
             </a>
             <p></p>
