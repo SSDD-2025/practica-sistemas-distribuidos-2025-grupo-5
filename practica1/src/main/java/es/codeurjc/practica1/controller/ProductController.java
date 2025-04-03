@@ -523,9 +523,15 @@ public class ProductController {
 		Optional<User> userA = userService.findByName(authentication.getName());
 		Optional<Order> order = orderService.findById(id);
 
+
 		try {
 			if (order!=null) {
 
+				for (Product product : order.get().getProducts()) {
+					product.setStock(product.getStock() + 1);
+					productService.save(product);
+				}
+				
 				User user = userA.get();
 				user.deleteOrder(order.get());  //Elimina de la lista de órdenes
 				order.get().deleteAllProducts();  // Limpia productos si es necesario
