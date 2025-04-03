@@ -440,6 +440,7 @@ public class ProductController {
 				
 				if(cartProduct.size()==1){
 					order= new Order(userAux, cartProduct.get(0));
+					order.setTotalPrice(order.getTotalPrice()+cartProduct.get(0).getPrice());
 					cartProduct.get(0).setStock(cartProduct.get(0).getStock() - 1);
 					productService.save(cartProduct.get(0));
 					cartProduct.get(0).setOrder(order);
@@ -453,6 +454,7 @@ public class ProductController {
 	
 						if (product.getStock() > 0) {
 							order.addProduct(product);
+							order.setTotalPrice(order.getTotalPrice()+cartProduct.get(i).getPrice());
 							product.setStock(product.getStock() - 1);
 							product.setOrder(order);
 							productService.save(product);
@@ -500,6 +502,8 @@ public class ProductController {
 				} else {
 
 					Order order = new Order(optionalUser.get(), cartProducts);
+					order.setTotalPrice(order.getTotalPrice()+product.getPrice());
+
 					orderService.save(order);
 					System.out.println("Order id (checkoutOne) ="+order.getId());
 

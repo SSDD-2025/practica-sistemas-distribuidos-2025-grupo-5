@@ -5,6 +5,8 @@
     <div>
         <p><b>Ya está todo gestionado, le llegará en 10-15 días:</b></p>
         {{#orders}}
+            <p><b>Precio Total del Pedido:</b> {{totalPrice}} €</p>
+
             {{#products}}
             <a href="/products/{{id}}" class="product-item">
                 <img class="product-img" src="/products/{{id}}/image" alt="{{name}}">        
