@@ -16,7 +16,9 @@ import org.springframework.core.io.Resource;
 import org.springframework.http.HttpHeaders;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
 import org.springframework.security.core.annotation.AuthenticationPrincipal;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -103,13 +105,14 @@ public class ProductController {
 	}
 
 	@GetMapping("/cart")
-	public String showCart(HttpSession session, Model model,@AuthenticationPrincipal UserDetails userDetails) {
-		// Get the list of product IDs in the session.
+	public String showCart(HttpSession session, Model model) {
+		
 		List<Long> cartProductIds = (List<Long>) session.getAttribute("cart");
 		List<Product> cartProducts = new ArrayList<>();
+		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-
-		Optional<User> oneUser = userService.findByName(userDetails.getUsername());
+		Optional<User> oneUser = userService.findByName(authentication.getName());
 		System.out.println("USUARIO ESTA EN EL CARRITO");
 		if (oneUser.isPresent()) {
 			User user = oneUser.get();
@@ -431,42 +434,46 @@ public class ProductController {
 
 	// ORDER
 	@GetMapping("/checkout")
-	public String showGateway(@AuthenticationPrincipal User user, HttpSession session, Model model) {
+	public String showGateway( HttpSession session, Model model) {
 		// Get the list of product IDs in the session.
-		Optional<User> optionalUser = userService.findByName(user.getName());
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Optional<User> user = userService.findByName(authentication.getName());
 
-		List<Product> cartProduct = (List<Product>) session.getAttribute("cartProducts");
-		System.out.println("CARRITO PARA COMPRAR"+cartProduct);
-
-		if (cartProduct==null) {
-			return "redirect:/error";
-		} else {
-			System.out.println("ENTRA EN CHECKOUT ADIOS CARRITO");
+		System.out.println("ENTRA EN CHECKOUT ADIOS CARRITO");
 
 			if (user != null) {
-
+				User userAux=user.get();
+				List<Product> cartProduct= userAux.getProducts();
+				System.out.println("CARRITO PARA COMPRAR"+cartProduct);
+	
 				for (int i = 0; i < cartProduct.size(); i++) {
 					Product product =cartProduct.get(i);
 					
 					if (product.getStock() > 0) {
 						product.setStock(product.getStock() - 1);
 						productService.save(product);
-						model.addAttribute("product", product);
+						//model.addAttribute("product", product);
 					} else {
 						throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
 					}
-					cartProduct.add(product);
 				}
 
-				Order order = new Order(user, cartProduct);
+				Order order = new Order(userAux, cartProduct);
+
 				orderService.save(order);
-				userService.addOrder(user.getId(), order);
-				userService.save(user);
+				System.out.println("NO FALLA SAVE DE ORDER");
+
+				userService.addOrder(userAux.getId(), order);
+				System.out.println("NO FALLA ADD DE ORDER");
+
+				userService.save(userAux);
+				System.out.println("NO FALLA SAVE DE USER");
+
 				System.out.println("EL PEDIDO ES: "+order);
 				model.addAttribute("orders", order);
 			}
 			return "/gateway";
-		}
+		
 	}
 
 	@GetMapping("/checkoutOne/{id}")

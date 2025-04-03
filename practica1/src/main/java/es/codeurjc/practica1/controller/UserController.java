@@ -23,7 +23,13 @@ public class UserController {
 
 	@ModelAttribute
 	public void addAttributes(Model model, HttpServletRequest request) {
+
 		Principal principal = request.getUserPrincipal();
+		//-------------
+		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+		model.addAttribute("token", token.getToken());
+		//-------------
+
 		if(principal != null) {
 			model.addAttribute("logged", true);
 			model.addAttribute("userName", principal.getName());
@@ -35,17 +41,24 @@ public class UserController {
 
 
 	@GetMapping("/users/")
-	public String showUsers(Model model) {
-
+	public String showUsers(Model model, HttpServletRequest request) {
+		//-------------
+		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+		model.addAttribute("token", token.getToken());
+		//-------------
 		model.addAttribute("users", userService.findAll());
 
 		return "users";
 	}
 
 	@GetMapping("/users/{id}")
-	public String showUser(Model model, @PathVariable long id) {
+	public String showUser(Model model, @PathVariable long id, HttpServletRequest request) {
 
 		Optional<User> user = userService.findById(id);
+		//-------------
+		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+		model.addAttribute("token", token.getToken());
+		//-------------
 		if (user.isPresent()) {
 			model.addAttribute("user", user.get());
 			return "user";
@@ -64,7 +77,11 @@ public class UserController {
 	}
 
 	@GetMapping("/loginerror")
-	public String loginerror() {
+	public String loginerror(Model model, HttpServletRequest request) {
+		//-------------
+		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+		model.addAttribute("token", token.getToken());
+		//-------------
 		return "loginerror";
 	}
 	
@@ -72,6 +89,10 @@ public class UserController {
 		public String privatePage(Model model, HttpServletRequest request) {
 		String name = request.getUserPrincipal().getName();
 		User user = userService.findByName(name).orElseThrow();
+		//-------------
+		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
+		model.addAttribute("token", token.getToken());
+		//-------------
 		model.addAttribute("username", user.getName());
 		model.addAttribute("admin", request.isUserInRole("ADMIN"));
 		return "private";

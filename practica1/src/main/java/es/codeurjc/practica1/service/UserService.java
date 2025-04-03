@@ -4,6 +4,7 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
 import es.codeurjc.practica1.model.Order;
@@ -39,8 +40,9 @@ public class UserService {
         return userRepository.findAllById(ids);
     }
 
-    public User getLoggedUser() {
-        return userRepository.findAll().get(0);
+    public User getLoggedUser(String name) {
+        User user=userRepository.findByName(name).orElseThrow(()-> new UsernameNotFoundException("USER SERVICE LINE 44") );
+        return user;
     }
 
     public Optional<User> findByName(String name) {

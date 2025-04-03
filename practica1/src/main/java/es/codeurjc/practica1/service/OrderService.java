@@ -36,6 +36,8 @@ public class OrderService {
 
     //Guardar un pedido en la base de datos
     public void save(Order order) {
+        System.out.println("estoy en order service");
+
         orderRepository.save(order);
     }
 

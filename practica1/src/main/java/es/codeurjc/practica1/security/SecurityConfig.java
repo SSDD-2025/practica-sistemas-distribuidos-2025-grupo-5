@@ -72,6 +72,12 @@ public class SecurityConfig {
 					.requestMatchers(HttpMethod.POST,"/api/users/**").hasRole("ADMIN")
 					.requestMatchers(HttpMethod.PUT,"/api/users/**").hasRole("ADMIN")
 					.requestMatchers(HttpMethod.DELETE,"/api/users/**").hasRole("ADMIN")
+                    .requestMatchers("/api/cart/**").hasRole("USER")
+                    .requestMatchers("/api/checkout/**").hasRole("USER")
+                    .requestMatchers("/api/gateway").hasRole("USER")
+
+
+                    
 					// PUBLIC ENDPOINTS
 					.anyRequest().permitAll()
 			);
@@ -133,7 +139,7 @@ public class SecurityConfig {
         .logoutSuccessUrl("/")
         .permitAll());
         // Disable CSRF at the moment
-        http.csrf(csrf -> csrf.disable());
+        //http.csrf(csrf -> csrf.disable());
         return http.build();
 	}
 }
