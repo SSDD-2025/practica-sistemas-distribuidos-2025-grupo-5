@@ -1,6 +1,9 @@
 package es.codeurjc.practica1.controller;
 
+import java.io.IOException;
 import java.security.Principal;
+import java.sql.SQLException;
+import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -10,6 +13,8 @@ import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 
 import es.codeurjc.practica1.model.User;
 import es.codeurjc.practica1.service.UserService;
@@ -96,6 +101,37 @@ public class UserController {
 		model.addAttribute("username", user.getName());
 		model.addAttribute("admin", request.isUserInRole("ADMIN"));
 		return "private";
+	}
+	
+	@PostMapping("/newuser")
+	public String newProductProcess(
+			Model model,
+			@RequestParam String name, @RequestParam String email, @RequestParam String password, @RequestParam List<String> roles, @RequestParam int phoneNumber) throws IOException, SQLException {
+
+		User user = new User(name, email, password, roles, phoneNumber);
+
+		if (user.getName() == null || user.getPassword() == null || user.getEmail() == null) {
+			return "redirect:/error";
+		}
+		userService.save(user);
+
+		model.addAttribute("userName",user.getName());
+
+		return "redirect:/admin/";
+	}
+
+	@PostMapping("/removeUser/{userName}")
+	public String removeUser(@PathVariable String name) {
+		// Search for the product in the database.
+		Optional<User> User = userService.findByName(name);
+
+		if (User.isPresent()) {
+			userService.delete(User.get()); // Delete the product from the database.
+			System.out.println("Producto eliminado: " + name);
+		} else {
+			return "redirect:/error";
+		}
+		return "redirect:/admin"; // Redirect to the updated product list.
 	}
 
 }

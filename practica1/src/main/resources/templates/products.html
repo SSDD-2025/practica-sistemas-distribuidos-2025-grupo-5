@@ -25,6 +25,13 @@
     </div>
 </div>
 
+<!-- Botón de redirección a /admin -->
+<form action="/admin" style="position: absolute; top: 150px; right: 80px;">
+    <button class="btn btn-primary" style="background-color: #ec3818; color: black; width: 120px; margin-top: 20px;">Funciones de Admin</button>
+    <input type="hidden" name="_csrf" value="{{token}}"/>
+</form>
+
+
 <style>
     /* General container for products */
     .product-container {
@@ -67,6 +74,7 @@
         margin-bottom: 15px;
         background-color: #f9f9f9; /* Background color for smaller images. */
     }
+
     /* Product name style */
     .product-name {
         font-size: 1.3em;
@@ -116,7 +124,23 @@
         justify-content: space-between;
     }
 
+    /* Estilo para el botón de redirección a /admin */
+    .admin-btn {
+        position: absolute;
+        top: 20px;
+        right: 20px;
+        background-color: #ff4500;
+        color: white;
+        padding: 10px 20px;
+        border-radius: 5px;
+        text-decoration: none;
+        font-weight: bold;
+        transition: background-color 0.3s ease;
+    }
 
+    .admin-btn:hover {
+        background-color: #ff6347; /* Color más oscuro al pasar el mouse */
+    }
 </style>
 
 <script>

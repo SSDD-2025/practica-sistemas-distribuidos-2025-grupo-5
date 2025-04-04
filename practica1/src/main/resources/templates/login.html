@@ -81,7 +81,11 @@
 
         <!-- Botón de registro -->
         <p>¿No tienes cuenta? <p>
-        <button class="register-button" onclick="window.location.href = '/register';">Registrarse</button>
+        <form action="/login" method="post">
+        <button class="register-button" onclick="window.location.href = '/register'">Registrarse</button>
+        <input type="hidden" name="_csrf" value="{{token}}"/>
+        </form>
+
     </div>
 
 </body>
