@@ -72,9 +72,13 @@ public class SecurityConfig {
 					.requestMatchers(HttpMethod.POST,"/api/users/**").hasRole("ADMIN")
 					.requestMatchers(HttpMethod.PUT,"/api/users/**").hasRole("ADMIN")
 					.requestMatchers(HttpMethod.DELETE,"/api/users/**").hasRole("ADMIN")
+                    .requestMatchers("/style.css/**").hasRole("ADMIN")
+
+                    .requestMatchers("/admin").hasRole("ADMIN")
                     .requestMatchers("/api/cart/**").hasRole("USER")
                     .requestMatchers("/api/checkout/**").hasRole("USER")
                     .requestMatchers("/api/gateway").hasRole("USER")
+                    .requestMatchers("/style.css/**").hasRole("USER")
 
 
                     
@@ -112,6 +116,8 @@ public class SecurityConfig {
         .requestMatchers("/css/**").permitAll()
         .requestMatchers("/images/public/**").permitAll()
         .requestMatchers("/error").permitAll()
+        .requestMatchers("/style.css/**").permitAll()
+        .requestMatchers("/register").permitAll()
 
         // PRIVATE PAGES
         .requestMatchers("/private").hasAnyRole("USER")
@@ -127,7 +133,9 @@ public class SecurityConfig {
         .requestMatchers("/removeOrder/**").hasAnyRole("USER")
         .requestMatchers("/update/**").hasAnyRole("USER")
 
-        .requestMatchers("/products/1/gateway").hasAnyRole("USER")
+        .requestMatchers("/newproduct/**").hasAnyRole("ADMIN")
+        .requestMatchers("/edit/**").hasAnyRole("ADMIN")
+        .requestMatchers("/remove-from-products/**").hasAnyRole("ADMIN")
         .requestMatchers("/gateway").hasAnyRole("USER")
         .requestMatchers("/admin").hasAnyRole("ADMIN"))
         .formLogin(formLogin -> formLogin

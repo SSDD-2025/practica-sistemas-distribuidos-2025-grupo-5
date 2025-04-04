@@ -100,7 +100,7 @@ public class ProductController {
 
 	@GetMapping("/newproduct")
 	public String newProduct(Model model) {
-		model.addAttribute("availableShops", userService.findAll());
+		model.addAttribute("availableProducts", userService.findAll());
 		return "newProductPage";
 	}
 

@@ -1,5 +1,6 @@
-<!DOCTYPE html>
+!DOCTYPE html>
 <html>
+
 <head>
 	<title>B&S</title>
 	<base href=".">
@@ -17,6 +18,8 @@
 </head>
 
 <body>
+	<div class="container" style="padding-top: calc(1rem - 5px); padding-bottom: calc(1rem + 25px);">
+
 	<nav class="navbar navbar-expand-lg bg-dark" data-bs-theme="dark">
 		<div class="toolbar">
 			<button onclick="location.href='/'">
@@ -33,8 +36,21 @@
 				<option value="en">English</option>
 				<option value="fr">Français</option>
 			</select>
-			<button onclick="location.href='/login'">🔑 Iniciar Sesión</button>
+			<!--<form action="/login">-->
+				<!--<input type="hidden" name="_csrf" value="{{token}}"/>-->
+				<form action="/login" method="post" class="d-flex align-items-center p-2">
+					<input type="text" class="form-control me-3" name="username" placeholder="Username">
+					<input type="password" class="form-control me-3" name="password" placeholder="Password">
+					<button type="submit" class="btn btn-primary btn-nowrap w-50" style="background-color: green; border-color: green; color: white;">🔑 Iniciar Sesión</button>
+					<input type="hidden" name="_csrf" value="{{token}}" />
+				</form>
+				<form action="/logout" method="post" class="d-flex align-items-center p-2">
+					<button type="submit" class="btn btn-primary btn-nowrap w-50" style="background-color: rgb(219, 47, 16); border-color: rgb(233, 41, 7); color: white;">🔒 Cerrar Sesión</button>
+					<input type="hidden" name="_csrf" value="{{token}}" />
+				</form>
+			<!--</form>-->
 		</div>
 	</nav>
+	</div>
 
 	<div class="container">
