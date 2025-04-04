@@ -88,4 +88,8 @@ public class Order {
     private double calculateTotalPrice() {
         return products.stream().mapToDouble(Product::getPrice).sum();
     }
+
+    public void addProduct(Product p){
+        this.products.add(p);
+    }
 }

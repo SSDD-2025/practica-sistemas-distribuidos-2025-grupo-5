@@ -8,6 +8,7 @@
         {{#orderList}}
                 <div class="container" style="background-color: #e1dada; padding: 20px; border-radius: 5px;">
                     <p class="order-id">Pedido: {{id}}</p>
+                    <p class="order-id"><b>Precio Total: {{totalPrice}} €</b></p>
 
                     {{#products}}
                         <a href="/products/{{id}}" class="product-item">
@@ -17,6 +18,7 @@
                             <p><b>Descripción:</b> {{description}}</p>
                         </a>
                     {{/products}}
+                    <p></p>
                 </div>
                 <div class="container" style="background-color: #ffffff; padding: 20px; border-radius: 5px;">
                 </div>
