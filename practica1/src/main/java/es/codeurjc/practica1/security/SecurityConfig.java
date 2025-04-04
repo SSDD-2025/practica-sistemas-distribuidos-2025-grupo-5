@@ -125,6 +125,7 @@ public class SecurityConfig {
         .requestMatchers("/remove-from-cart/**").hasAnyRole("USER")
         .requestMatchers("/showOrders/**").hasAnyRole("USER")
         .requestMatchers("/removeOrder/**").hasAnyRole("USER")
+        .requestMatchers("/update/**").hasAnyRole("USER")
 
         .requestMatchers("/products/1/gateway").hasAnyRole("USER")
         .requestMatchers("/gateway").hasAnyRole("USER")
