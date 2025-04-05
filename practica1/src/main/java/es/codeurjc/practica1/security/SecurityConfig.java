@@ -122,6 +122,7 @@ public class SecurityConfig {
         .requestMatchers("/reviews/**").permitAll()
         .requestMatchers("/newReview/**").permitAll()
 
+
         // PRIVATE PAGES
         .requestMatchers("/private").hasAnyRole("USER")
         .requestMatchers("/checkoutOne/**").hasAnyRole("USER")
