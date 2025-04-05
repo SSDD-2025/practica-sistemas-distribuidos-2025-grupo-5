@@ -1,0 +1,44 @@
+{{>header}}
+ <p></p>
+ <p></p>
+ <h2>Nuevo Usuario</h2>
+ 
+ <form action="/saveNewUser" method="post" enctype="multipart/form-data">
+ 
+   <div class="mb-3">
+     <label class="form-label">Nombre del usuario:</label>
+     <input type="text" class="form-control" name="name" id="name" required>
+   </div>
+ 
+   <div class="mb-3">
+     <label class="form-label">Email: </label>
+     <textarea class="form-control" name="email" id="email" required></textarea>
+   </div>
+ 
+   <div class="mb-3">
+     <label class="form-label">Contraseña: </label>
+     <input type="text" class="form-control" name="encodedPassword" id="encodedPassword" required>
+   </div>
+ 
+   <div class="mb-3">
+     <label class="form-label">Numero de tfo: </label>
+     <input type="number" class="form-control" name="phoneNumber" id="phoneNumber" required>
+   </div>
+   <div class="mb-3">
+    <label for="roles" class="form-label">Rol:</label>
+    <select class="form-select" name="roles" id="roles" required>
+      <option value="" disabled selected>Selecciona un rol</option>
+      <option value="ROLE_ADMIN">Admin</option>
+      <option value="ROLE_USER">User</option>
+    </select>
+  </div>
+
+  <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Cancelar</button>
+   
+  <form action="/saveNewUser" method="POST">
+     <button class="btn btn-primary" type="submit">Guardar</button>
+     <input type="hidden" name="_csrf" value="{{token}}"/>
+  </form>
+</form>
+ 
+ {{>footer}}

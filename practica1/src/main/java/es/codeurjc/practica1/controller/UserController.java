@@ -20,6 +20,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import es.codeurjc.practica1.model.User;
+import es.codeurjc.practica1.service.ProductService;
 import es.codeurjc.practica1.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -28,6 +29,9 @@ public class UserController {
 
 	@Autowired
 	private UserService userService;
+
+	@Autowired
+	private ProductService productService;
 
 	@ModelAttribute
 	public void addAttributes(Model model, HttpServletRequest request) {
@@ -109,22 +113,61 @@ public class UserController {
 		model.addAttribute("admin", request.isUserInRole("ADMIN"));
 		return "private";
 	}
-	
-	@PostMapping("/newuser")
-	public String newProductProcess(
+
+	@GetMapping("/newUser")
+	public String newUser(Model model) {
+		//TOOLBAR
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		boolean isLoggedIn = authentication != null &&
+		authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken);
+		model.addAttribute("isLoggedIn", isLoggedIn);
+		//-----
+		return "newUser";
+	}
+
+	@PostMapping("/saveNewUser")
+	public String saveNewUser(
 			Model model,
-			@RequestParam String name, @RequestParam String email, @RequestParam String password, @RequestParam List<String> roles, @RequestParam int phoneNumber) throws IOException, SQLException {
+			@RequestParam String name, 
+			@RequestParam String email, 
+			@RequestParam String encodedPassword, 
+			@RequestParam List<String> roles, 
+			@RequestParam int phoneNumber
+		) throws IOException, SQLException {
 
-		User user = new User(name, email, password, roles, phoneNumber);
+		//TOOLBAR
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		boolean isLoggedIn = authentication != null &&
+		authentication.isAuthenticated() &&
+		!(authentication instanceof AnonymousAuthenticationToken);
+		model.addAttribute("isLoggedIn", isLoggedIn);
+		//-----
 
-		if (user.getName() == null || user.getPassword() == null || user.getEmail() == null) {
+		if (name == null || encodedPassword == null || email== null) {
 			return "redirect:/error";
 		}
+		User user = new User(name, email, encodedPassword, roles, phoneNumber);
 		userService.save(user);
 
-		model.addAttribute("userName",user.getName());
+		if (isLoggedIn) {
+			boolean isAdmin = authentication.getAuthorities().stream()
+											.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+			
+			if (isAdmin) {
+				model.addAttribute("isAdmin", isAdmin);
+				System.out.println("El usuario es ADMIN");
+			} else {
+				model.addAttribute("isAdmin", isAdmin);
+				System.out.println("El usuario NOOOOO es ADMIN");
+			}
+		}
 
-		return "redirect:/admin/";
+		model.addAttribute("isLoggedIn", isLoggedIn);
+		model.addAttribute("users", userService.findAll());
+		model.addAttribute("products", productService.findAll());
+		//model.addAttribute("userName",user.getName());
+
+		return "products";
 	}
 
 	@PostMapping("/removeUser/{userName}")

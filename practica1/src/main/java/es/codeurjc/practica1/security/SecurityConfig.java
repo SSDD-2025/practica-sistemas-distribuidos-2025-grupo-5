@@ -80,8 +80,6 @@ public class SecurityConfig {
                     .requestMatchers("/api/gateway").hasRole("USER")
                     .requestMatchers("/style.css/**").hasRole("USER")
 
-
-                    
 					// PUBLIC ENDPOINTS
 					.anyRequest().permitAll()
 			);
@@ -139,7 +137,9 @@ public class SecurityConfig {
 
         .requestMatchers("/gateway").hasAnyRole("USER")
         .requestMatchers("/admin").hasAnyRole("ADMIN")
-        .requestMatchers("/newuser/**").hasAnyRole("ADMIN")
+        .requestMatchers("/newUser/**").hasAnyRole("ADMIN")
+        .requestMatchers("/saveNewUser/**").hasAnyRole("ADMIN")
+
         .requestMatchers("/removeUser/**").hasAnyRole("ADMIN"))
         .formLogin(formLogin -> formLogin
         .loginPage("/login")

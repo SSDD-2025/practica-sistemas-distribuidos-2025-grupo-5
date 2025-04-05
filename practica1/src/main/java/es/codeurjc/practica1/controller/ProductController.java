@@ -76,11 +76,11 @@ public class ProductController {
 			} else {
 				model.addAttribute("isAdmin", isAdmin);
 				System.out.println("El usuario NOOOOO es ADMIN");
-
 			}
 		}
 
 		model.addAttribute("isLoggedIn", isLoggedIn);
+		model.addAttribute("users", userService.findAll());
 		model.addAttribute("products", productService.findAll());
 		return "products";
 	}
@@ -184,7 +184,6 @@ public class ProductController {
 			model.addAttribute("isEmpty", true);
 
 		}
-
 		return "cart"; // Display the cart view.
 	}
 
@@ -239,6 +238,7 @@ public class ProductController {
 
 		for(Product aux:user.get().getProducts()){
 			cart.add(aux.getId());
+			System.out.println("id productos carro"+aux.getId());
 		}
 
 		cart.add(productId);
@@ -255,11 +255,10 @@ public class ProductController {
 			// stock");
 		}
 
-		if (productAux.isPresent()) {
-			Product product = productAux.get();
-			user.get().addProduct(product);
-			userService.save(user.get());
-		}
+		Product product = productAux.get();
+		user.get().addProduct(product);
+		userService.save(user.get());
+		
 
 		// Add the product to the cart.
 		session.setAttribute("cartProducts", cart);
