@@ -118,6 +118,9 @@ public class SecurityConfig {
         .requestMatchers("/error").permitAll()
         .requestMatchers("/style.css/**").permitAll()
         .requestMatchers("/register").permitAll()
+        .requestMatchers("/productReviews/**").permitAll()
+        .requestMatchers("/reviews/**").permitAll()
+        .requestMatchers("/newReview/**").permitAll()
 
         // PRIVATE PAGES
         .requestMatchers("/private").hasAnyRole("USER")
@@ -132,6 +135,7 @@ public class SecurityConfig {
         .requestMatchers("/showOrders/**").hasAnyRole("USER")
         .requestMatchers("/removeOrder/**").hasAnyRole("USER")
         .requestMatchers("/update/**").hasAnyRole("USER")
+        .requestMatchers("/removeReview/**").hasAnyRole("ADMIN")
 
         .requestMatchers("/gateway").hasAnyRole("USER")
         .requestMatchers("/admin").hasAnyRole("ADMIN")

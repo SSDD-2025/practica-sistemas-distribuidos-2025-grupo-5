@@ -25,10 +25,10 @@
         <div style="margin-top: 20px;"></div>
 
         <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Volver a todos los productos</button>
-
-        <div style="margin-top: 20px;"></div>
-        <button class="btn btn-outline-secondary" onclick="location.href='/checkout'; return false;">Realizar compra</button>
-
+        {{#isEmpty}}
+            <div style="margin-top: 20px;"></div>
+            <button class="btn btn-outline-secondary" onclick="location.href='/checkout'; return false;">Realizar compra</button>
+        {{/isEmpty}}
     </div>
 </div>
 

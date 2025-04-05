@@ -7,6 +7,9 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -71,14 +74,18 @@ public class UserController {
 			return "users";
 		}
 	}
+
 	@GetMapping("/login")
 	public String login(Model model, HttpServletRequest request) {
-		
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		boolean isLoggedIn = authentication != null &&
+								authentication.isAuthenticated() &&
+								!(authentication instanceof AnonymousAuthenticationToken);
+
 		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
 		model.addAttribute("token", token.getToken());
-
+		model.addAttribute("isLoggedIn", isLoggedIn);
 		return "login";
-
 	}
 
 	@GetMapping("/loginerror")

@@ -1,12 +1,11 @@
 {{>header}}
 
-<div>
-  <div class="container">
+<div class="container">
     <div class="row align-items-center">
-      <div class="col-4">
+    <div class="col-4">
         <img class="img-thumbnail" src="/products/{{product.id}}/image" style="width: 100%; height: auto;">
-      </div>
-      <div class="col-8">
+    </div>
+    <div class="col-8">
         <p><b></b></p>
         <h2>Nombre del producto: "{{product.name}}"</h2>
         <div>
@@ -14,16 +13,14 @@
         </div>
         <p><b>Precio: </b>{{product.price}} €</p>
 
-        <p><b>Stock disponible:</b> {{{product.stock}}} unidades</p>
+        <p><b>Stock disponible:</b> {{{product.stock}}} units</p>
         <div>
-          <p><b>Marca:</b> {{{product.provider}}}</p>
+        <p><b>Marca:</b> {{{product.provider}}}</p>
         </div>
 
         <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Volver a todos los productos</button>
         <button class="btn btn-outline-dark" onclick="location.href='/productReviews/{{product.id}} '">Ver comentarios</button>
-      </div>
 
-      {{#isAdmin}}
         <p><b>¿Quieres editarlo?</b></p>
         <button class="btn btn-primary" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/edit/{{product.id}}'">EDITAR</button>
         <p><b></b></p>
@@ -33,30 +30,10 @@
             <form action="/remove-from-products/{{product.id}}" method="post">
                 <button class="btn btn-danger" style="width: 1200%; max-width: 1172px; margin-left: -28px; margin-bottom: 100px;">BORRAR</button>
                 <input type="hidden" name="_csrf" value="{{token}}">
+
             </form>
         </div>
-      {{/isAdmin}}
-
-      {{^isAdmin}}
-        <p><b></b></p>
-        <p><b>¿Quieres añadirlo al carrito?</b></p> 
-        <button id="add-to-cart" class="btn btn-success" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/add-to-cart/{{product.id}}'">AÑADIR AL CARRITO</button>
-        <p></p>
-        
-        <p><b>¿Quieres comprarlo ahora?</b></p>
-        <div style="justify-content: center;">
-          <form method="get" action="/checkoutOne/{{product.id}}">
-              <button 
-                  id="buy-now" 
-                  type="submit" 
-                  class="btn btn-warning" 
-                  style="width: 1200%; max-width: 1172px; margin-left: -28px;">
-                  COMPRAR AHORA
-              </button>
-          </form>
-          <p id="out-of-stock-message" style="color: red; font-weight: bold; display: none;">Lo sentimos, este producto está agotado.</p>
-        </div>
-      {{/isAdmin}}
+    
     </div>
   </div>
 </div>
@@ -76,3 +53,4 @@
         outOfStockMessage.style.display = 'block';
     }
 </script>
+

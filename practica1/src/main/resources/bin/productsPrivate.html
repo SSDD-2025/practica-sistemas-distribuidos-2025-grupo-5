@@ -18,17 +18,18 @@
             </a>
             {{/products}}
         </div>
-
-        {{#isAdmin}}
-            <p><b></b></p>
-            <p>¿Quieres añadir algún producto?</p>
-            <button class="btn btn-primary" style="background-color: #69a3e2; color: black;" onclick="location.href='/newproduct'">Nuevo producto</button>
-        {{/isAdmin}}
-    
+        
+        <p><b></b></p>
+        <p>¿Quieres añadir algún producto?</p>
+        <button class="btn btn-primary" style="background-color: #69a3e2; color: black;" onclick="location.href='/newproduct'">Nuevo producto</button>
     </div>
 </div>
 
-
+<!-- Botón de redirección a /admin -->
+<form action="/admin" style="position: absolute; top: 150px; right: 80px;">
+    <button class="btn btn-primary" style="background-color: #ec3818; color: black; width: 120px; margin-top: 20px;" onclick="location.href='/admin'">Funciones de Admin</button>
+    <input type="hidden" name="_csrf" value="{{token}}"/>
+</form>
 
 <style>
     /* General container for products */

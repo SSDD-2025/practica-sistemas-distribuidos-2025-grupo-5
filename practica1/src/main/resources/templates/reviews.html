@@ -7,10 +7,16 @@
         <p class="review-title">De: {{author.name}}</p>
         <p class="review-title">Título:{{title}}</p>
         <p class="review-text">Comentario: {{text}}</p>
-        <form method="post" action="/removeReview/{{id}}" style="margin: 0;">
-            <button type="submit" class="btn btn-danger remove-button" style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">Borrar
-            </button>
-        </form>
+
+        {{#isAdmin}}
+            <form method="post" action="/removeReview/{{id}}" style="margin: 0;">
+                <button type="submit" class="btn btn-danger remove-button" style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">Borrar
+                </button>
+                <input type="hidden" name="_csrf" value="{{token}}">
+
+            </form>
+        {{/isAdmin}}
+        
     </div>
     {{/reviews}}
 
