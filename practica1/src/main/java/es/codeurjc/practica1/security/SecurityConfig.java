@@ -74,7 +74,6 @@ public class SecurityConfig {
 					.requestMatchers(HttpMethod.DELETE,"/api/users/**").hasRole("ADMIN")
                     .requestMatchers("/style.css/**").hasRole("ADMIN")
 
-                    .requestMatchers("/admin").hasRole("ADMIN")
                     .requestMatchers("/api/cart/**").hasRole("USER")
                     .requestMatchers("/api/checkout/**").hasRole("USER")
                     .requestMatchers("/api/gateway").hasRole("USER")
@@ -120,7 +119,8 @@ public class SecurityConfig {
         .requestMatchers("/register").permitAll()
 
         // PRIVATE PAGES
-        .requestMatchers("/private").hasAnyRole("USER")
+        .requestMatchers("/private").hasAnyRole("USER","ADMIN")
+        .requestMatchers("/productReviews/**").hasAnyRole("USER","ADMIN")
         .requestMatchers("/checkoutOne/**").hasAnyRole("USER")
         .requestMatchers("/checkout/**").hasAnyRole("USER")
         .requestMatchers("/edit/**").hasAnyRole("USER","ADMIN")
@@ -134,7 +134,7 @@ public class SecurityConfig {
         .requestMatchers("/update/**").hasAnyRole("USER")
 
         .requestMatchers("/gateway").hasAnyRole("USER")
-        .requestMatchers("/admin").hasAnyRole("ADMIN")
+        .requestMatchers("/admin/**").hasAnyRole("ADMIN")
         .requestMatchers("/newuser/**").hasAnyRole("ADMIN")
         .requestMatchers("/removeUser/**").hasAnyRole("ADMIN"))
         .formLogin(formLogin -> formLogin

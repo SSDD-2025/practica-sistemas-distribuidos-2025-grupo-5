@@ -12,7 +12,7 @@
                 <div class="user-item-content">
                     <p class="user-name">{{name}}</p>
                     <p>¿Quieres eliminar este usuario?</p>
-                    <form action="/removeUser/{{userName}}">
+                    <form action="/removeUser/{{userName}}" method ="post">
                     <button class="btn btn-primary" style="background-color: #69a3e2; color: black;">Eliminar usuario</button>
                     <input type="hidden" name="_csrf" value="{{token}}"/>
                     </form>
@@ -24,7 +24,7 @@
         
         <p><b></b></p>
         <p>¿Quieres añadir a un usuario?</p>
-        <form action ="/newuser" method ="post">
+        <form action ="/newuser" method ="get">
         <button class="btn btn-primary" style="background-color: #69a3e2; color: black;">Nuevo usuario</button>
         <input type="hidden" name="_csrf" value="{{token}}"/>
         </form>

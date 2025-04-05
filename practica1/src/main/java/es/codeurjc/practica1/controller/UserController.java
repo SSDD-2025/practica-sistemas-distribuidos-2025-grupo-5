@@ -103,6 +103,12 @@ public class UserController {
 		return "private";
 	}
 	
+	@GetMapping("/newuser")
+	public String newUser(Model model) {
+		model.addAttribute("availableUsers", userService.findAll());
+		return "newUserPage";
+	}
+
 	@PostMapping("/newuser")
 	public String newProductProcess(
 			Model model,
