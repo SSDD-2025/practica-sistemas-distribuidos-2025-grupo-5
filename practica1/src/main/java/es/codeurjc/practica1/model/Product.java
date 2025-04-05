@@ -4,6 +4,9 @@ import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.CascadeType;
 import jakarta.persistence.Column;
 import jakarta.persistence.Entity;
@@ -29,6 +32,7 @@ public class Product {
     private String description;
 
     @ManyToMany
+    @OnDelete(action = OnDeleteAction.CASCADE)
     private List<User> users;
 
     @Lob

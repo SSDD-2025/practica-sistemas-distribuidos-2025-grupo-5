@@ -19,8 +19,13 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
+import es.codeurjc.practica1.model.Order;
+import es.codeurjc.practica1.model.Product;
+import es.codeurjc.practica1.model.Review;
 import es.codeurjc.practica1.model.User;
+import es.codeurjc.practica1.service.OrderService;
 import es.codeurjc.practica1.service.ProductService;
+import es.codeurjc.practica1.service.ReviewService;
 import es.codeurjc.practica1.service.UserService;
 import jakarta.servlet.http.HttpServletRequest;
 
@@ -32,6 +37,12 @@ public class UserController {
 
 	@Autowired
 	private ProductService productService;
+
+	@Autowired
+	private ReviewService reviewService;
+
+	@Autowired
+	private OrderService orderService;
 
 	@ModelAttribute
 	public void addAttributes(Model model, HttpServletRequest request) {
@@ -170,18 +181,49 @@ public class UserController {
 		return "products";
 	}
 
-	@PostMapping("/removeUser/{userName}")
-	public String removeUser(@PathVariable String name) {
+	@PostMapping("/removeUser/{id}")
+	public String removeUser(Model model,@PathVariable long id) {
 		// Search for the product in the database.
-		Optional<User> User = userService.findByName(name);
+		Optional<User> user = userService.findById(id);
 
-		if (User.isPresent()) {
-			userService.delete(User.get()); // Delete the product from the database.
-			System.out.println("Producto eliminado: " + name);
+		//TOOLBAR
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		boolean isLoggedIn = authentication != null &&
+		authentication.isAuthenticated() &&
+		!(authentication instanceof AnonymousAuthenticationToken);
+		model.addAttribute("isLoggedIn", isLoggedIn);
+		//-----
+
+		if (user.isPresent()) {
+			for (Product product : user.get().getProducts()) {
+				product.getUsers().remove(user);
+				productService.save(product);
+			}
+
+			user.get().getProducts().clear();
+			for (Review review : user.get().getReviews()) {
+				review.setAuthor(null);
+				reviewService.save(review);
+			}
+
+			for (Order order : user.get().getOrders()) {
+				order=null;
+				orderService.save(order);
+			}
+
+			user.get().getProducts().clear();
+			userService.save(user.get());
+
+			userService.delete(user.get());
 		} else {
 			return "redirect:/error";
 		}
-		return "redirect:/admin"; // Redirect to the updated product list.
+		
+		System.out.println("AQUIII");
+		model.addAttribute("isLoggedIn", isLoggedIn);
+		model.addAttribute("users", userService.findAll());
+		model.addAttribute("products", productService.findAll());
+		return "products"; 
 	}
 
 }

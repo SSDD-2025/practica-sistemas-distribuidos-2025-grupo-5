@@ -6,13 +6,19 @@
 
     {{#isAdmin}}
     <h1>Administrador</h1>
-    <h4 style="margin-bottom: 20px;">Usuarios</h4>
+    <h2 style="margin-bottom: 20px;">Usuarios</h2>
         {{#users}}
             <div style="display: block; padding: 10px 15px; margin-bottom: 10px; background-color: #f5f5f5; border-radius: 8px; color: #333; font-size: 14px;">
                 <div style="margin-bottom: 4px;"><strong>ID:</strong> {{id}}</div>
                 <div style="margin-bottom: 4px;"><strong>Nombre:</strong> {{name}}</div>
                 <div><strong>Email:</strong> {{email}}</div>
+                <form method="post" action="/removeUser/{{id}}" style="margin: 0;">
+                    <button type="submit" class="btn btn-danger" style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">Borrar
+                        <input type="hidden" name="_csrf" value="{{token}}"/>
+                    </button>
+                </form>
             </div>
+            
         {{/users}}
         <p>¿Quieres añadir un usuario?</p>
         <button class="btn btn-primary" style="background-color:#40e356; color: black;" onclick="location.href='/newUser'">Crear nuevo usuario ➕ </button>

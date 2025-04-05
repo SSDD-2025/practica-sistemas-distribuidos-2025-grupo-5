@@ -3,6 +3,9 @@ package es.codeurjc.practica1.model;
 import java.util.ArrayList;
 import java.util.List;
 
+import org.hibernate.annotations.OnDelete;
+import org.hibernate.annotations.OnDeleteAction;
+
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
@@ -23,6 +26,7 @@ public class Order {
 
 	@ManyToOne  // Un usuario puede tener múltiples órdenes
 	@JoinColumn(name = "owner_id")  // Especifica la clave foránea en la tabla "customer_order"
+    @OnDelete(action = OnDeleteAction.CASCADE)
 	private User owner;
 
     @ManyToMany
