@@ -1,0 +1,41 @@
+{{>header}}
+
+<div>
+  <div class="container">
+    <div class="row align-items-center">
+      <div class="col-8">
+        <p></p>
+        <p></p>
+        <h2>Editar Información del Usuario {{user.name}}</h2>
+
+        <form action="/updateUser" method="post">
+
+          <div class="form-group">
+            <label for="name">Nombre:</label>
+            <input type="text" class="form-control" id="name" name="name" value="{{user.name}}" required>
+            <input type="hidden" name="_csrf" value="{{token}}"/>
+
+          </div>
+
+          <div class="form-group">
+            <label for="email">Email:</label>
+            <textarea class="form-control" id="email" name="email" required>{{user.email}}</textarea>
+
+          </div>
+
+          <div class="form-group">
+            <label for="phoneNumber">Teléfono:</label>
+            <input type="number" class="form-control" id="phoneNumber" name="phoneNumber" value="{{user.phoneNumber}}" required>
+
+          </div>
+
+          <button type="submit" class="btn btn-primary" style="width: 700px;">Guardar Cambios</button>
+        </form>
+
+        <button class="btn btn-outline-secondary" style="width: 700px" onclick="location.href='/products'; return false;">Cancelar</button>
+      </div>
+    </div>
+  </div>
+</div>
+
+{{>footer}}

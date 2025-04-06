@@ -10,6 +10,7 @@
         {{#users}}
             <div style="display: block; padding: 10px 15px; margin-bottom: 10px; background-color: #f5f5f5; border-radius: 8px; color: #333; font-size: 14px;">
                 <div style="margin-bottom: 4px;"><strong>ID:</strong> {{id}}</div>
+                <div><strong>ROL:</strong> {{roles}}</div>
                 <div style="margin-bottom: 4px;"><strong>Nombre:</strong> {{name}}</div>
                 <div><strong>Email:</strong> {{email}}</div>
                 <form method="post" action="/removeUser/{{id}}" style="margin: 0;">

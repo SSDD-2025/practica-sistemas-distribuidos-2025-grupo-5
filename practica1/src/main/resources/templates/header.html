@@ -35,12 +35,14 @@
 				<option value="en">English</option>
 				<option value="fr">Français</option>
 			</select>
-			
+
 			{{^isLoggedIn}}
 				<button onclick="location.href='/login'">🔑 Iniciar Sesión</button>
 			{{/isLoggedIn}}
 			
 			{{#isLoggedIn}}
+				<button type="submit" onclick="location.href='/editUserGet'"> Editar Perfil 🖍️ </button>
+
 				<form id="logoutForm" action="/logout" method="post" style="display:inline;">
 					<input type="hidden" name="_csrf" value="{{token}}"/>
 					<button type="submit" onclick="return confirm('¿Estás seguro de que querés cerrar sesión?')">

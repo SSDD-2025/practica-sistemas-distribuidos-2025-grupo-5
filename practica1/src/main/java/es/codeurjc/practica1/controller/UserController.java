@@ -67,6 +67,46 @@ public class UserController {
 		}
 	}
 
+	@GetMapping("/editUserGet")
+	public String editUserGet(Model model) {
+
+		//TOOLBAR
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		boolean isLoggedIn = authentication != null &&
+		authentication.isAuthenticated() &&
+		!(authentication instanceof AnonymousAuthenticationToken);
+		model.addAttribute("isLoggedIn", isLoggedIn);
+		
+		
+		User user=userService.findByName(authentication.getName()).get();
+
+		model.addAttribute("user",user);
+		return "editUser";
+	}
+
+	@PostMapping("/updateUser")
+	public String updateUser(@RequestParam String name,
+								@RequestParam String email,
+								@RequestParam int phoneNumber, Model model) {
+		
+		System.out.println("Holaaaaaa");
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		boolean isLoggedIn = authentication != null &&
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
+		model.addAttribute("isLoggedIn", isLoggedIn);
+		model.addAttribute("users", userService.findAll());
+		model.addAttribute("products", productService.findAll());
+		
+		User user = userService.findByName(authentication.getName()).get();
+		user.setName(name);
+		user.setEmail(email);
+		user.setPhoneNumber(phoneNumber);
+
+		userService.save(user);
+		return "/products"; // Redirige correctamente
+	}
+
 
 	@GetMapping("/users/")
 	public String showUsers(Model model, HttpServletRequest request) {

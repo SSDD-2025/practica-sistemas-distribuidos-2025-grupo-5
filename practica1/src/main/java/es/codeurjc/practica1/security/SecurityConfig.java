@@ -120,8 +120,13 @@ public class SecurityConfig {
         .requestMatchers("/newReview/**").permitAll()
         .requestMatchers("/newUser/**").permitAll()
         .requestMatchers("/saveNewUser/**").permitAll()
+        .requestMatchers("/updateUser/**").permitAll()
+
         // PRIVATE PAGES
         .requestMatchers("/private").hasAnyRole("USER")
+        .requestMatchers("/editUserGet").hasAnyRole("USER")
+        .requestMatchers("/editUserGet").hasAnyRole("ADMIN")
+
         .requestMatchers("/checkoutOne/**").hasAnyRole("USER")
         .requestMatchers("/checkout/**").hasAnyRole("USER")
         .requestMatchers("/edit/**").hasAnyRole("USER","ADMIN")
@@ -137,7 +142,6 @@ public class SecurityConfig {
 
         .requestMatchers("/gateway").hasAnyRole("USER")
         .requestMatchers("/admin").hasAnyRole("ADMIN")
-
 
         .requestMatchers("/removeUser/**").hasAnyRole("ADMIN"))
         .formLogin(formLogin -> formLogin
