@@ -72,13 +72,12 @@ public class SecurityConfig {
 					.requestMatchers(HttpMethod.POST,"/api/users/**").hasRole("ADMIN")
 					.requestMatchers(HttpMethod.PUT,"/api/users/**").hasRole("ADMIN")
 					.requestMatchers(HttpMethod.DELETE,"/api/users/**").hasRole("ADMIN")
-                    .requestMatchers("/style.css/**").hasRole("ADMIN")
+                    .requestMatchers("/style.css/**").permitAll()
 
                     .requestMatchers("/admin").hasRole("ADMIN")
                     .requestMatchers("/api/cart/**").hasRole("USER")
                     .requestMatchers("/api/checkout/**").hasRole("USER")
                     .requestMatchers("/api/gateway").hasRole("USER")
-                    .requestMatchers("/style.css/**").hasRole("USER")
 
 					// PUBLIC ENDPOINTS
 					.anyRequest().permitAll()
