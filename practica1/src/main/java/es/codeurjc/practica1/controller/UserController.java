@@ -133,6 +133,20 @@ public class UserController {
 		authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		//-----
+
+		if (isLoggedIn) {
+			//tiene que ser asi porque puede ser que te de como válido un usuario anónimo
+			boolean isAdmin = authentication.getAuthorities().stream()
+											.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+			
+			if (isAdmin) {
+				model.addAttribute("isAdmin", isAdmin);
+				System.out.println("El usuario es ADMIN");
+			} else {
+				model.addAttribute("isAdmin", isAdmin);
+				System.out.println("El usuario NOOOOO es ADMIN");
+			}
+		}
 		return "newUser";
 	}
 
@@ -156,7 +170,10 @@ public class UserController {
 
 		if (name == null || encodedPassword == null || email== null) {
 			return "redirect:/error";
+
 		}
+
+		System.out.println("CONTRASEÑA GUARDADA"+encodedPassword);
 		User user = new User(name, email, encodedPassword, roles, phoneNumber);
 		userService.save(user);
 

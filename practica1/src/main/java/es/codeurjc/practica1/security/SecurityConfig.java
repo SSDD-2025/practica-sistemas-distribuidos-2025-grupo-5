@@ -103,7 +103,7 @@ public class SecurityConfig {
 	}
 
 	@Bean
-	@Order(1)
+	@Order(2)
 	public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
 		http.authenticationProvider(authenticationProvider());
         http.authorizeHttpRequests(authorize -> authorize
@@ -119,7 +119,8 @@ public class SecurityConfig {
         .requestMatchers("/productReviews/**").permitAll()
         .requestMatchers("/reviews/**").permitAll()
         .requestMatchers("/newReview/**").permitAll()
-
+        .requestMatchers("/newUser/**").permitAll()
+        .requestMatchers("/saveNewUser/**").permitAll()
         // PRIVATE PAGES
         .requestMatchers("/private").hasAnyRole("USER")
         .requestMatchers("/checkoutOne/**").hasAnyRole("USER")
@@ -137,8 +138,7 @@ public class SecurityConfig {
 
         .requestMatchers("/gateway").hasAnyRole("USER")
         .requestMatchers("/admin").hasAnyRole("ADMIN")
-        .requestMatchers("/newUser/**").hasAnyRole("ADMIN")
-        .requestMatchers("/saveNewUser/**").hasAnyRole("ADMIN")
+
 
         .requestMatchers("/removeUser/**").hasAnyRole("ADMIN"))
         .formLogin(formLogin -> formLogin

@@ -24,14 +24,19 @@
      <label class="form-label">Numero de tfo: </label>
      <input type="number" class="form-control" name="phoneNumber" id="phoneNumber" required>
    </div>
+
    <div class="mb-3">
     <label for="roles" class="form-label">Rol:</label>
     <select class="form-select" name="roles" id="roles" required>
       <option value="" disabled selected>Selecciona un rol</option>
+      {{#isAdmin}}
       <option value="ROLE_ADMIN">Admin</option>
+      {{/isAdmin}}
       <option value="ROLE_USER">User</option>
     </select>
   </div>
+
+
 
   <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Cancelar</button>
    
@@ -40,5 +45,5 @@
      <input type="hidden" name="_csrf" value="{{token}}"/>
   </form>
 </form>
- 
+
  {{>footer}}
