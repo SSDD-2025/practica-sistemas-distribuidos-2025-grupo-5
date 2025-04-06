@@ -240,6 +240,7 @@ public class UserController {
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		model.addAttribute("users", userService.findAll());
 		model.addAttribute("products", productService.findAll());
+		model.addAttribute("isAdmin", true);
 		return "products"; 
 	}
 
