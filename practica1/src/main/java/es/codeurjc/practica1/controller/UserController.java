@@ -10,6 +10,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
@@ -43,6 +44,10 @@ public class UserController {
 
 	@Autowired
 	private OrderService orderService;
+
+	@Autowired
+	private PasswordEncoder passwordEncoder;
+
 
 	@ModelAttribute
 	public void addAttributes(Model model, HttpServletRequest request) {
@@ -174,8 +179,8 @@ public class UserController {
 		}
 
 		System.out.println("CONTRASEÑA GUARDADA"+encodedPassword);
-		User user = new User(name, email, encodedPassword, roles, phoneNumber);
-		userService.save(user);
+		String hashedPassword = passwordEncoder.encode(encodedPassword);
+		userService.save(new User(name, email, hashedPassword, roles, phoneNumber));
 
 		if (isLoggedIn) {
 			boolean isAdmin = authentication.getAuthorities().stream()
