@@ -18,7 +18,9 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -29,7 +31,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
+import es.codeurjc.practica1.model.Order;
 import es.codeurjc.practica1.model.Product;
+import es.codeurjc.practica1.model.Review;
 import es.codeurjc.practica1.model.User;
 import es.codeurjc.practica1.service.OrderService;
 import es.codeurjc.practica1.service.ProductService;
@@ -149,6 +153,7 @@ public class ProductController {
 
 	@GetMapping("/cart")
 	public String showCart(HttpSession session, Model model) {
+
 		//TOOLBAR
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
@@ -158,7 +163,6 @@ public class ProductController {
 		//-----
 		List<Long> cartProductIds = (List<Long>) session.getAttribute("cart");
 		List<Product> cartProducts = new ArrayList<>();
-		
 
 		Optional<User> oneUser = userService.findByName(authentication.getName());
 		System.out.println("USUARIO ESTA EN EL CARRITO");
@@ -197,18 +201,22 @@ public class ProductController {
 		// Get the list of product IDs in the session.
 		Optional<User> user = userService.findByName(authentication.getName());
 
-		List<Long> cart = new ArrayList();
+		List<Product> cart = new ArrayList();
 
 		for(Product aux:user.get().getProducts()){
-			cart.add(aux.getId());
-			System.out.println("id productos carro"+aux.getId());
+			cart.add(aux);
 		}
-
-		cart.add(productId);
-
+		if (isLoggedIn) {
+			//tiene que ser asi porque puede ser que te de como válido un usuario anónimo
+			boolean isAdmin = authentication.getAuthorities().stream()
+											.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+			model.addAttribute("isAdmin", isAdmin);
+		}
 		Optional<Product> productAux = productService.findById(productId);
 		Product p = productAux.get();
+		
 		if (p.getStock() > 0) {
+			cart.add(p);
 			p.setStock(p.getStock() - 1);
 			productService.save(p);
 			//model.addAttribute("product", productAux.get());
@@ -221,15 +229,21 @@ public class ProductController {
 		Product product = productAux.get();
 		user.get().addProduct(product);
 		userService.save(user.get());
-		
 
 		// Add the product to the cart.
-		session.setAttribute("cartProducts", cart);
-		return "/cart";
+		if (cart.isEmpty()) {
+			model.addAttribute("isEmpty", false);
+		} else {
+			model.addAttribute("cartProducts", cart);
+			model.addAttribute("isEmpty", true);
+
+		}
+		model.addAttribute("cartProducts", cart);
+		return "cart";
 	}
 
 	@PostMapping("/remove-from-cart/{productId}")
-	public String removeFromCart(@PathVariable long productId, HttpSession session) {
+	public String removeFromCart(@PathVariable long productId, Model model, HttpSession session) {
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Optional<User> user = userService.findByName(authentication.getName());
@@ -241,9 +255,12 @@ public class ProductController {
 			productService.save(p);
 			user.get().removeProduct(p);
 			userService.save(user.get());
+			System.out.println("REMOVEEEEEEEE");
 		}
 
-		session.setAttribute("cartProducts", user.get().getProducts());
+		model.addAttribute("cartProducts", user.get().getProducts());
+		System.out.println(user.get().getProducts());
+
 		return "/cart";
 	}
 
@@ -346,4 +363,339 @@ public class ProductController {
 		return "/products/" + id; // Correctly redirect to the updated product.
 	}
 
+
+	//ORDER
+
+	@GetMapping("/showOrders")
+	public String showOrders(HttpSession session, Model model,@AuthenticationPrincipal UserDetails userDetails) {
+		//TOOLBAR
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		boolean isLoggedIn = authentication != null &&
+		authentication.isAuthenticated() &&
+		!(authentication instanceof AnonymousAuthenticationToken);
+		model.addAttribute("isLoggedIn", isLoggedIn);
+		//----
+		System.out.println("USUARIO ESTA EN EL SHOW ORDERS");
+
+		if (userDetails == null) {
+			return "/login"; // o manejar el caso de usuario no autenticado
+		}
+
+		// Get the list of product IDs in the session.
+		Optional<User> oneUser = userService.findByName(userDetails.getUsername());
+		List<Order> orderList = null;
+		System.out.println("USUARIO ESTA EN EL SHOW ORDERS");
+		
+		if (oneUser.isPresent()) {
+			User user = oneUser.get();
+			orderList = user.getOrders();
+		}
+
+		if (orderList.isEmpty()) {
+			model.addAttribute("message", "No tienes ningún pedido de momento");
+		} else {
+			model.addAttribute("orderList", orderList);
+		}
+
+		return "orders"; // Display the cart view.
+	}
+
+
+	// ORDER
+	@GetMapping("/checkout")
+	public String showGateway( HttpSession session, Model model) {
+		// Get the list of product IDs in the session.
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Optional<User> user = userService.findByName(authentication.getName());
+		Order order;
+			if (user != null) {
+				User userAux=user.get();
+				List<Product> cartProduct= userAux.getProducts();
+				
+				if(cartProduct.size()==1){
+					order= new Order(userAux, cartProduct.get(0));
+					order.setTotalPrice(cartProduct.get(0).getPrice());
+					cartProduct.get(0).setStock(cartProduct.get(0).getStock() - 1);
+					productService.save(cartProduct.get(0));
+					cartProduct.get(0).setOrder(order);
+					model.addAttribute("product", cartProduct.get(0));
+
+				}else{
+
+					order= new Order(userAux, cartProduct.get(0));
+					for (int i = 1; i < cartProduct.size(); i++) {
+						Product product =cartProduct.get(i);
+	
+						if (product.getStock() > 0) {
+							order.addProduct(product);
+							order.setTotalPrice(order.getTotalPrice()+cartProduct.get(i).getPrice());
+							product.setStock(product.getStock() - 1);
+							product.setOrder(order);
+							productService.save(product);
+							model.addAttribute("product", product);
+	
+						} else {
+							throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
+						}
+					}
+				}
+				
+				orderService.save(order);
+				//System.out.println("Order id (checkoutOne) ="+order.getId());
+
+				userService.addOrder(user.get().getId(), order);
+				userService.save(user.get());
+				model.addAttribute("orders", order);
+				//System.out.println("ORDER ID ANTES GATEWAY EN CHECK OUT"+order.getId());
+				
+				//TOOLBAR
+				boolean isLoggedIn = authentication != null &&
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
+				model.addAttribute("isLoggedIn", isLoggedIn);
+				//-----
+			}
+			return "/gateway";
+	}
+
+	@GetMapping("/checkoutOne/{id}")
+	public String showGatewayOne(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long id, HttpSession session, Model model) {
+		// Get the list of product IDs in the session.
+		Optional<Product> productOptional = productService.findById(id);
+
+		//System.out.println(SecurityContextHolder.getContext().getAuthentication());
+		
+		//TOOLBAR
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		boolean isLoggedIn = authentication != null &&
+		authentication.isAuthenticated() &&
+		!(authentication instanceof AnonymousAuthenticationToken);
+		model.addAttribute("isLoggedIn", isLoggedIn);
+		//-----
+
+		if (productOptional.isPresent()) {
+			Product product = productOptional.get();
+
+			if (product.getStock() > 0) {
+
+				//System.out.println("PRODUCT EXISTE");
+				product.setStock(product.getStock() - 1);
+				List<Product> cartProducts = new ArrayList<>();
+				cartProducts.add(product);
+				Optional<User> optionalUser = userService.findByName(userDetails.getUsername());
+
+				if (optionalUser.isEmpty()) {
+					//System.out.println("USER NULO");
+					return "/error";
+				} else {
+
+					Order order = new Order(optionalUser.get(), cartProducts);
+					order.setTotalPrice(product.getPrice());
+
+					orderService.save(order);
+					System.out.println("Order id (checkoutOne) ="+order.getId());
+
+					userService.addOrder(optionalUser.get().getId(), order);
+					userService.save(optionalUser.get());
+
+					product.setOrder(order);
+					productService.save(product);
+					model.addAttribute("orders", order);
+				}
+			} else {
+				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
+			}
+
+		} else {
+			return "/error";
+		}
+		return "/gateway";
+	}
+
+	@PostMapping("/removeOrder/{id}")
+	public String removeOrder(@PathVariable Long id) {
+
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Optional<User> userA = userService.findByName(authentication.getName());
+		Optional<Order> order = orderService.findById(id);
+
+
+		try {
+			if (order!=null) {
+
+				for (Product product : order.get().getProducts()) {
+					product.setStock(product.getStock() + 1);
+					productService.save(product);
+				}
+				
+				User user = userA.get();
+				user.deleteOrder(order.get());  //Elimina de la lista de órdenes
+				order.get().deleteAllProducts();  // Limpia productos si es necesario
+
+				userService.save(user);  // Guarda cambios en el usuario
+				orderService.delete(order.get());  // Ahora sí borra la orden
+		
+				return "/";
+			} else {
+				System.out.println("Orden no encontrada");
+				return "/error";
+			}
+		
+		} catch (Exception e) {
+			System.out.println("SALTA EXCEPCIÓN: " + e.getMessage());
+			return "/error";
+		}
+	}
+
+		// Reviwes
+	@GetMapping("/productReviews/{id}")
+	public String showReviews(Model model, @PathVariable long id) {
+		System.err.println("ENTRA EN SHOW REVIEWS");
+
+		//TOOLBAR
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		boolean isLoggedIn = authentication != null &&
+		authentication.isAuthenticated() &&
+		!(authentication instanceof AnonymousAuthenticationToken);
+		model.addAttribute("isLoggedIn", isLoggedIn);
+		//-----
+		
+		if (isLoggedIn) {
+			//tiene que ser asi porque puede ser que te de como válido un usuario anónimo
+			boolean isAdmin = authentication.getAuthorities().stream()
+											.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+			
+			if (isAdmin) {
+				model.addAttribute("isAdmin", isAdmin);
+				System.out.println("El usuario es ADMIN");
+			} else {
+				model.addAttribute("isAdmin", isAdmin);
+				System.out.println("El usuario NOOOOO es ADMIN");
+
+			}
+		}
+		Optional<Product> product = productService.findById(id);
+		if (product.isPresent()) {
+			Product p = product.get();
+
+			model.addAttribute("reviews", p.getReviews());
+			return "reviews";
+		} else {
+			return "/error";
+		}
+	}
+
+	@GetMapping("/newReview/{productId}")
+	public String newReview(@PathVariable long productId, Model model) {
+		Optional<Product> productOpt = productService.findById(productId);
+
+		if (!productOpt.isPresent()) {
+			return "/error";
+		}
+		//TOOLBAR
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		boolean isLoggedIn = authentication != null &&
+		authentication.isAuthenticated() &&
+		!(authentication instanceof AnonymousAuthenticationToken);
+		model.addAttribute("isLoggedIn", isLoggedIn);
+		//-----
+		model.addAttribute("product", productOpt.get());
+		model.addAttribute("productId", productId);
+		return "newReview";
+	}
+
+	@PostMapping("/newReview/{productId}")
+	public String newReviewProcess(
+			@PathVariable long productId,
+			@RequestParam String title,
+			@RequestParam String text) {
+
+		System.out.println("ENTRA EN NEW REVIEW");
+
+		Optional<Product> productOpt = productService.findById(productId);
+		if (!productOpt.isPresent()) {
+			return "/error";
+		}
+		Product product = productOpt.get();
+
+		Optional<User> userOpt = userService.findByEmail("paula@gmail.com");
+		User author = userOpt.get();
+
+		Review review = new Review(title, text, author, product);
+		product.addReview(review);
+
+		reviewService.save(review);
+		productService.save(product);
+		return "/productReviews/" + product.getId();
+	}
+
+	@PostMapping("/removeReview/{reviewId}")
+	public String removeReview(@PathVariable long reviewId, HttpSession session, Model model) {
+		try {
+			List<Review> reviews = (List<Review>) session.getAttribute("reviews");
+
+			Optional<Review> reviewAux = reviewService.findById(reviewId);
+			if (!reviewAux.isPresent()) {
+				return "/reviews";
+			}
+
+			Review review = reviewAux.get();
+			User userAux = userService.findById(review.getAuthor().getId()).orElse(null);
+			Product productAux = productService.findById(review.getProduct().getId()).orElse(null);
+
+			if (userAux == null || productAux == null) {
+				return "/reviews";
+			}
+
+			userAux.deleteReview(review);
+			productAux.removeReview(review);
+
+			userService.save(userAux);
+			productService.save(productAux);
+
+			reviewService.delete(review);
+
+			if (reviews != null) {
+				reviews.removeIf(r -> r.getId() == reviewId);
+			} else {
+				reviews = new ArrayList<>();
+			}
+
+			session.setAttribute("reviews", reviews);
+			List<Review> updatedReviews = reviewService.findAll();
+
+			session.setAttribute("reviews", updatedReviews);
+			return "/productReviews/" + productAux.getId();
+		} catch (Exception e) {
+			return "/error";
+		}
+	}
+
+	@GetMapping("/reviews/{productId}")
+	public String showReviews(@PathVariable Long productId, Model model, HttpSession session) {
+		try {
+			Optional<Product> productOpt = productService.findById(productId);
+			if (!productOpt.isPresent()) {
+				return "/error";
+			}
+
+			Product product = productOpt.get();
+			List<Review> reviews = product.getReviews();
+
+			session.setAttribute("reviews", reviews);
+			model.addAttribute("reviews", reviews);
+			
+			//TOOLBAR
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			boolean isLoggedIn = authentication != null &&
+			authentication.isAuthenticated() &&
+			!(authentication instanceof AnonymousAuthenticationToken);
+			model.addAttribute("isLoggedIn", isLoggedIn);
+			//-----
+			return "reviews";
+
+		} catch (Exception e) {
+			return "/error";
+		}
+	}
 }
