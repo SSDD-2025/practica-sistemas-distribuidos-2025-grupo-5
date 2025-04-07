@@ -201,7 +201,6 @@ public class UserController {
 			@RequestParam String name, 
 			@RequestParam String email, 
 			@RequestParam String encodedPassword, 
-			@RequestParam List<String> roles, 
 			@RequestParam int phoneNumber
 		) throws IOException, SQLException {
 
@@ -215,13 +214,14 @@ public class UserController {
 
 		if (name == null || name.isEmpty() || encodedPassword == null || email== null) {
 			model.addAttribute("message", "El nombre, la contraseña y el email no pueden estar vacíos.");
-			return "error";
+			return "/error";
 
 		}
 
 		System.out.println("CONTRASEÑA GUARDADA"+encodedPassword);
 		String hashedPassword = passwordEncoder.encode(encodedPassword);
-		userService.save(new User(name, email, hashedPassword, roles, phoneNumber));
+		List<String>rol = List.of("USER");
+		userService.save(new User(name, email, hashedPassword, rol, phoneNumber));
 
 		if (isLoggedIn) {
 			boolean isAdmin = authentication.getAuthorities().stream()
@@ -265,13 +265,16 @@ public class UserController {
 
 			user.get().getProducts().clear();
 			for (Review review : user.get().getReviews()) {
-				review.setAuthor(null);
-				reviewService.save(review);
+				review.removeAllComments();
+				review.getAuthor().deleteReview(review);
+				review.getProduct().removeReview(review);
+				reviewService.delete(review);
 			}
 
 			for (Order order : user.get().getOrders()) {
-				order=null;
-				orderService.save(order);
+				order.deleteAllProducts();
+				order.getOwner().deleteOrder(order);
+				orderService.delete(order);
 			}
 
 			user.get().getProducts().clear();
@@ -279,7 +282,7 @@ public class UserController {
 
 			userService.delete(user.get());
 		} else {
-			return "redirect:/error";
+			return "/error";
 		}
 		
 		System.out.println("AQUIII");

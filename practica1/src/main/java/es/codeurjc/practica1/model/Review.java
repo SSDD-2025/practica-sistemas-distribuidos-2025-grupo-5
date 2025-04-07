@@ -18,7 +18,7 @@ public class Review {
 
 	private String title;
 	private String text;
-	private List<String> comments = new ArrayList<>();
+	private List<String> comments;
 
 	// Each review has a single author
 	@ManyToOne
@@ -38,6 +38,7 @@ public class Review {
 		this.text = text;
 		this.author = author;
 		this.product = product;
+		this.comments = new ArrayList<>();
 	}
 
 	public long getId() {
@@ -95,5 +96,11 @@ public class Review {
 
 	public void addComment(String comment) {
 		this.comments.add(comment);
+	}
+	public void removeComment(String comment) {
+		this.comments.remove(comment);
+	}
+	public void removeAllComments() {
+		this.comments.clear();
 	}
 }

@@ -30,7 +30,7 @@ public class Order {
 	private User owner;
 
     @ManyToMany
-    private List<Product> products = new ArrayList<>();
+    private List<Product> products;
 
     protected Order() {
     }
@@ -39,6 +39,7 @@ public class Order {
         this.owner = owner;
         this.products = products != null ? products : new ArrayList<>();
         this.totalPrice = calculateTotalPrice();
+        this.products = new ArrayList<>();
     }
 
     public Order(User owner, Product product) {

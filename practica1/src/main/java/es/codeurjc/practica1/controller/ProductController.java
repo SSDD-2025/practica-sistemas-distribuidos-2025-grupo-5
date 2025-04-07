@@ -199,7 +199,7 @@ public class ProductController {
 		System.out.println("USUARIO ESTA EN EL SHOW ORDERS");
 
 		if (userDetails == null) {
-			return "redirect:/login"; // o manejar el caso de usuario no autenticado
+			return "/login"; // o manejar el caso de usuario no autenticado
 		}
 
 		// Get the list of product IDs in the session.
@@ -250,7 +250,7 @@ public class ProductController {
 			productService.save(p);
 			//model.addAttribute("product", productAux.get());
 		} else {
-			return "redirect:/error";
+			return "/error";
 			// throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of
 			// stock");
 		}
@@ -262,7 +262,7 @@ public class ProductController {
 
 		// Add the product to the cart.
 		session.setAttribute("cartProducts", cart);
-		return "redirect:/cart";
+		return "/cart";
 	}
 
 	@PostMapping("/remove-from-cart/{productId}")
@@ -282,7 +282,7 @@ public class ProductController {
 		}
 
 		session.setAttribute("cartProducts", user.get().getProducts());
-		return "redirect:/cart";
+		return "/cart";
 	}
 
 	@PostMapping("/newproduct")
@@ -310,7 +310,7 @@ public class ProductController {
 			product.setImageFile(imageBlob);
 		}
 		if (product.getProvider() == null || product.getName() == null || product.getDescription() == null) {
-			return "redirect:/error";
+			return "/error";
 		}
 		Product newProduct = productService.save(product);
 		newProduct.setProvider(provider);
@@ -318,7 +318,7 @@ public class ProductController {
 		model.addAttribute("productId", newProduct.getId());
 		productService.save(newProduct);
 
-		return "redirect:/products/" + newProduct.getId();
+		return "/products/" + newProduct.getId();
 	}
 
 	@PostMapping("/remove-from-products/{productId}")
@@ -331,9 +331,9 @@ public class ProductController {
 			productService.delete(productAux.get()); // Delete the product from the database.
 			System.out.println("Producto eliminado: " + productId);
 		} else {
-			return "redirect:/error";
+			return "/error";
 		}
-		return "redirect:/"; // Redirect to the updated product list.
+		return "/"; // Redirect to the updated product list.
 	}
 
 	@GetMapping("/edit/{id}")
@@ -361,7 +361,7 @@ public class ProductController {
 
 		Optional<Product> existingProduct = productService.findById(id);
 		if (existingProduct.isEmpty()) {
-			return "redirect:/error";
+			return "/error";
 		}
 
 		Product product = existingProduct.get();
@@ -381,7 +381,7 @@ public class ProductController {
 		}
 
 		productService.save(product);
-		return "redirect:/products/" + id; // Correctly redirect to the updated product.
+		return "/products/" + id; // Correctly redirect to the updated product.
 	}
 
 	// Reviwes
@@ -418,7 +418,7 @@ public class ProductController {
 			model.addAttribute("reviews", p.getReviews());
 			return "reviews";
 		} else {
-			return "redirect:/error";
+			return "/error";
 		}
 	}
 
@@ -427,7 +427,7 @@ public class ProductController {
 		Optional<Product> productOpt = productService.findById(productId);
 
 		if (!productOpt.isPresent()) {
-			return "redirect:/error";
+			return "/error";
 		}
 		//TOOLBAR
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -451,7 +451,7 @@ public class ProductController {
 
 		Optional<Product> productOpt = productService.findById(productId);
 		if (!productOpt.isPresent()) {
-			return "redirect:/error";
+			return "/error";
 		}
 		Product product = productOpt.get();
 
@@ -463,7 +463,7 @@ public class ProductController {
 
 		reviewService.save(review);
 		productService.save(product);
-		return "redirect:/productReviews/" + product.getId();
+		return "/productReviews/" + product.getId();
 	}
 
 	@PostMapping("/removeReview/{reviewId}")
@@ -473,7 +473,7 @@ public class ProductController {
 
 			Optional<Review> reviewAux = reviewService.findById(reviewId);
 			if (!reviewAux.isPresent()) {
-				return "redirect:/reviews";
+				return "/reviews";
 			}
 
 			Review review = reviewAux.get();
@@ -481,7 +481,7 @@ public class ProductController {
 			Product productAux = productService.findById(review.getProduct().getId()).orElse(null);
 
 			if (userAux == null || productAux == null) {
-				return "redirect:/reviews";
+				return "/reviews";
 			}
 
 			userAux.deleteReview(review);
@@ -502,9 +502,9 @@ public class ProductController {
 			List<Review> updatedReviews = reviewService.findAll();
 
 			session.setAttribute("reviews", updatedReviews);
-			return "redirect:/productReviews/" + productAux.getId();
+			return "/productReviews/" + productAux.getId();
 		} catch (Exception e) {
-			return "redirect:/error";
+			return "/error";
 		}
 	}
 
@@ -513,7 +513,7 @@ public class ProductController {
 		try {
 			Optional<Product> productOpt = productService.findById(productId);
 			if (!productOpt.isPresent()) {
-				return "redirect:/error";
+				return "/error";
 			}
 
 			Product product = productOpt.get();
@@ -532,7 +532,7 @@ public class ProductController {
 			return "reviews";
 
 		} catch (Exception e) {
-			return "redirect:/error";
+			return "/error";
 		}
 	}
 
@@ -621,7 +621,7 @@ public class ProductController {
 
 				if (optionalUser.isEmpty()) {
 					//System.out.println("USER NULO");
-					return "redirect:/error";
+					return "/error";
 				} else {
 
 					Order order = new Order(optionalUser.get(), cartProducts);
@@ -642,7 +642,7 @@ public class ProductController {
 			}
 
 		} else {
-			return "redirect:/error";
+			return "/error";
 		}
 		return "/gateway";
 	}
@@ -670,15 +670,15 @@ public class ProductController {
 				userService.save(user);  // Guarda cambios en el usuario
 				orderService.delete(order.get());  // Ahora sí borra la orden
 		
-				return "redirect:/";
+				return "/";
 			} else {
 				System.out.println("Orden no encontrada");
-				return "redirect:/error";
+				return "/error";
 			}
 		
 		} catch (Exception e) {
 			System.out.println("SALTA EXCEPCIÓN: " + e.getMessage());
-			return "redirect:/error";
+			return "/error";
 		}
 	}
 
