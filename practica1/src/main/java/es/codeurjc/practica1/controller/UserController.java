@@ -213,8 +213,9 @@ public class UserController {
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		//-----
 
-		if (name == null || encodedPassword == null || email== null) {
-			return "redirect:/error";
+		if (name == null || name.isEmpty() || encodedPassword == null || email== null) {
+			model.addAttribute("message", "El nombre, la contraseña y el email no pueden estar vacíos.");
+			return "error";
 
 		}
 
