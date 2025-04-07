@@ -427,7 +427,7 @@ public class ProductController {
 				
 				orderService.save(order);
 				//System.out.println("Order id (checkoutOne) ="+order.getId());
-
+				user.get().getProducts().clear();
 				userService.addOrder(user.get().getId(), order);
 				userService.save(user.get());
 				model.addAttribute("orders", order);

@@ -96,7 +96,8 @@ public class UserController {
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		List<User> listAux=userService.findAll();
 		listAux.remove(0);
-		model.addAttribute("users",listAux);		model.addAttribute("products", productService.findAll());
+		model.addAttribute("users",listAux);		
+		model.addAttribute("products", productService.findAll());
 		
 		User user = userService.findByName(authentication.getName()).get();
 		user.setName(name);
@@ -289,8 +290,6 @@ public class UserController {
 
 		//TOOLBAR
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		
-		//-----
 
 		// Search for the product in the database.
 		Optional<User> user = userService.findByName(authentication.getName());
@@ -326,6 +325,6 @@ public class UserController {
 		model.addAttribute("isLoggedIn", false);
 		model.addAttribute("products", productService.findAll());
 		model.addAttribute("isAdmin", false);
-		return "products"; 
+		return "redirect:/products"; 
 	}
 }
