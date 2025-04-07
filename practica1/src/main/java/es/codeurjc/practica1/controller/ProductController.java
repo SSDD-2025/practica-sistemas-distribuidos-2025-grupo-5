@@ -151,7 +151,7 @@ public class ProductController {
 		return "newProductPage";
 	}
 
-	@GetMapping("/cart")
+	@GetMapping("/showCart")
 	public String showCart(HttpSession session, Model model) {
 
 		//TOOLBAR
@@ -165,7 +165,6 @@ public class ProductController {
 		List<Product> cartProducts = new ArrayList<>();
 
 		Optional<User> oneUser = userService.findByName(authentication.getName());
-		System.out.println("USUARIO ESTA EN EL CARRITO");
 		if (oneUser.isPresent()) {
 			User user = oneUser.get();
 			cartProducts = user.getProducts();
@@ -183,65 +182,53 @@ public class ProductController {
 		} else {
 			model.addAttribute("cartProducts", cartProducts);
 			model.addAttribute("isEmpty", true);
-
 		}
 		return "cart"; // Display the cart view.
 	}
 
-	@GetMapping("/add-to-cart/{productId}")
+	@PostMapping("/add-to-cart/{productId}")
 	public String addToCart(@PathVariable long productId, HttpSession session, Model model) {
-		//TOOLBAR
+		// TOOLBAR
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
-		authentication.isAuthenticated() &&
-		!(authentication instanceof AnonymousAuthenticationToken);
+			authentication.isAuthenticated() &&
+			!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
-		//----
-
-		// Get the list of product IDs in the session.
+		// ----
+	
+		// Obtener el usuario
 		Optional<User> user = userService.findByName(authentication.getName());
-
-		List<Product> cart = new ArrayList();
-
-		for(Product aux:user.get().getProducts()){
-			cart.add(aux);
+	
+		if (user.isEmpty()) {
+			return "/error"; // o redirigir al login
 		}
-		if (isLoggedIn) {
-			//tiene que ser asi porque puede ser que te de como válido un usuario anónimo
-			boolean isAdmin = authentication.getAuthorities().stream()
-											.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-			model.addAttribute("isAdmin", isAdmin);
-		}
+	
+		List<Product> cart = user.get().getProducts();
+	
 		Optional<Product> productAux = productService.findById(productId);
+	
+		if (productAux.isEmpty()) {
+			return "/error";
+		}
+	
 		Product p = productAux.get();
-		
+	
 		if (p.getStock() > 0) {
 			cart.add(p);
 			p.setStock(p.getStock() - 1);
 			productService.save(p);
-			//model.addAttribute("product", productAux.get());
+			user.get().addProduct(p);
+			userService.save(user.get());
 		} else {
-			return "/error";
-			// throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of
-			// stock");
+			return "/error"; // Producto sin stock
 		}
-
-		Product product = productAux.get();
-		user.get().addProduct(product);
-		userService.save(user.get());
-
-		// Add the product to the cart.
-		if (cart.isEmpty()) {
-			model.addAttribute("isEmpty", false);
-		} else {
-			model.addAttribute("cartProducts", cart);
-			model.addAttribute("isEmpty", true);
-
-		}
+	
 		model.addAttribute("cartProducts", cart);
-		return "cart";
+		model.addAttribute("isEmpty", cart.isEmpty());
+	
+		return "redirect:/showCart";
 	}
-
+	
 	@PostMapping("/remove-from-cart/{productId}")
 	public String removeFromCart(@PathVariable long productId, Model model, HttpSession session) {
 		
@@ -255,7 +242,6 @@ public class ProductController {
 			productService.save(p);
 			user.get().removeProduct(p);
 			userService.save(user.get());
-			System.out.println("REMOVEEEEEEEE");
 		}
 
 		model.addAttribute("cartProducts", user.get().getProducts());
@@ -459,12 +445,10 @@ public class ProductController {
 	}
 
 	@GetMapping("/checkoutOne/{id}")
-	public String showGatewayOne(@AuthenticationPrincipal UserDetails userDetails, @PathVariable Long id, HttpSession session, Model model) {
+	public String showGatewayOne(@PathVariable Long id, HttpSession session, Model model) {
 		// Get the list of product IDs in the session.
 		Optional<Product> productOptional = productService.findById(id);
-
-		//System.out.println(SecurityContextHolder.getContext().getAuthentication());
-		
+		Order order;
 		//TOOLBAR
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
@@ -475,33 +459,25 @@ public class ProductController {
 
 		if (productOptional.isPresent()) {
 			Product product = productOptional.get();
+			System.out.println("PRODUCTO ="+product.getName());
 
 			if (product.getStock() > 0) {
 
-				//System.out.println("PRODUCT EXISTE");
 				product.setStock(product.getStock() - 1);
-				List<Product> cartProducts = new ArrayList<>();
-				cartProducts.add(product);
-				Optional<User> optionalUser = userService.findByName(userDetails.getUsername());
+				
+				Optional<User> optionalUser = userService.findByName(authentication.getName());
 
-				if (optionalUser.isEmpty()) {
-					//System.out.println("USER NULO");
-					return "/error";
-				} else {
+				order = new Order(optionalUser.get(), product);
+				order.setTotalPrice(product.getPrice());
+				orderService.save(order);
+				
+				userService.addOrder(optionalUser.get().getId(), order);
+				userService.save(optionalUser.get());
 
-					Order order = new Order(optionalUser.get(), cartProducts);
-					order.setTotalPrice(product.getPrice());
-
-					orderService.save(order);
-					System.out.println("Order id (checkoutOne) ="+order.getId());
-
-					userService.addOrder(optionalUser.get().getId(), order);
-					userService.save(optionalUser.get());
-
-					product.setOrder(order);
-					productService.save(product);
-					model.addAttribute("orders", order);
-				}
+				product.setOrder(order);
+				productService.save(product);
+				model.addAttribute("orders", order);
+				
 			} else {
 				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
 			}
@@ -509,6 +485,7 @@ public class ProductController {
 		} else {
 			return "/error";
 		}
+		System.out.println("FINAL CHECKOUT"+order.getProducts().toString());
 		return "/gateway";
 	}
 

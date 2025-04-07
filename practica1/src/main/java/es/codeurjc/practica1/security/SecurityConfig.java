@@ -133,7 +133,7 @@ public class SecurityConfig {
         .requestMatchers("/checkout/**").hasAnyRole("USER")
         .requestMatchers("/edit/**").hasAnyRole("USER","ADMIN")
         .requestMatchers("/add-to-cart/**").hasAnyRole("USER")
-        .requestMatchers("/cart/**").hasAnyRole("USER")
+        .requestMatchers("/showCart/**").hasAnyRole("USER")
         .requestMatchers("/newproduct/**").hasAnyRole("USER","ADMIN")
         .requestMatchers("/remove-from-products/**").hasAnyRole("USER","ADMIN")
         .requestMatchers("/remove-from-cart/**").hasAnyRole("USER")
