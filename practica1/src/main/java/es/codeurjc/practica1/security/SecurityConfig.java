@@ -106,6 +106,7 @@ public class SecurityConfig {
 	public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
 		http.authenticationProvider(authenticationProvider());
         http.authorizeHttpRequests(authorize -> authorize
+        
         // PUBLIC PAGES
         .requestMatchers("/").permitAll()
         .requestMatchers("/products/**").permitAll()
@@ -121,6 +122,7 @@ public class SecurityConfig {
         .requestMatchers("/newUser/**").permitAll()
         .requestMatchers("/saveNewUser/**").permitAll()
         .requestMatchers("/updateUser/**").permitAll()
+        .requestMatchers("/removeUser/**").permitAll()
 
         // PRIVATE PAGES
         .requestMatchers("/private").hasAnyRole("USER")
@@ -141,9 +143,7 @@ public class SecurityConfig {
         .requestMatchers("/removeReview/**").hasAnyRole("ADMIN")
 
         .requestMatchers("/gateway").hasAnyRole("USER")
-        .requestMatchers("/admin").hasAnyRole("ADMIN")
-
-        .requestMatchers("/removeUser/**").hasAnyRole("ADMIN"))
+        .requestMatchers("/admin").hasAnyRole("ADMIN"))
         .formLogin(formLogin -> formLogin
         .loginPage("/login")
         .failureUrl("/loginerror")

@@ -89,14 +89,14 @@ public class UserController {
 								@RequestParam String email,
 								@RequestParam int phoneNumber, Model model) {
 		
-		System.out.println("Holaaaaaa");
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
 				authentication.isAuthenticated() &&
 				!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
-		model.addAttribute("users", userService.findAll());
-		model.addAttribute("products", productService.findAll());
+		List<User> listAux=userService.findAll();
+		listAux.remove(0);
+		model.addAttribute("users",listAux);		model.addAttribute("products", productService.findAll());
 		
 		User user = userService.findByName(authentication.getName()).get();
 		user.setName(name);
@@ -107,18 +107,20 @@ public class UserController {
 		return "/products"; // Redirige correctamente
 	}
 
-
+/*
 	@GetMapping("/users/")
 	public String showUsers(Model model, HttpServletRequest request) {
 		//-------------
 		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
 		model.addAttribute("token", token.getToken());
 		//-------------
-		model.addAttribute("users", userService.findAll());
+		List<User> listAux=userService.findAll();
+		listAux.remove(0);
+		model.addAttribute("users",listAux);
 
 		return "users";
 	}
-
+ 
 	@GetMapping("/users/{id}")
 	public String showUser(Model model, @PathVariable long id, HttpServletRequest request) {
 
@@ -128,12 +130,13 @@ public class UserController {
 		model.addAttribute("token", token.getToken());
 		//-------------
 		if (user.isPresent()) {
+			List<User> listAux=
 			model.addAttribute("user", user.get());
 			return "user";
 		} else {
 			return "users";
 		}
-	}
+	}*/
 
 	@GetMapping("/login")
 	public String login(Model model, HttpServletRequest request) {
@@ -172,26 +175,10 @@ public class UserController {
 
 	@GetMapping("/newUser")
 	public String newUser(Model model) {
-		//TOOLBAR
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		boolean isLoggedIn = authentication != null &&
-		authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken);
-		model.addAttribute("isLoggedIn", isLoggedIn);
-		//-----
 
-		if (isLoggedIn) {
-			//tiene que ser asi porque puede ser que te de como válido un usuario anónimo
-			boolean isAdmin = authentication.getAuthorities().stream()
-											.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-			
-			if (isAdmin) {
-				model.addAttribute("isAdmin", isAdmin);
-				System.out.println("El usuario es ADMIN");
-			} else {
-				model.addAttribute("isAdmin", isAdmin);
-				System.out.println("El usuario NOOOOO es ADMIN");
-			}
-		}
+		model.addAttribute("isLoggedIn", false);
+		model.addAttribute("isAdmin", false);
+				
 		return "newUser";
 	}
 
@@ -237,7 +224,9 @@ public class UserController {
 		}
 
 		model.addAttribute("isLoggedIn", isLoggedIn);
-		model.addAttribute("users", userService.findAll());
+		List<User> listAux=userService.findAll();
+		listAux.remove(0);
+		model.addAttribute("users",listAux);		
 		model.addAttribute("products", productService.findAll());
 		//model.addAttribute("userName",user.getName());
 
@@ -258,6 +247,55 @@ public class UserController {
 		//-----
 
 		if (user.isPresent()) {
+			for (Product product : user.get().getProducts()) {
+				product.getUsers().remove(user);
+				productService.save(product);
+			}
+			System.out.println("ENTRO EN BORRARME");
+
+			user.get().getProducts().clear();
+			for (Review review : user.get().getReviews()) {
+				review.removeAllComments();
+				review.getAuthor().deleteReview(review);
+				review.getProduct().removeReview(review);
+				reviewService.delete(review);
+			}
+
+			for (Order order : user.get().getOrders()) {
+				order.deleteAllProducts();
+				order.getOwner().deleteOrder(order);
+				orderService.delete(order);
+			}
+
+			user.get().getProducts().clear();
+			userService.save(user.get());
+
+			userService.delete(user.get());
+		} else {
+			return "/error";
+		}
+		
+		model.addAttribute("isLoggedIn", isLoggedIn);
+		List<User> listAux=userService.findAll();
+		listAux.remove(0);
+		model.addAttribute("users",listAux);
+		model.addAttribute("products", productService.findAll());
+		model.addAttribute("isAdmin", true);
+		return "products"; 
+	}
+
+	@PostMapping("/removeUser")
+	public String removeUser(Model model) {
+
+		//TOOLBAR
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
+		//-----
+
+		// Search for the product in the database.
+		Optional<User> user = userService.findByName(authentication.getName());
+
+		if (user.isPresent()&&user.get().getId()!=1) {
 			for (Product product : user.get().getProducts()) {
 				product.getUsers().remove(user);
 				productService.save(product);
@@ -285,12 +323,9 @@ public class UserController {
 			return "/error";
 		}
 		
-		System.out.println("AQUIII");
-		model.addAttribute("isLoggedIn", isLoggedIn);
-		model.addAttribute("users", userService.findAll());
+		model.addAttribute("isLoggedIn", false);
 		model.addAttribute("products", productService.findAll());
-		model.addAttribute("isAdmin", true);
+		model.addAttribute("isAdmin", false);
 		return "products"; 
 	}
-
 }
