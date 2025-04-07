@@ -290,7 +290,6 @@ public class ProductController {
 	public String removeFromProducts(@PathVariable long productId) {
 		// Search for the product in the database.
 		Optional<Product> productAux = productService.findById(productId);
-		System.out.println("ENTRA EN REMOVE FROM PRODUCTS");
 
 		if (productAux.isPresent()) {
 			productService.delete(productAux.get()); // Delete the product from the database.
@@ -298,7 +297,7 @@ public class ProductController {
 		} else {
 			return "/error";
 		}
-		return "/"; // Redirect to the updated product list.
+		return "redirect:/"; // Redirect to the updated product list.
 	}
 
 	@GetMapping("/edit/{id}")
@@ -346,7 +345,7 @@ public class ProductController {
 		}
 
 		productService.save(product);
-		return "/products/" + id; // Correctly redirect to the updated product.
+		return "redirect:/products/" + id; // Correctly redirect to the updated product.
 	}
 
 
@@ -527,7 +526,6 @@ public class ProductController {
 		// Reviwes
 	@GetMapping("/productReviews/{id}")
 	public String showReviews(Model model, @PathVariable long id) {
-		System.err.println("ENTRA EN SHOW REVIEWS");
 
 		//TOOLBAR
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -585,25 +583,31 @@ public class ProductController {
 	public String newReviewProcess(
 			@PathVariable long productId,
 			@RequestParam String title,
-			@RequestParam String text) {
+			@RequestParam String text, Model model) {
 
-		System.out.println("ENTRA EN NEW REVIEW");
+		//TOOLBAR
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		boolean isLoggedIn = authentication != null &&
+		authentication.isAuthenticated() &&
+		!(authentication instanceof AnonymousAuthenticationToken);
+		model.addAttribute("isLoggedIn", isLoggedIn);
 
 		Optional<Product> productOpt = productService.findById(productId);
 		if (!productOpt.isPresent()) {
 			return "/error";
 		}
-		Product product = productOpt.get();
 
-		Optional<User> userOpt = userService.findByEmail("paula@gmail.com");
+		Product product = productOpt.get();
+		Optional<User> userOpt = userService.findByName(authentication.getName());
 		User author = userOpt.get();
 
 		Review review = new Review(title, text, author, product);
+		author.addReview(review);
 		product.addReview(review);
-
+		userService.save(author);
 		reviewService.save(review);
 		productService.save(product);
-		return "/productReviews/" + product.getId();
+		return "redirect:/productReviews/" + product.getId();
 	}
 
 	@PostMapping("/removeReview/{reviewId}")

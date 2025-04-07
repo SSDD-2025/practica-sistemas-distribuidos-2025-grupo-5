@@ -135,11 +135,11 @@ public class SecurityConfig {
         .requestMatchers("/add-to-cart/**").hasAnyRole("USER")
         .requestMatchers("/showCart/**").hasAnyRole("USER")
         .requestMatchers("/newproduct/**").hasAnyRole("USER","ADMIN")
-        .requestMatchers("/remove-from-products/**").hasAnyRole("USER","ADMIN")
+        .requestMatchers("/remove-from-products/**").hasAnyRole("ADMIN")
         .requestMatchers("/remove-from-cart/**").hasAnyRole("USER")
         .requestMatchers("/showOrders/**").hasAnyRole("USER")
         .requestMatchers("/removeOrder/**").hasAnyRole("USER")
-        .requestMatchers("/update/**").hasAnyRole("USER")
+        .requestMatchers("/update/**").hasAnyRole("ADMIN")
         .requestMatchers("/removeReview/**").hasAnyRole("ADMIN")
 
         .requestMatchers("/gateway").hasAnyRole("USER")
