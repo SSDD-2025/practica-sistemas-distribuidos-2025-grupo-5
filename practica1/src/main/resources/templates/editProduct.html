@@ -12,10 +12,11 @@
         <h2>Editar Producto "{{product.name}}"</h2>
 
         <form action="/update/{{product.id}}" method="post">
+          <input type="hidden" name="_csrf" value="{{token}}"/>
+
           <div class="form-group">
             <label for="name">Nombre del producto:</label>
             <input type="text" class="form-control" id="name" name="name" value="{{product.name}}" required>
-            <input type="hidden" name="_csrf" value="{{token}}"/>
           </div>
 
           <div class="form-group">

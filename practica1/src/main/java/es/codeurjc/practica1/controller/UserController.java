@@ -8,8 +8,11 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
+import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
+import org.springframework.security.core.userdetails.UserDetails;
+import org.springframework.security.core.userdetails.UserDetailsService;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.security.web.csrf.CsrfToken;
 import org.springframework.stereotype.Controller;
@@ -48,6 +51,8 @@ public class UserController {
 	@Autowired
 	private PasswordEncoder passwordEncoder;
 
+	@Autowired
+	private UserDetailsService userDetailsService; // Tu implementación personalizada
 
 	@ModelAttribute
 	public void addAttributes(Model model, HttpServletRequest request) {
@@ -78,35 +83,58 @@ public class UserController {
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		
 		
-		User user=userService.findByName(authentication.getName()).get();
-
+		User user = userService.findByName(authentication.getName())
+		.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+	
 		model.addAttribute("user",user);
 		return "editUser";
 	}
 
 	@PostMapping("/updateUser")
-	public String updateUser(@RequestParam String name,
-								@RequestParam String email,
-								@RequestParam int phoneNumber, Model model) {
-		
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		boolean isLoggedIn = authentication != null &&
-				authentication.isAuthenticated() &&
-				!(authentication instanceof AnonymousAuthenticationToken);
-		model.addAttribute("isLoggedIn", isLoggedIn);
-		List<User> listAux=userService.findAll();
-		listAux.remove(0);
-		model.addAttribute("users",listAux);		
-		model.addAttribute("products", productService.findAll());
-		
-		User user = userService.findByName(authentication.getName()).get();
-		user.setName(name);
-		user.setEmail(email);
-		user.setPhoneNumber(phoneNumber);
+public String updateUser(@RequestParam String name,
+                         @RequestParam String email,
+                         @RequestParam int phoneNumber,
+                         Model model) {
 
-		userService.save(user);
-		return "/products"; // Redirige correctamente
-	}
+    Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+    boolean isLoggedIn = authentication != null &&
+            authentication.isAuthenticated() &&
+            !(authentication instanceof AnonymousAuthenticationToken);
+    model.addAttribute("isLoggedIn", isLoggedIn);
+
+    // Buscar usuario actual por nombre de login
+    User user = userService.findByName(authentication.getName())
+            .orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+
+    // Actualizar datos
+    user.setName(name);
+    user.setEmail(email);
+    user.setPhoneNumber(phoneNumber);
+    userService.save(user);
+
+    // Cargar el nuevo UserDetails por el nuevo nombre
+    UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(name);
+
+    // Crear nuevo Authentication y reemplazarlo en el contexto
+    Authentication newAuth = new UsernamePasswordAuthenticationToken(
+            updatedUserDetails,
+            authentication.getCredentials(),
+            updatedUserDetails.getAuthorities()
+    );
+    SecurityContextHolder.getContext().setAuthentication(newAuth);
+
+    // Añadir atributos al modelo
+    List<User> listAux = userService.findAll();
+    if (!listAux.isEmpty()) {
+        listAux.remove(0);
+    }
+    model.addAttribute("users", listAux);
+    model.addAttribute("products", productService.findAll());
+
+    return "/products";
+}
+
+	
 
 /*
 	@GetMapping("/users/")

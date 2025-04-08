@@ -26,10 +26,15 @@
           <div class="form-group">
             <label for="phoneNumber">Teléfono:</label>
             <input type="number" class="form-control" id="phoneNumber" name="phoneNumber" value="{{user.phoneNumber}}" required>
-
           </div>
 
           <button type="submit" class="btn btn-primary" style="width: 700px;">Guardar Cambios</button>
+        </form>
+
+        <form method="post" action="/removeUser" style="margin: 0;">
+          <button type="submit" class="btn btn-danger" style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">Borrarme 💥
+              <input type="hidden" name="_csrf" value="{{token}}"/>
+          </button>
         </form>
 
         <button class="btn btn-outline-secondary" style="width: 700px" onclick="location.href='/products'; return false;">Cancelar</button>
