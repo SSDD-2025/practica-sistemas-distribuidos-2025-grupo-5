@@ -123,11 +123,11 @@ public class SecurityConfig {
         .requestMatchers("/saveNewUser/**").permitAll()
         .requestMatchers("/updateUser/**").permitAll()
         .requestMatchers("/removeUser/**").permitAll()
+        .requestMatchers("/removeUserByUser/**").permitAll()
 
         // PRIVATE PAGES
         .requestMatchers("/private").hasAnyRole("USER")
         .requestMatchers("/editUserGet").hasAnyRole("USER", "ADMIN")
-        .requestMatchers("/removeUserByUser").hasAnyRole("USER")
 
         .requestMatchers("/checkoutOne/**").hasAnyRole("USER")
         .requestMatchers("/checkout/**").hasAnyRole("USER")

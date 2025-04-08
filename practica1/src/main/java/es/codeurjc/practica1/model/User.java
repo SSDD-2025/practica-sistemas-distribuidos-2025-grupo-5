@@ -32,7 +32,7 @@ public class User {
     private int phoneNumber;
 
     // Un usuario puede crear muchas reviews
-    @OneToMany(mappedBy = "author", orphanRemoval = true)
+    @OneToMany(mappedBy = "author")
     private List<Review> reviews = new ArrayList<>();
 
     @OneToMany(fetch = FetchType.LAZY)

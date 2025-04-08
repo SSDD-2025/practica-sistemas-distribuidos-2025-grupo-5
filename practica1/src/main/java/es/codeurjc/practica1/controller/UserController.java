@@ -310,65 +310,46 @@ public class UserController {
 
 	@PostMapping("/removeUserByUser")
 	public String removeUser(Model model, HttpServletRequest request) {
-
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		String username = authentication.getName();
+		boolean isLoggedIn = authentication != null &&
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
+		model.addAttribute("isLoggedIn", isLoggedIn);
+		// -----
+		User user=userService.findByName(username).get();
 
-		// Cargar UserDetails antes de borrar
-		UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(username);
-
-		// Actualizar Authentication en el contexto (por si se usa antes de logout)
-		Authentication newAuth = new UsernamePasswordAuthenticationToken(
-				updatedUserDetails,
-				authentication.getCredentials(),
-				updatedUserDetails.getAuthorities());
-		SecurityContextHolder.getContext().setAuthentication(newAuth);
-
-		// Buscar usuario real
-		Optional<User> userOpt = userService.findByName(username);
-
-		if (userOpt.isPresent() && userOpt.get().getId() != 1) {
-			User user = userOpt.get();
-
-			// Eliminar relaciones con productos
+		if (user!=null) {
 			for (Product product : user.getProducts()) {
 				product.getUsers().remove(user);
 				productService.save(product);
 			}
 
-			// Eliminar reseñas
+			user.getProducts().clear();
 			for (Review review : user.getReviews()) {
-				review.removeAllComments();
-				review.getAuthor().deleteReview(review);
-				review.getProduct().removeReview(review);
-				reviewService.delete(review);
+				review.setAuthor(null);
+				reviewService.save(review);
 			}
 
-			// Eliminar pedidos
 			for (Order order : user.getOrders()) {
-				order.deleteAllProducts();
-				order.getOwner().deleteOrder(order);
-				orderService.delete(order);
+				order = null;
+				orderService.save(order);
 			}
 
-			// Limpiar relaciones finales y borrar usuario
 			user.getProducts().clear();
 			userService.save(user);
+
 			userService.delete(user);
-
-			// Limpiar sesión y seguridad
-			SecurityContextHolder.clearContext();
-			request.getSession().invalidate();
-
-			model.addAttribute("isLoggedIn", false);
-			model.addAttribute("isAdmin", false);
-			model.addAttribute("products", productService.findAll());
-			System.out.println("El usuario ha sido eliminado correctamente.");
-			return "redirect:/products";
-			
 		} else {
-			return "/error";
+			return "redirect:/error";
 		}
+
+		model.addAttribute("isLoggedIn", false);
+		model.addAttribute("products", productService.findAll());
+		model.addAttribute("isAdmin", false);
+		return "products";
 	}
+
 
 }
