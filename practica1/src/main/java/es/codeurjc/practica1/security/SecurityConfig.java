@@ -126,8 +126,8 @@ public class SecurityConfig {
 
         // PRIVATE PAGES
         .requestMatchers("/private").hasAnyRole("USER")
-        .requestMatchers("/editUserGet").hasAnyRole("USER")
-        .requestMatchers("/editUserGet").hasAnyRole("ADMIN")
+        .requestMatchers("/editUserGet").hasAnyRole("USER", "ADMIN")
+        .requestMatchers("/removeUserByUser").hasAnyRole("USER")
 
         .requestMatchers("/checkoutOne/**").hasAnyRole("USER")
         .requestMatchers("/checkout/**").hasAnyRole("USER")

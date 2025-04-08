@@ -40,8 +40,8 @@ public class DatabaseInitializer {
     public void init() throws IOException {
         List<String> rolUser = List.of("USER");
         List<String> rolAdmin = List.of( "ADMIN");
-        userService.save(new User("admin","paula@gmail.com", passwordEncoder.encode("adminpass"), rolAdmin,912));
-        userService.save(new User("user","juanjo@gmail.com",passwordEncoder.encode("pass"), rolUser,112));
+        userService.save(new User("user","paula@gmail.com", passwordEncoder.encode("pass"), rolUser,912));
+        userService.save(new User("admin","juanjo@gmail.com",passwordEncoder.encode("adminpass"), rolAdmin,112));
         User user1 = userService.findByName("user").get();
         System.out.println("ID USUARIO: " + user1.getId());
         

@@ -26,9 +26,10 @@
 			</button>
 
 			<button onclick="openSettings()">⚙ Ajustes</button>
+			{{^isAdmin}}
             <button onclick="location.href='/showCart'"> CARRITO</button>
 			<button onclick="location.href='/showOrders'"> PEDIDOS</button>
-
+			{{/isAdmin}}
 			<input type="text" placeholder="Buscar...">
 			<select id="language" onchange="changeLanguage()">
 				<option value="es">Español</option>

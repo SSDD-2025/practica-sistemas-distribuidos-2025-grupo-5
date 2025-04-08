@@ -14,13 +14,11 @@
             <label for="name">Nombre:</label>
             <input type="text" class="form-control" id="name" name="name" value="{{user.name}}" required>
             <input type="hidden" name="_csrf" value="{{token}}"/>
-
           </div>
 
           <div class="form-group">
             <label for="email">Email:</label>
             <textarea class="form-control" id="email" name="email" required>{{user.email}}</textarea>
-
           </div>
 
           <div class="form-group">
@@ -30,14 +28,16 @@
 
           <button type="submit" class="btn btn-primary" style="width: 700px;">Guardar Cambios</button>
         </form>
+        {{^isAdmin}}
+          <form method="post" action="/removeUserByUser" style="margin: 0;">
+            <button type="submit" class="btn btn-danger" style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">Borrarme 💥
+                <input type="hidden" name="_csrf" value="{{token}}"/>
+            </button>
+          </form>
+        {{/isAdmin}}
+        
 
-        <form method="post" action="/removeUser" style="margin: 0;">
-          <button type="submit" class="btn btn-danger" style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">Borrarme 💥
-              <input type="hidden" name="_csrf" value="{{token}}"/>
-          </button>
-        </form>
-
-        <button class="btn btn-outline-secondary" style="width: 700px" onclick="location.href='/products'; return false;">Cancelar</button>
+        <button class="btn btn-outline-secondary" style="width: 700px" onclick="location.href='/'; return false;">Cancelar</button>
       </div>
     </div>
   </div>

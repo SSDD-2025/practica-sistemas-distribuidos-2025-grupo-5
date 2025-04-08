@@ -85,7 +85,11 @@ public class UserController {
 		
 		User user = userService.findByName(authentication.getName())
 		.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
-	
+		boolean isAdmin = authentication.getAuthorities().stream()
+		.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+
+		
+		model.addAttribute("isAdmin", isAdmin);
 		model.addAttribute("user",user);
 		return "editUser";
 	}
@@ -266,93 +270,109 @@ public String updateUser(@RequestParam String name,
 	public String removeUser(Model model,@PathVariable long id) {
 		// Search for the product in the database.
 		Optional<User> user = userService.findById(id);
-
-		//TOOLBAR
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		boolean isLoggedIn = authentication != null &&
-		authentication.isAuthenticated() &&
-		!(authentication instanceof AnonymousAuthenticationToken);
-		model.addAttribute("isLoggedIn", isLoggedIn);
-		//-----
-
-		if (user.isPresent()) {
-			for (Product product : user.get().getProducts()) {
-				product.getUsers().remove(user);
-				productService.save(product);
-			}
-			System.out.println("ENTRO EN BORRARME");
-
-			user.get().getProducts().clear();
-			for (Review review : user.get().getReviews()) {
-				review.removeAllComments();
-				review.getAuthor().deleteReview(review);
-				review.getProduct().removeReview(review);
-				reviewService.delete(review);
-			}
-
-			for (Order order : user.get().getOrders()) {
-				order.deleteAllProducts();
-				order.getOwner().deleteOrder(order);
-				orderService.delete(order);
-			}
-
-			user.get().getProducts().clear();
-			userService.save(user.get());
-
-			userService.delete(user.get());
-		} else {
-			return "/error";
-		}
+				//TOOLBAR
+				Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+				boolean isLoggedIn = authentication != null &&
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
+				model.addAttribute("isLoggedIn", isLoggedIn);
+				//-----
 		
-		model.addAttribute("isLoggedIn", isLoggedIn);
-		List<User> listAux=userService.findAll();
-		listAux.remove(0);
-		model.addAttribute("users",listAux);
-		model.addAttribute("products", productService.findAll());
-		model.addAttribute("isAdmin", true);
-		return "products"; 
-	}
-
-	@PostMapping("/removeUser")
-	public String removeUser(Model model) {
-
-		//TOOLBAR
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-
-		// Search for the product in the database.
-		Optional<User> user = userService.findByName(authentication.getName());
-
-		if (user.isPresent()&&user.get().getId()!=1) {
-			for (Product product : user.get().getProducts()) {
-				product.getUsers().remove(user);
-				productService.save(product);
-			}
-
-			user.get().getProducts().clear();
-			for (Review review : user.get().getReviews()) {
-				review.removeAllComments();
-				review.getAuthor().deleteReview(review);
-				review.getProduct().removeReview(review);
-				reviewService.delete(review);
-			}
-
-			for (Order order : user.get().getOrders()) {
-				order.deleteAllProducts();
-				order.getOwner().deleteOrder(order);
-				orderService.delete(order);
-			}
-
-			user.get().getProducts().clear();
-			userService.save(user.get());
-
-			userService.delete(user.get());
-		} else {
-			return "/error";
-		}
+				if (user.isPresent()) {
+					for (Product product : user.get().getProducts()) {
+						product.getUsers().remove(user);
+						productService.save(product);
+					}
 		
-		model.addAttribute("isLoggedIn", false);
-		model.addAttribute("products", productService.findAll());
-		model.addAttribute("isAdmin", false);
-		return "redirect:/products"; 
-	}
+					user.get().getProducts().clear();
+					for (Review review : user.get().getReviews()) {
+						review.setAuthor(null);
+						reviewService.save(review);
+					}
+		
+					for (Order order : user.get().getOrders()) {
+						order=null;
+						orderService.save(order);
+					}
+		
+					user.get().getProducts().clear();
+					userService.save(user.get());
+		
+					userService.delete(user.get());
+				} else {
+					return "redirect:/error";
+				}
+				
+				model.addAttribute("isLoggedIn", isLoggedIn);
+				List<User> listAux=userService.findAll();
+				listAux.remove(0);
+				model.addAttribute("users",listAux);					
+				model.addAttribute("products", productService.findAll());
+				model.addAttribute("isAdmin", true);
+				return "products"; 
+			}
+		
+			@PostMapping("/removeUserByUser")
+			public String removeUser(Model model, HttpServletRequest request) {
+			
+				Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+				String username = authentication.getName();
+			
+				// Cargar UserDetails antes de borrar
+				UserDetails updatedUserDetails = userDetailsService.loadUserByUsername(username);
+			
+				// Actualizar Authentication en el contexto (por si se usa antes de logout)
+				Authentication newAuth = new UsernamePasswordAuthenticationToken(
+						updatedUserDetails,
+						authentication.getCredentials(),
+						updatedUserDetails.getAuthorities()
+				);
+				SecurityContextHolder.getContext().setAuthentication(newAuth);
+			
+				// Buscar usuario real
+				Optional<User> userOpt = userService.findByName(username);
+			
+				if (userOpt.isPresent() && userOpt.get().getId() != 1) {
+					User user = userOpt.get();
+			
+					// Eliminar relaciones con productos
+					for (Product product : user.getProducts()) {
+						product.getUsers().remove(user);
+						productService.save(product);
+					}
+			
+					// Eliminar reseñas
+					for (Review review : user.getReviews()) {
+						review.removeAllComments();
+						review.getAuthor().deleteReview(review);
+						review.getProduct().removeReview(review);
+						reviewService.delete(review);
+					}
+			
+					// Eliminar pedidos
+					for (Order order : user.getOrders()) {
+						order.deleteAllProducts();
+						order.getOwner().deleteOrder(order);
+						orderService.delete(order);
+					}
+			
+					// Limpiar relaciones finales y borrar usuario
+					user.getProducts().clear();
+					userService.save(user);
+					userService.delete(user);
+			
+					// Limpiar sesión y seguridad
+					SecurityContextHolder.clearContext();
+					request.getSession().invalidate();
+			
+					model.addAttribute("isLoggedIn", false);
+					model.addAttribute("isAdmin", false);
+					model.addAttribute("products", productService.findAll());
+			
+					return "redirect:/products";
+				} else {
+					return "/error";
+				}
+			}
+			
 }
