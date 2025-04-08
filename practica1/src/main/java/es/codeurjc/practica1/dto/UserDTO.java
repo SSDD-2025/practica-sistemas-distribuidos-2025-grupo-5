@@ -5,7 +5,7 @@ public record UserDTO (
     Long id,
     String name,
     String email,
-    String password,
+    //String password, No deberia aparecer la contraseña
     List<String> roles,
     List<ReviewDTO> reviews,
     List<ProductDTO> products,

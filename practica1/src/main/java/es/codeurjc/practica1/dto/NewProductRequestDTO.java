@@ -1,7 +1,8 @@
 package es.codeurjc.practica1.dto;
+
 import java.util.List;
-    public record ProductDTO(
-    Long id,
+
+public record NewProductRequestDTO (
     String name,
     Double price,
     Integer stock,
@@ -15,6 +16,5 @@ import java.util.List;
 
     List<ReviewDTO>reviews,
 
-    List<OrderDTO> orders){}
-
-
+    List<OrderDTO> orders){
+}
