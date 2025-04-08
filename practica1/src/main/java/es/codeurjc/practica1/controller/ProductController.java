@@ -283,7 +283,7 @@ public class ProductController {
 		model.addAttribute("productId", newProduct.getId());
 		productService.save(newProduct);
 
-		return "/products/" + newProduct.getId();
+		return "redirect:/products/" + newProduct.getId();
 	}
 
 	@PostMapping("/remove-from-products/{productId}")
