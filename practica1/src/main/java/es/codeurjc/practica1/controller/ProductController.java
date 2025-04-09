@@ -72,7 +72,7 @@ public class ProductController {
 											.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 			model.addAttribute("isAdmin", isAdmin);
 		}
-
+		System.out.println(isLoggedIn);
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		List<User> listAux=userService.findByDeleted(false);
 		listAux.remove(0);
