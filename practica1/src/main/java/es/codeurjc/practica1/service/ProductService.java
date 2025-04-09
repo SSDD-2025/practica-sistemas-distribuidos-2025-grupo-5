@@ -28,6 +28,10 @@ public class ProductService {
         return productRepository.findAllById(productIds);
     }
 
+    public List<Product> findByDeleteProducts(Boolean deletedProducts) {
+        return productRepository.findByDeletedProducts(deletedProducts);
+    }
+
     public boolean exist(long id) {
         return productRepository.findById(id).isPresent();
     }

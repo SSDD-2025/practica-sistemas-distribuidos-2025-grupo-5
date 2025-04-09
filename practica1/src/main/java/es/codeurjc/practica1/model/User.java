@@ -21,7 +21,7 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-
+    private boolean deleted; 
     private String name;
     private String email;
     private String encodedPassword;
@@ -50,6 +50,7 @@ public class User {
         this.email = email;
         this.encodedPassword = password;
         this.roles = roles;
+        this.deleted = false;
         this.phoneNumber = phoneNumber;
         this.products = new ArrayList<>();
         this.reviews = new ArrayList<>();
@@ -154,4 +155,11 @@ public class User {
         this.orders.add(order);
     }
 
+    public void setDeletedd(boolean deleted){
+        this.deleted = deleted;
+    }
+
+    public boolean getDeletedd(){
+        return this.deleted;
+    }
 }

@@ -56,6 +56,7 @@ public class ProductController {
 
 	@Autowired
 	private ImageUtils imageUtils;
+	
 	@Autowired
 	private ReviewService reviewService;
 
@@ -69,20 +70,14 @@ public class ProductController {
 			//tiene que ser asi porque puede ser que te de como válido un usuario anónimo
 			boolean isAdmin = authentication.getAuthorities().stream()
 											.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-			
-			if (isAdmin) {
-				model.addAttribute("isAdmin", isAdmin);
-				System.out.println("El usuario es ADMIN");
-			} else {
-				model.addAttribute("isAdmin", isAdmin);
-				System.out.println("El usuario NOOOOO es ADMIN");
-			}
+			model.addAttribute("isAdmin", isAdmin);
 		}
 
 		model.addAttribute("isLoggedIn", isLoggedIn);
-		List<User> listAux=userService.findAll();
+		List<User> listAux=userService.findByDeleted(false);
 		listAux.remove(0);
-		model.addAttribute("users",listAux);		model.addAttribute("products", productService.findAll());
+		model.addAttribute("users",listAux);		
+		model.addAttribute("products", productService.findByDeleteProducts(false));
 		return "products";
 	}
 
@@ -101,15 +96,7 @@ public class ProductController {
 				//tiene que ser asi porque puede ser que te de como válido un usuario anónimo
 				boolean isAdmin = authentication.getAuthorities().stream()
 												.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-				
-				if (isAdmin) {
-					model.addAttribute("isAdmin", isAdmin);
-					System.out.println("El usuario es ADMIN");
-				} else {
-					model.addAttribute("isAdmin", isAdmin);
-					System.out.println("El usuario NOOOOO es ADMIN");
-	
-				}
+				model.addAttribute("isAdmin", isAdmin);
 			}
 			model.addAttribute("product", product.get());
 			return "product";
@@ -147,7 +134,6 @@ public class ProductController {
 		authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		//-----
-		model.addAttribute("availableProducts", userService.findAll());
 		return "newProductPage";
 	}
 
@@ -177,12 +163,9 @@ public class ProductController {
 			}
 		}
 
-		if (cartProducts.isEmpty()) {
-			model.addAttribute("isEmpty", false);
-		} else {
-			model.addAttribute("cartProducts", cartProducts);
-			model.addAttribute("isEmpty", true);
-		}
+		model.addAttribute("cartProducts", cartProducts);
+		model.addAttribute("isEmpty", true);
+		
 		return "cart"; // Display the cart view.
 	}
 
@@ -244,9 +227,13 @@ public class ProductController {
 			userService.save(user.get());
 		}
 
-		model.addAttribute("cartProducts", user.get().getProducts());
-		System.out.println(user.get().getProducts());
+		boolean isLoggedIn = authentication != null &&
+		authentication.isAuthenticated() &&
+		!(authentication instanceof AnonymousAuthenticationToken);
+		model.addAttribute("isLoggedIn", isLoggedIn);
 
+		model.addAttribute("isEmpty", !user.get().getProducts().isEmpty());
+		model.addAttribute("cartProducts", user.get().getProducts());
 		return "/cart";
 	}
 
@@ -292,8 +279,9 @@ public class ProductController {
 		Optional<Product> productAux = productService.findById(productId);
 
 		if (productAux.isPresent()) {
-			productService.delete(productAux.get()); // Delete the product from the database.
-			System.out.println("Producto eliminado: " + productId);
+			productAux.get().setDeletedProducts(true);
+			productService.save(productAux.get());
+
 		} else {
 			return "/error";
 		}
@@ -313,7 +301,6 @@ public class ProductController {
 		!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		//-----
-
 		model.addAttribute("product", product.get());
 		return "editProduct";
 	}
@@ -350,7 +337,6 @@ public class ProductController {
 
 
 	//ORDER
-
 	@GetMapping("/showOrders")
 	public String showOrders(HttpSession session, Model model,@AuthenticationPrincipal UserDetails userDetails) {
 		//TOOLBAR
@@ -360,8 +346,6 @@ public class ProductController {
 		!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		//----
-		System.out.println("USUARIO ESTA EN EL SHOW ORDERS");
-
 		if (userDetails == null) {
 			return "/login"; // o manejar el caso de usuario no autenticado
 		}
@@ -369,7 +353,6 @@ public class ProductController {
 		// Get the list of product IDs in the session.
 		Optional<User> oneUser = userService.findByName(userDetails.getUsername());
 		List<Order> orderList = null;
-		System.out.println("USUARIO ESTA EN EL SHOW ORDERS");
 		
 		if (oneUser.isPresent()) {
 			User user = oneUser.get();
@@ -426,12 +409,10 @@ public class ProductController {
 				}
 				
 				orderService.save(order);
-				//System.out.println("Order id (checkoutOne) ="+order.getId());
 				user.get().getProducts().clear();
 				userService.addOrder(user.get().getId(), order);
 				userService.save(user.get());
 				model.addAttribute("orders", order);
-				//System.out.println("ORDER ID ANTES GATEWAY EN CHECK OUT"+order.getId());
 				
 				//TOOLBAR
 				boolean isLoggedIn = authentication != null &&
@@ -458,12 +439,10 @@ public class ProductController {
 
 		if (productOptional.isPresent()) {
 			Product product = productOptional.get();
-			System.out.println("PRODUCTO ="+product.getName());
 
 			if (product.getStock() > 0) {
 
 				product.setStock(product.getStock() - 1);
-				
 				Optional<User> optionalUser = userService.findByName(authentication.getName());
 
 				order = new Order(optionalUser.get(), product);
@@ -484,7 +463,6 @@ public class ProductController {
 		} else {
 			return "/error";
 		}
-		System.out.println("FINAL CHECKOUT"+order.getProducts().toString());
 		return "/gateway";
 	}
 
@@ -494,7 +472,6 @@ public class ProductController {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Optional<User> userA = userService.findByName(authentication.getName());
 		Optional<Order> order = orderService.findById(id);
-
 
 		try {
 			if (order!=null) {
@@ -513,12 +490,10 @@ public class ProductController {
 		
 				return "/";
 			} else {
-				System.out.println("Orden no encontrada");
 				return "/error";
 			}
 		
 		} catch (Exception e) {
-			System.out.println("SALTA EXCEPCIÓN: " + e.getMessage());
 			return "/error";
 		}
 	}
@@ -540,14 +515,9 @@ public class ProductController {
 			boolean isAdmin = authentication.getAuthorities().stream()
 											.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 			
-			if (isAdmin) {
-				model.addAttribute("isAdmin", isAdmin);
-				System.out.println("El usuario es ADMIN");
-			} else {
-				model.addAttribute("isAdmin", isAdmin);
-				System.out.println("El usuario NOOOOO es ADMIN");
-
-			}
+			
+			model.addAttribute("isAdmin", isAdmin);
+			
 		}
 		Optional<Product> product = productService.findById(id);
 		if (product.isPresent()) {
@@ -567,6 +537,7 @@ public class ProductController {
 		if (!productOpt.isPresent()) {
 			return "/error";
 		}
+		
 		//TOOLBAR
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&

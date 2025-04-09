@@ -15,6 +15,8 @@ public interface UserRepository extends JpaRepository<User, Long> {
 
     List<User> findAll();
 
+    List<User> findByDeleted(boolean deleted);
+
     Optional<User> findByEmail(String email);
 
     //obtener solo los pedidos de un usuario directamente desde la base de datos

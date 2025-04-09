@@ -32,6 +32,10 @@ public class UserService {
         return userRepository.findByEmail(email);
     }
 
+    public List<User> findByDeleted(boolean deleted) {
+        return userRepository.findByDeleted(deleted);
+    }
+
     public User save(User user) {
         return userRepository.save(user);
     }

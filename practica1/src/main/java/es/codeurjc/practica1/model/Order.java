@@ -85,7 +85,9 @@ public class Order {
     }
 
     public void deleteAllProducts() {
-        this.products.clear();
+        for(Product product: this.products){
+            product.setDeletedProducts(true);
+        }
         this.totalPrice = 0; // Resetear el precio si se eliminan los productos
     }
 

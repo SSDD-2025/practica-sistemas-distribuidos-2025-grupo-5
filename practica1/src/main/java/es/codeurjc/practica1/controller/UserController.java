@@ -23,9 +23,6 @@ import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
-import es.codeurjc.practica1.model.Order;
-import es.codeurjc.practica1.model.Product;
-import es.codeurjc.practica1.model.Review;
 import es.codeurjc.practica1.model.User;
 import es.codeurjc.practica1.service.OrderService;
 import es.codeurjc.practica1.service.ProductService;
@@ -52,7 +49,7 @@ public class UserController {
 	private PasswordEncoder passwordEncoder;
 
 	@Autowired
-	private UserDetailsService userDetailsService; // Tu implementación personalizada
+	private UserDetailsService userDetailsService;
 
 	@ModelAttribute
 	public void addAttributes(Model model, HttpServletRequest request) {
@@ -125,48 +122,15 @@ public class UserController {
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
 
 		// Añadir atributos al modelo
-		List<User> listAux = userService.findAll();
+		List<User> listAux = userService.findByDeleted(false);
 		if (!listAux.isEmpty()) {
 			listAux.remove(0);
 		}
 		model.addAttribute("users", listAux);
-		model.addAttribute("products", productService.findAll());
+		model.addAttribute("products", productService.findByDeleteProducts(false));
 
 		return "/products";
 	}
-
-	/*
-	 * @GetMapping("/users/")
-	 * public String showUsers(Model model, HttpServletRequest request) {
-	 * //-------------
-	 * CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
-	 * model.addAttribute("token", token.getToken());
-	 * //-------------
-	 * List<User> listAux=userService.findAll();
-	 * listAux.remove(0);
-	 * model.addAttribute("users",listAux);
-	 * 
-	 * return "users";
-	 * }
-	 * 
-	 * @GetMapping("/users/{id}")
-	 * public String showUser(Model model, @PathVariable long id, HttpServletRequest
-	 * request) {
-	 * 
-	 * Optional<User> user = userService.findById(id);
-	 * //-------------
-	 * CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
-	 * model.addAttribute("token", token.getToken());
-	 * //-------------
-	 * if (user.isPresent()) {
-	 * List<User> listAux=
-	 * model.addAttribute("user", user.get());
-	 * return "user";
-	 * } else {
-	 * return "users";
-	 * }
-	 * }
-	 */
 
 	@GetMapping("/login")
 	public String login(Model model, HttpServletRequest request) {
@@ -190,19 +154,6 @@ public class UserController {
 		return "loginerror";
 	}
 
-	@GetMapping("/private")
-	public String privatePage(Model model, HttpServletRequest request) {
-		String name = request.getUserPrincipal().getName();
-		User user = userService.findByName(name).orElseThrow();
-		// -------------
-		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
-		model.addAttribute("token", token.getToken());
-		// -------------
-		model.addAttribute("username", user.getName());
-		model.addAttribute("admin", request.isUserInRole("ADMIN"));
-		return "private";
-	}
-
 	@GetMapping("/newUser")
 	public String newUser(Model model) {
 
@@ -222,44 +173,35 @@ public class UserController {
 
 		// TOOLBAR
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		boolean isLoggedIn = authentication != null &&
-				authentication.isAuthenticated() &&
-				!(authentication instanceof AnonymousAuthenticationToken);
-		model.addAttribute("isLoggedIn", isLoggedIn);
-		// -----
-
+				// -----
+		List<User> aux=userService.findAll();
 		if (name == null || name.isEmpty() || encodedPassword == null || email == null) {
 			model.addAttribute("message", "El nombre, la contraseña y el email no pueden estar vacíos.");
 			return "/error";
 
+
+		}else if(userService.findByName(name).isPresent()&&aux.contains(userService.findByName(name).get())){
+			model.addAttribute("message", "Este nombre de usuario ya esta cogido, elige otro :)");
+			model.addAttribute("isLoggedIn", false);
+			model.addAttribute("isAdmin", false);
+			return "/error";
+		}else{
+			String hashedPassword = passwordEncoder.encode(encodedPassword);
+			List<String> rol = List.of("USER");
+			userService.save(new User(name, email, hashedPassword, rol, phoneNumber));
+
+			model.addAttribute("isAdmin", false);
+			List<User> listAux = userService.findByDeleted(false);
+			listAux.remove(0);
+			model.addAttribute("isLoggedIn", true);
+			model.addAttribute("users", listAux);
+			model.addAttribute("products", productService.findByDeleteProducts(false));
+			// model.addAttribute("userName",user.getName());
+	
+			return "products";
 		}
 
-		System.out.println("CONTRASEÑA GUARDADA" + encodedPassword);
-		String hashedPassword = passwordEncoder.encode(encodedPassword);
-		List<String> rol = List.of("USER");
-		userService.save(new User(name, email, hashedPassword, rol, phoneNumber));
-
-		if (isLoggedIn) {
-			boolean isAdmin = authentication.getAuthorities().stream()
-					.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-
-			if (isAdmin) {
-				model.addAttribute("isAdmin", isAdmin);
-				System.out.println("El usuario es ADMIN");
-			} else {
-				model.addAttribute("isAdmin", isAdmin);
-				System.out.println("El usuario NOOOOO es ADMIN");
-			}
-		}
-
-		model.addAttribute("isLoggedIn", isLoggedIn);
-		List<User> listAux = userService.findAll();
-		listAux.remove(0);
-		model.addAttribute("users", listAux);
-		model.addAttribute("products", productService.findAll());
-		// model.addAttribute("userName",user.getName());
-
-		return "products";
+		
 	}
 
 	@PostMapping("/removeUser/{id}")
@@ -273,37 +215,11 @@ public class UserController {
 				!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		// -----
+		user.get().setDeletedd(true);
+		userService.save(user.get());
 
-		if (user.isPresent()) {
-			for (Product product : user.get().getProducts()) {
-				product.getUsers().remove(user);
-				productService.save(product);
-			}
-
-			user.get().getProducts().clear();
-			for (Review review : user.get().getReviews()) {
-				review.setAuthor(null);
-				reviewService.save(review);
-			}
-
-			for (Order order : user.get().getOrders()) {
-				order = null;
-				orderService.save(order);
-			}
-
-			user.get().getProducts().clear();
-			userService.save(user.get());
-
-			userService.delete(user.get());
-		} else {
-			return "redirect:/error";
-		}
-
-		model.addAttribute("isLoggedIn", isLoggedIn);
-		List<User> listAux = userService.findAll();
-		listAux.remove(0);
-		model.addAttribute("users", listAux);
-		model.addAttribute("products", productService.findAll());
+		model.addAttribute("isLoggedIn", true);
+		model.addAttribute("products", productService.findByDeleteProducts(false));
 		model.addAttribute("isAdmin", true);
 		return "products";
 	}
@@ -319,34 +235,11 @@ public class UserController {
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		// -----
 		User user=userService.findByName(username).get();
-
-		if (user!=null) {
-			for (Product product : user.getProducts()) {
-				product.getUsers().remove(user);
-				productService.save(product);
-			}
-
-			user.getProducts().clear();
-			for (Review review : user.getReviews()) {
-				review.setAuthor(null);
-				reviewService.save(review);
-			}
-
-			for (Order order : user.getOrders()) {
-				order = null;
-				orderService.save(order);
-			}
-
-			user.getProducts().clear();
-			userService.save(user);
-
-			userService.delete(user);
-		} else {
-			return "redirect:/error";
-		}
+		user.setDeletedd(true);
+		userService.save(user);
 
 		model.addAttribute("isLoggedIn", false);
-		model.addAttribute("products", productService.findAll());
+		model.addAttribute("products", productService.findByDeleteProducts(false));
 		model.addAttribute("isAdmin", false);
 		return "products";
 	}

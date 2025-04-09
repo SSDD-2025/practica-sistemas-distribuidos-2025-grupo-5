@@ -18,7 +18,6 @@ import jakarta.persistence.ManyToMany;
 import jakarta.persistence.OneToMany;
 
 @Entity
-
 public class Product {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
@@ -27,6 +26,7 @@ public class Product {
     private double price;
     private int stock;
     private String provider;
+    private boolean deletedProducts;
 
     @Column(columnDefinition = "TEXT")
     private String description;
@@ -52,6 +52,7 @@ public class Product {
         this.description = description;
         this.price = price;
         this.stock = stock;
+        this.deletedProducts = false;
         // this.imageFile = img;
         this.users = new ArrayList<>();
         this.provider = provider;
@@ -155,4 +156,11 @@ public class Product {
         this.orders = orders;
     }
 
+    public void setDeletedProducts(boolean deleted){
+        this.deletedProducts=deleted;
+    }
+
+    public boolean getDeletedProducts(){
+        return this.deletedProducts;
+    }
 }

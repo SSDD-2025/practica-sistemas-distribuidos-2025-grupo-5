@@ -13,6 +13,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     List<Product> findByName(String name);
 
+    List<Product> findByDeletedProducts(boolean deletedProducts);
+
     List<Product> findByProvider(String provider);
 
     List<Product> findByPriceLessThan(double price);
