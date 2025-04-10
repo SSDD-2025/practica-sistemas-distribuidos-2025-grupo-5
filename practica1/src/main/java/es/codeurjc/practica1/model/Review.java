@@ -15,7 +15,7 @@ public class Review {
 	@Id
 	@GeneratedValue(strategy = GenerationType.AUTO)
 	private long id;
-
+	private boolean me;
 	private String title;
 	private String text;
 	private List<String> comments;
@@ -38,6 +38,7 @@ public class Review {
 		this.text = text;
 		this.author = author;
 		this.product = product;
+		this.me=false;
 		this.comments = new ArrayList<>();
 	}
 
@@ -53,8 +54,14 @@ public class Review {
 		return title;
 	}
 
+	public boolean getme() {
+		return me;
+	}
 	public void setTitle(String title) {
 		this.title = title;
+	}
+	public void setme(boolean tellMe) {
+		this.me = tellMe;
 	}
 
 	public String getText() {

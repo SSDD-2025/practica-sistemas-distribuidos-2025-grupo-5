@@ -1,4 +1,4 @@
-package es.codeurjc.practica1.controller.web;
+package es.codeurjc.practica1.controller;
 
 import java.io.IOException;
 import java.security.Principal;

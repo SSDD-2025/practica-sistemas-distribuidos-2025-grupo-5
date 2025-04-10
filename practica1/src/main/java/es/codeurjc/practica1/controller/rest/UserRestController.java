@@ -1,5 +1,5 @@
 package es.codeurjc.practica1.controller.rest;
-
+/* 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,3 +20,4 @@ public class UserRestController {
 		return userService.getLoggedUserDTO();
 	}
 }
+*/

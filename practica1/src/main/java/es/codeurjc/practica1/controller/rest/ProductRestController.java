@@ -1,5 +1,5 @@
 package es.codeurjc.practica1.controller.rest;
-
+/* 
 import java.io.IOException;
 import java.net.URI;
 import java.sql.SQLException;
@@ -102,4 +102,4 @@ public class ProductRestController {
 
 		return ResponseEntity.noContent().build();
 	}
-}
+}*/

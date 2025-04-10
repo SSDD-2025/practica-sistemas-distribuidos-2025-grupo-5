@@ -1,4 +1,4 @@
-package es.codeurjc.practica1.controller.web;
+package es.codeurjc.practica1.controller;
 
 import java.io.IOException;
 import java.sql.Blob;
@@ -519,6 +519,17 @@ public class ProductController {
 			model.addAttribute("isAdmin", isAdmin);
 			
 		}
+		User user= userService.findByName(authentication.getName()).get();
+		List<Review> reviews=reviewService.findAll();
+			for (Review review: reviews){
+
+				if(review.getAuthor().getName().equals(user.getName())){
+					review.setme(true);
+					System.err.println("entraaaaaaaaa");
+				}else{
+					review.setme(false);
+				}
+			}
 		Optional<Product> product = productService.findById(id);
 		if (product.isPresent()) {
 			Product p = product.get();
@@ -602,7 +613,7 @@ public class ProductController {
 			userAux.deleteReview(review);
 			productAux.removeReview(review);
 
-			userService.save(userAux);
+			userService.save(userAux);	
 			productService.save(productAux);
 
 			reviewService.delete(review);
@@ -623,25 +634,93 @@ public class ProductController {
 		}
 	}
 
+	@PostMapping("/removeReviewByUser/{reviewId}")
+	public String removeReviewByUSer(@PathVariable long reviewId, HttpSession session, Model model) {
+		try {
+			// Obtener el usuario autenticado
+			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+			if (authentication == null || !authentication.isAuthenticated()
+					|| authentication instanceof AnonymousAuthenticationToken) {
+				return "/access-denied"; // o redireccionar a login
+			}
+
+			String username = authentication.getName(); // puede ser el username o el email según tu config
+
+			// Buscar la review
+			Optional<Review> reviewAux = reviewService.findById(reviewId);
+			if (!reviewAux.isPresent()) {
+				return "/reviews";
+			}
+			boolean isMe=false;
+			Review review = reviewAux.get();
+
+			// Verificar que el usuario autenticado es el autor
+			if (!review.getAuthor().getName().equals(username)) {
+				
+				return "/access-denied"; // impedir borrar si no es el autor
+			}
+
+			// Continuar con la lógica de borrado
+			List<Review> reviews = (List<Review>) session.getAttribute("reviews");
+
+			User userAux = userService.findById(review.getAuthor().getId()).orElse(null);
+			Product productAux = productService.findById(review.getProduct().getId()).orElse(null);
+
+			if (userAux == null || productAux == null) {
+				return "/reviews";
+			}
+
+			userAux.deleteReview(review);
+			productAux.removeReview(review);
+
+			userService.save(userAux);
+			productService.save(productAux);
+			reviewService.delete(review);
+
+			if (reviews != null) {
+				reviews.removeIf(r -> r.getId() == reviewId);
+			} else {
+				reviews = new ArrayList<>();
+			}
+
+			session.setAttribute("reviews", reviews);
+			List<Review> updatedReviews = reviewService.findAll();
+
+			session.setAttribute("reviews", updatedReviews);
+			return "/productReviews/" + productAux.getId();
+
+		} catch (Exception e) {
+			return "/error";
+		}
+	}
+
 	@GetMapping("/reviews/{productId}")
 	public String showReviews(@PathVariable Long productId, Model model, HttpSession session) {
+
 		try {
 			Optional<Product> productOpt = productService.findById(productId);
 			if (!productOpt.isPresent()) {
 				return "/error";
 			}
-
-			Product product = productOpt.get();
-			List<Review> reviews = product.getReviews();
-
-			session.setAttribute("reviews", reviews);
-			model.addAttribute("reviews", reviews);
-			
-			//TOOLBAR
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			boolean isLoggedIn = authentication != null &&
 			authentication.isAuthenticated() &&
 			!(authentication instanceof AnonymousAuthenticationToken);
+
+			Product product = productOpt.get();
+			List<Review> reviews = product.getReviews();
+			User user= userService.findByName(authentication.getName()).get();
+			for (Review review: reviews){
+				if(review.getAuthor().equals(user)){
+					review.setme(true);
+				}
+			}
+
+			session.setAttribute("reviews", reviews);
+			model.addAttribute("reviews", reviews);
+			
+			
+
 			model.addAttribute("isLoggedIn", isLoggedIn);
 			//-----
 			return "reviews";
@@ -650,4 +729,7 @@ public class ProductController {
 			return "/error";
 		}
 	}
+
 }
+	
+
