@@ -1,4 +1,4 @@
-package es.codeurjc.practica1.controller;
+package es.codeurjc.practica1.controller.web;
 
 import java.io.IOException;
 import java.sql.Blob;
