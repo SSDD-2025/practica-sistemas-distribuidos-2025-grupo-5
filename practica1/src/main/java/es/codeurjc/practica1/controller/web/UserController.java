@@ -1,4 +1,4 @@
-package es.codeurjc.practica1.controller;
+package es.codeurjc.practica1.controller.web;
 
 import java.io.IOException;
 import java.security.Principal;
@@ -79,8 +79,7 @@ public class UserController {
 				authentication.isAuthenticated() &&
 				!(authentication instanceof AnonymousAuthenticationToken);
 
-		User user = userService.findByName(authentication.getName())
-				.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+		User user = userService.findUserByName(authentication.getName()).get();
 		boolean isAdmin = authentication.getAuthorities().stream()
 				.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 		
@@ -106,8 +105,7 @@ public class UserController {
 		model.addAttribute("isLoggedIn", isLoggedIn);
 
 		// Buscar usuario actual por nombre de login
-		User user = userService.findByName(authentication.getName())
-				.orElseThrow(() -> new RuntimeException("Usuario no encontrado"));
+		User user = userService.findUserByName(authentication.getName()).get();
 
 		// Actualizar datos
 		user.setName(name);
@@ -126,7 +124,7 @@ public class UserController {
 		SecurityContextHolder.getContext().setAuthentication(newAuth);
 
 		// Añadir atributos al modelo
-		List<User> listAux = userService.findByDeleted(false);
+		List<User> listAux = userService.findAllByDeleted(false);
 		if (!listAux.isEmpty()) {
 			listAux.remove(0);
 		}
@@ -180,7 +178,7 @@ public class UserController {
 		CsrfToken token = (CsrfToken) request.getAttribute("_csrf");
 		model.addAttribute("token", token.getToken());
 
-		List<User> aux=userService.findAll();
+		List<User> aux=userService.findAllUsers();
 		if (name == null || name.isEmpty() || encodedPassword == null || email == null) {
 			model.addAttribute("isLoggedIn", false);
 			model.addAttribute("isAdmin", false);
@@ -188,7 +186,7 @@ public class UserController {
 			request.logout();
 			return "/error";
 
-		}else if(userService.findByName(name).isPresent()&&aux.contains(userService.findByName(name).get())){
+		}else if(userService.findUserByName(name) != null &&aux.contains(userService.findUserByName(name))){
 			model.addAttribute("message", "Este nombre de usuario ya esta cogido, elige otro :)");
 			model.addAttribute("isLoggedIn", false);
 			model.addAttribute("isAdmin", false);
@@ -202,7 +200,7 @@ public class UserController {
 			.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 
 			model.addAttribute("isAdmin", isAdmin);
-			List<User> listAux = userService.findByDeleted(false);
+			List<User> listAux = userService.findAllByDeleted(false);
 			listAux.remove(0);
 			boolean isLoggedIn;
 			if(isAdmin){
@@ -222,7 +220,7 @@ public class UserController {
 	@PostMapping("/removeUser/{id}")
 	public String removeUser(Model model, @PathVariable long id, HttpServletRequest request) {
 		// Search for the product in the database.
-		Optional<User> user = userService.findById(id);
+		Optional<User> user = userService.findUserById(id);
 		// TOOLBAR
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
@@ -253,7 +251,7 @@ public class UserController {
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		// -----
 		
-		User user=userService.findByName(username).get();
+		User user=userService.findUserByName(username).get();
 		user.setDeletedd(true);
 		userService.save(user);
 

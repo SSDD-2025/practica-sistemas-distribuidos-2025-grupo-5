@@ -38,6 +38,8 @@ public class Product {
     @Lob
     private Blob imageFile;
 
+    private boolean image;
+
     @OneToMany(mappedBy = "product", cascade = CascadeType.ALL, orphanRemoval = true)
     private List<Review> reviews = new ArrayList<>();
 
@@ -47,13 +49,14 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String description, double price, int stock, String provider) { // Blob img
+    public Product(String name, String description, double price, int stock, String provider, boolean image) { // Blob img
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
         this.deletedProducts = false;
-        // this.imageFile = img;
+        //this.imageFile = img;
+        this.image = image;
         this.users = new ArrayList<>();
         this.provider = provider;
         this.orders = new ArrayList<>();
@@ -83,8 +86,8 @@ public class Product {
         return users;
     }
 
-    public void setUsers(List<User> users) {
-        this.users = users;
+    public void setUsers(List<User> products) {
+        this.users = products;
     }
 
     public Blob getImageFile() {
@@ -111,6 +114,9 @@ public class Product {
         this.stock = stock;
     }
 
+    public void setImage(boolean image) {
+        this.image = image;
+    }
     public void setImageFile(Blob img) {
         this.imageFile = img;
     }
@@ -150,6 +156,10 @@ public class Product {
 
     public List<Order> getOrders() {
         return orders;
+    }
+
+    public boolean getImage() {
+        return image;
     }
 
     public void setOrders(List<Order> orders) {

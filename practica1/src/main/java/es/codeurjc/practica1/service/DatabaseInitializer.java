@@ -42,7 +42,7 @@ public class DatabaseInitializer {
         List<String> rolAdmin = List.of( "ADMIN");
         userService.save(new User("admin","paula@gmail.com", passwordEncoder.encode("adminpass"), rolAdmin,912));
         userService.save(new User("user","juanjo@gmail.com",passwordEncoder.encode("pass"), rolUser,112));
-        User user1 = userService.findByName("user").get();
+        User user1 = userService.findUserByName("user").get();
         System.out.println("ID USUARIO: " + user1.getId());
         
         List<Long> set = List.of(user1.getId());
@@ -50,18 +50,18 @@ public class DatabaseInitializer {
         // UserService.save(user2);
         // set = List.of(user2.getId());
 
-        Product product1 = new Product("Cuerda", "resistente", 12.3, 123, "ES_factory");
+        Product product1 = new Product("Cuerda", "resistente", 12.3, 123, "ES_factory",true);
         saveProductWithURLImage(product1, set, "rope.jpg");
         Review review2 = new Review("Cuerda", "no aguanta", user1, product1);
-        reviewService.save(review2);
+        reviewService.saveReview(review2);
 
-        Product product2 = new Product("Gafas", "para el sol", 56.3, 123, "GLLASSES_factory");
+        Product product2 = new Product("Gafas", "para el sol", 56.3, 123, "GLLASSES_factory",true);
         saveProductWithURLImage(product2, set, "glasses.jpg");
         Review review1 = new Review("Gafas", "no son de sol", user1, product2);
         Review review3 = new Review("ggg", "ggg", user1, product2);
-        reviewService.save(review3);
+        reviewService.saveReview(review3);
 
-        reviewService.save(review1);
+        reviewService.saveReview(review1);
 
     }
 
@@ -80,7 +80,7 @@ public class DatabaseInitializer {
             product.setImageFile(imageBlob);
 
             // Save the product with the image.
-            return productService.save(product, selectedUsers);
+            return productService.saveProduct(product, selectedUsers);
         } catch (Exception e) {
             e.printStackTrace(); // Print error in console for debugging.
             return null; // Or handle with a custom exception.

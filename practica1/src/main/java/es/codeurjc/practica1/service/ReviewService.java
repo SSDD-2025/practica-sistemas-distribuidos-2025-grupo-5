@@ -6,10 +6,10 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import es.codeurjc.practica1.dto.ReviewDTO;
+import es.codeurjc.practica1.dto.ReviewsMapper;
 import es.codeurjc.practica1.model.Review;
-import es.codeurjc.practica1.model.User;
 import es.codeurjc.practica1.repositories.ReviewRepository;
-import es.codeurjc.practica1.repositories.UserRepository;
 
 @Service
 public class ReviewService {
@@ -18,35 +18,76 @@ public class ReviewService {
 	private ReviewRepository reviewRepository;
 
 	@Autowired
-	private UserRepository userRepository;
+	private ReviewRepository ReviewRepository;
 
-	public List<Review> findAll() {
-		return reviewRepository.findAll();
+	 @Autowired
+	private ReviewsMapper mapper;
+
+     private Review toDomain(ReviewDTO reviewDTO) {
+		return mapper.toDomain(reviewDTO);
 	}
 
-	public Optional<Review> findById(long id) {
-		return reviewRepository.findById(id);
+	private List<ReviewDTO> toDTOs(List<Review> reviews) {
+		return mapper.toDTOs(reviews);
 	}
 
-	public void save(Review review) {
+    private ReviewDTO toDTO(Review review) {
+		return mapper.toDTO(review);
+	}
+
+	public List<ReviewDTO> findAll() {
+		return toDTOs(reviewRepository.findAll());
+	}
+
+	public ReviewDTO findById(long id) {
+		return toDTO(reviewRepository.findById(id).orElseThrow());
+	}
+
+	public void save(ReviewDTO reviewDTO) {
+
+		Review review = toDomain(reviewDTO);
+		reviewRepository.save(review);
+		//return toDTO(review);
+	}
+
+	public void update(ReviewDTO oldReview, ReviewDTO updatedReview) {
+		Review AuxReview = toDomain(oldReview);
+		AuxReview.setAuthor(toDomain(updatedReview).getAuthor());
+		AuxReview.setTitle(toDomain(updatedReview).getTitle());
+		AuxReview.setText(toDomain(updatedReview).getText());
+
+		reviewRepository.save(AuxReview);
+		//return toDTO(AuxReview);
+	}
+
+	public void delete(ReviewDTO reviewDTO) {
+		Review review = toDomain(reviewDTO);
+		if (review != null && reviewRepository.existsById(review.getId())) {
+			reviewRepository.delete(review);
+		} else {
+			System.out.println("Review not found");
+		}
+		//return toDTO(review);
+	}
+
+	public void deleteReview(Review review) {
+		
+		if (review != null && reviewRepository.existsById(review.getId())) {
+			reviewRepository.delete(review);
+		} else {
+			System.out.println("Review not found");
+		}
+	}
+
+	public void saveReview(Review review) {
 		reviewRepository.save(review);
 	}
 
-	public void update(Review oldReview, Review updatedReview) {
-		oldReview.setTitle(updatedReview.getTitle());
-		oldReview.setText(updatedReview.getText());
-		reviewRepository.save(oldReview);
+	public List<Review> findAllReviews() {
+		return reviewRepository.findAll();
 	}
 
-	public void delete(Review review) {
-		Optional<User> user = userRepository.findById(review.getAuthor().getId());
-		if (user.isPresent()) {
-			User userAux = user.get();
-			userAux.deleteReview(review);
-			userRepository.save(userAux);
-			reviewRepository.delete(review);
-		} else {
-			System.out.println("User not found");
-		}
+	public Optional<Review> findReviewById(long id) {
+		return reviewRepository.findById(id);
 	}
 }

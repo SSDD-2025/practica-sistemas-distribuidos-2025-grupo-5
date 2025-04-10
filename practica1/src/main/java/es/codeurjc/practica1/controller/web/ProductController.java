@@ -1,4 +1,4 @@
-package es.codeurjc.practica1.controller;
+package es.codeurjc.practica1.controller.web;
 
 import java.io.IOException;
 import java.sql.Blob;
@@ -23,20 +23,14 @@ import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
-import org.springframework.web.bind.annotation.RequestBody;
-import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RequestParam;
-import org.springframework.web.bind.annotation.RestController;
 import org.springframework.web.multipart.MultipartFile;
 import org.springframework.web.server.ResponseStatusException;
 
-import es.codeurjc.practica1.dto.ProductDTO;
 import es.codeurjc.practica1.model.Order;
 import es.codeurjc.practica1.model.Product;
 import es.codeurjc.practica1.model.Review;
@@ -66,91 +60,6 @@ public class ProductController {
 	@Autowired
 	private ReviewService reviewService;
 
-@RestController
-@RequestMapping("/api/Products")
-public class ProductRestController {
-
-	@Autowired
-	private ProductService productService;
-
-	@GetMapping("/")
-	public List<ProductDTO> getProducts() {
-		return productService.findProducts();
-	}
-
-	@GetMapping("/{id}")
-	public ProductDTO getProduct(@PathVariable long id) {
-
-		return productService.getProduct(id);
-	}
-
-	@PostMapping("/")
-	public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO ProductDTO) {
-
-		ProductDTO = productService.save(ProductDTO);
-
-		URI location = fromCurrentRequest().path("/{id}").buildAndExpand(ProductDTO.id()).toUri();
-
-		return ResponseEntity.created(location).body(ProductDTO);
-	}
-
-	@PutMapping("/{id}")
-	public ProductDTO replaceProduct(@PathVariable long id, @RequestBody ProductDTO updatedProductDTO) throws SQLException {
-
-		return productService.replaceProduct(id, updatedProductDTO);
-	}
-
-	@DeleteMapping("/{id}")
-	public ProductDTO deleteProduct(@PathVariable long id) {
-
-		return productService.deleteProduct(id);
-	}
-
-	@PostMapping("/{id}/image")
-	public ResponseEntity<Object> createProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
-			throws IOException {
-
-		productService.createProductImage(id, imageFile.getInputStream(), imageFile.getSize());
-
-		URI location = fromCurrentRequest().build().toUri();
-
-		return ResponseEntity.created(location).build();
-	}
-
-	@GetMapping("/{id}/image")
-	public ResponseEntity<Object> getProductImage(@PathVariable long id) throws SQLException, IOException {
-
-		Resource postImage = productService.getProductImage(id);
-
-		return ResponseEntity
-				.ok()
-				.header(HttpHeaders.CONTENT_TYPE, "image/jpeg")
-				.body(postImage);
-
-	}
-
-	@PutMapping("/{id}/image")
-	public ResponseEntity<Object> replaceProductImage(@PathVariable long id, @RequestParam MultipartFile imageFile)
-			throws IOException {
-
-		productService.replaceProductImage(id, imageFile.getInputStream(), imageFile.getSize());
-
-		return ResponseEntity.noContent().build();
-	}
-
-	@DeleteMapping("/{id}/image")
-	public ResponseEntity<Object> deleteProductImage(@PathVariable long id) throws IOException {
-
-		productService.deleteProductImage(id);
-
-		return ResponseEntity.noContent().build();
-	}
-}
-
-
-
-
-/*--------------------------------------------------------------------------------------------------------------------
 	@GetMapping("/")
 	public String showProducts(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -165,7 +74,7 @@ public class ProductRestController {
 		}
 		System.out.println(isLoggedIn);
 		model.addAttribute("isLoggedIn", isLoggedIn);
-		List<User> listAux=userService.findByDeleted(false);
+		List<User> listAux=userService.findAllByDeleted(false);
 		listAux.remove(0);
 		model.addAttribute("users",listAux);		
 		model.addAttribute("products", productService.findByDeleteProducts(false));
@@ -241,7 +150,7 @@ public class ProductRestController {
 		List<Long> cartProductIds = (List<Long>) session.getAttribute("cart");
 		List<Product> cartProducts = new ArrayList<>();
 
-		Optional<User> oneUser = userService.findByName(authentication.getName());
+		Optional<User> oneUser = userService.findUserByName(authentication.getName());
 		if (oneUser.isPresent()) {
 			User user = oneUser.get();
 			cartProducts = user.getProducts();
@@ -271,7 +180,7 @@ public class ProductRestController {
 		// ----
 	
 		// Obtener el usuario
-		Optional<User> user = userService.findByName(authentication.getName());
+		Optional<User> user = userService.findUserByName(authentication.getName());
 	
 		if (user.isEmpty()) {
 			return "/error"; // o redirigir al login
@@ -290,7 +199,7 @@ public class ProductRestController {
 		if (p.getStock() > 0) {
 			cart.add(p);
 			p.setStock(p.getStock() - 1);
-			productService.save(p);
+			productService.saveP(p);
 			user.get().addProduct(p);
 			userService.save(user.get());
 		} else {
@@ -307,13 +216,13 @@ public class ProductRestController {
 	public String removeFromCart(@PathVariable long productId, Model model, HttpSession session) {
 		
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Optional<User> user = userService.findByName(authentication.getName());
+		Optional<User> user = userService.findUserByName(authentication.getName());
 		Optional<Product> productAux = productService.findById(productId);
 
 		if (productAux.isPresent()) {
 			Product p = productAux.get();
 			p.setStock(p.getStock() +1);
-			productService.save(p);
+			productService.saveP(p);
 			user.get().removeProduct(p);
 			userService.save(user.get());
 		}
@@ -338,7 +247,7 @@ public class ProductRestController {
 			@RequestParam String provider,
 			@RequestParam("imageField") MultipartFile imageField) throws IOException, SQLException {
 
-		Product product = new Product(name, description, price, stock, provider);
+		Product product = new Product(name, description, price, stock, provider,true);
 		
 		//TOOLBAR
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -355,11 +264,11 @@ public class ProductRestController {
 		if (product.getProvider() == null || product.getName() == null || product.getDescription() == null) {
 			return "/error";
 		}
-		Product newProduct = productService.save(product);
+		Product newProduct = productService.saveP(product);
 		newProduct.setProvider(provider);
 
 		model.addAttribute("productId", newProduct.getId());
-		productService.save(newProduct);
+		productService.saveP(newProduct);
 
 		return "redirect:/products/" + newProduct.getId();
 	}
@@ -371,7 +280,7 @@ public class ProductRestController {
 
 		if (productAux.isPresent()) {
 			productAux.get().setDeletedProducts(true);
-			productService.save(productAux.get());
+			productService.saveP(productAux.get());
 
 		} else {
 			return "/error";
@@ -422,7 +331,7 @@ public class ProductRestController {
 			}
 		}
 
-		productService.save(product);
+		productService.saveP(product);
 		return "redirect:/products/" + id; // Correctly redirect to the updated product.
 	}
 
@@ -442,7 +351,7 @@ public class ProductRestController {
 		}
 
 		// Get the list of product IDs in the session.
-		Optional<User> oneUser = userService.findByName(userDetails.getUsername());
+		Optional<User> oneUser = userService.findUserByName(userDetails.getUsername());
 		List<Order> orderList = null;
 		
 		if (oneUser.isPresent()) {
@@ -465,7 +374,7 @@ public class ProductRestController {
 	public String showGateway( HttpSession session, Model model) {
 		// Get the list of product IDs in the session.
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Optional<User> user = userService.findByName(authentication.getName());
+		Optional<User> user = userService.findUserByName(authentication.getName());
 		Order order;
 			if (user != null) {
 				User userAux=user.get();
@@ -475,7 +384,7 @@ public class ProductRestController {
 					order= new Order(userAux, cartProduct.get(0));
 					order.setTotalPrice(cartProduct.get(0).getPrice());
 					cartProduct.get(0).setStock(cartProduct.get(0).getStock() - 1);
-					productService.save(cartProduct.get(0));
+					productService.saveP(cartProduct.get(0));
 					cartProduct.get(0).setOrder(order);
 					model.addAttribute("product", cartProduct.get(0));
 
@@ -490,7 +399,7 @@ public class ProductRestController {
 							order.setTotalPrice(order.getTotalPrice()+cartProduct.get(i).getPrice());
 							product.setStock(product.getStock() - 1);
 							product.setOrder(order);
-							productService.save(product);
+							productService.saveP(product);
 							model.addAttribute("product", product);
 	
 						} else {
@@ -534,7 +443,7 @@ public class ProductRestController {
 			if (product.getStock() > 0) {
 
 				product.setStock(product.getStock() - 1);
-				Optional<User> optionalUser = userService.findByName(authentication.getName());
+				Optional<User> optionalUser = userService.findUserByName(authentication.getName());
 
 				order = new Order(optionalUser.get(), product);
 				order.setTotalPrice(product.getPrice());
@@ -544,7 +453,7 @@ public class ProductRestController {
 				userService.save(optionalUser.get());
 
 				product.setOrder(order);
-				productService.save(product);
+				productService.saveP(product);
 				model.addAttribute("orders", order);
 				
 			} else {
@@ -561,7 +470,7 @@ public class ProductRestController {
 	public String removeOrder(@PathVariable Long id) {
 
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		Optional<User> userA = userService.findByName(authentication.getName());
+		Optional<User> userA = userService.findUserByName(authentication.getName());
 		Optional<Order> order = orderService.findById(id);
 
 		try {
@@ -569,7 +478,7 @@ public class ProductRestController {
 
 				for (Product product : order.get().getProducts()) {
 					product.setStock(product.getStock() + 1);
-					productService.save(product);
+					productService.saveP(product);
 				}
 				
 				User user = userA.get();
@@ -610,8 +519,8 @@ public class ProductRestController {
 			model.addAttribute("isAdmin", isAdmin);
 			
 		}
-		User user= userService.findByName(authentication.getName()).get();
-		List<Review> reviews=reviewService.findAll();
+		User user= userService.findUserByName(authentication.getName()).get();
+		List<Review> reviews=reviewService.findAllReviews();
 			for (Review review: reviews){
 
 				if(review.getAuthor().getName().equals(user.getName())){
@@ -671,15 +580,15 @@ public class ProductRestController {
 		}
 
 		Product product = productOpt.get();
-		Optional<User> userOpt = userService.findByName(authentication.getName());
+		Optional<User> userOpt = userService.findUserByName(authentication.getName());
 		User author = userOpt.get();
 
 		Review review = new Review(title, text, author, product);
 		author.addReview(review);
 		product.addReview(review);
 		userService.save(author);
-		reviewService.save(review);
-		productService.save(product);
+		reviewService.saveReview(review);
+		productService.saveP(product);
 		return "redirect:/productReviews/" + product.getId();
 	}
 
@@ -688,13 +597,13 @@ public class ProductRestController {
 		try {
 			List<Review> reviews = (List<Review>) session.getAttribute("reviews");
 
-			Optional<Review> reviewAux = reviewService.findById(reviewId);
+			Optional<Review> reviewAux = reviewService.findReviewById(reviewId);
 			if (!reviewAux.isPresent()) {
 				return "/reviews";
 			}
 
 			Review review = reviewAux.get();
-			User userAux = userService.findById(review.getAuthor().getId()).orElse(null);
+			User userAux = userService.findUserById(review.getAuthor().getId()).get();//.orElse(null);
 			Product productAux = productService.findById(review.getProduct().getId()).orElse(null);
 
 			if (userAux == null || productAux == null) {
@@ -705,9 +614,9 @@ public class ProductRestController {
 			productAux.removeReview(review);
 
 			userService.save(userAux);	
-			productService.save(productAux);
+			productService.saveP(productAux);
 
-			reviewService.delete(review);
+			reviewService.deleteReview(review);
 
 			if (reviews != null) {
 				reviews.removeIf(r -> r.getId() == reviewId);
@@ -716,7 +625,7 @@ public class ProductRestController {
 			}
 
 			session.setAttribute("reviews", reviews);
-			List<Review> updatedReviews = reviewService.findAll();
+			List<Review> updatedReviews = reviewService.findAllReviews();
 
 			session.setAttribute("reviews", updatedReviews);
 			return "/productReviews/" + productAux.getId();
@@ -738,7 +647,7 @@ public class ProductRestController {
 			String username = authentication.getName(); // puede ser el username o el email según tu config
 
 			// Buscar la review
-			Optional<Review> reviewAux = reviewService.findById(reviewId);
+			Optional<Review> reviewAux = reviewService.findReviewById(reviewId);
 			if (!reviewAux.isPresent()) {
 				return "/reviews";
 			}
@@ -754,7 +663,7 @@ public class ProductRestController {
 			// Continuar con la lógica de borrado
 			List<Review> reviews = (List<Review>) session.getAttribute("reviews");
 
-			User userAux = userService.findById(review.getAuthor().getId()).orElse(null);
+			User userAux = userService.findUserById(review.getAuthor().getId()).get();//.orElse(null);
 			Product productAux = productService.findById(review.getProduct().getId()).orElse(null);
 
 			if (userAux == null || productAux == null) {
@@ -765,8 +674,8 @@ public class ProductRestController {
 			productAux.removeReview(review);
 
 			userService.save(userAux);
-			productService.save(productAux);
-			reviewService.delete(review);
+			productService.saveP(productAux);
+			reviewService.deleteReview(review);
 
 			if (reviews != null) {
 				reviews.removeIf(r -> r.getId() == reviewId);
@@ -775,7 +684,7 @@ public class ProductRestController {
 			}
 
 			session.setAttribute("reviews", reviews);
-			List<Review> updatedReviews = reviewService.findAll();
+			List<Review> updatedReviews = reviewService.findAllReviews();
 
 			session.setAttribute("reviews", updatedReviews);
 			return "/productReviews/" + productAux.getId();
@@ -800,7 +709,7 @@ public class ProductRestController {
 
 			Product product = productOpt.get();
 			List<Review> reviews = product.getReviews();
-			User user= userService.findByName(authentication.getName()).get();
+			User user= userService.findUserByName(authentication.getName()).get();
 			for (Review review: reviews){
 				if(review.getAuthor().equals(user)){
 					review.setme(true);
@@ -822,7 +731,7 @@ public class ProductRestController {
 	}
 
 
-*/
+
 }
 	
 

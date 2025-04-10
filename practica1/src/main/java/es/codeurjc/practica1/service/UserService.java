@@ -4,9 +4,12 @@ import java.util.List;
 import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
 import org.springframework.stereotype.Service;
 
+import es.codeurjc.practica1.dto.UserDTO;
+import es.codeurjc.practica1.dto.UserMapper;
 import es.codeurjc.practica1.model.Order;
 import es.codeurjc.practica1.model.User;
 import es.codeurjc.practica1.repositories.UserRepository;
@@ -15,50 +18,88 @@ import es.codeurjc.practica1.repositories.UserRepository;
 public class UserService {
     @Autowired
     private UserRepository userRepository;
+    @Autowired
+	private UserMapper mapper;
 
-    public List<User> findAll() {
-        return userRepository.findAll();
+     private User toDomain(UserDTO userDTO) {
+		return mapper.toDomain(userDTO);
+	}
+
+	private List<UserDTO> toDTOs(List<User> Users) {
+		return mapper.toDTOs(Users);
+	}
+
+    private UserDTO toDTO(User User) {
+		return mapper.toDTO(User);
+	}
+
+    public UserDTO getUser(String name) {
+		return mapper.toDTO(userRepository.findByName(name).orElseThrow());
+	}
+
+	public User getLoggedUser() {
+        String username = SecurityContextHolder.getContext().getAuthentication().getName();
+        return userRepository.findByName(username).get();
     }
 
-    public Optional<User> findById(long id) {
-        return userRepository.findById(id);
+	public UserDTO getLoggedUserDTO() {
+        return mapper.toDTO(getLoggedUser());
+    }
+
+    public List<UserDTO> findAll() {
+        return toDTOs (userRepository.findAll());
+    }
+
+    public UserDTO findById(long id) {
+        return toDTO(userRepository.findById(id).orElseThrow());
     }
 
     public List<User> findByIds(List<Long> ids) {
         return userRepository.findAllById(ids);
     }
 
-    public Optional<User> findByEmail(String email) {
-        return userRepository.findByEmail(email);
+    public UserDTO findByEmail(String email) {
+        return toDTO(userRepository.findByEmail(email).orElseThrow());
     }
 
-    public List<User> findByDeleted(boolean deleted) {
-        return userRepository.findByDeleted(deleted);
+    public List<UserDTO> findByDeleted(boolean deleted) {
+        return toDTOs(userRepository.findByDeleted(deleted));
     }
 
-    public User save(User user) {
-        return userRepository.save(user);
+    public UserDTO save(UserDTO userDTO) {
+        User user = toDomain(userDTO);
+        userRepository.save(user);
+        return toDTO(user);
     }
 
-    public void delete(User user) {
-        userRepository.delete(user);
-    }
-
-    public void addUser(User user) {
+    public void save(User user) {
         userRepository.save(user);
     }
 
-    public List<User> findAllById(List<Long> ids) {
-        return userRepository.findAllById(ids);
+    public void delete(UserDTO userDTO) {
+        User user = toDomain(userDTO);
+        user.setDeletedd(true);
+        userRepository.save(user);
+        userRepository.delete(user);
     }
 
-    public User getLoggedUser(String name) {
+    public void addUser(UserDTO userDTO) {
+        User user = toDomain(userDTO);
+        userRepository.save(user);
+    }
+
+    public List<UserDTO> findAllById(List<Long> ids) {
+        return toDTOs(userRepository.findAllById(ids));
+    }
+
+    public UserDTO getLoggedUser(String name) {
         User user=userRepository.findByName(name).orElseThrow(()-> new UsernameNotFoundException("USER SERVICE LINE 44") );
-        return user;
+        return toDTO(user);
     }
 
-    public Optional<User> findByName(String name) {
-        return userRepository.findByName(name);
+    public UserDTO findByName(String name) {
+        User user = userRepository.findByName(name).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return toDTO(user);
     }
 
     public void addOrder(Long userId, Order order) {
@@ -90,4 +131,26 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(userId);
         return userOptional.map(User::getOrders).orElseThrow(() -> new RuntimeException("User not found"));
     }
+
+    public Optional<User> findUserByName(String name) {
+        return userRepository.findByName(name);
+    }
+
+    public User findByUserName(String name) {
+        User user = userRepository.findByName(name).orElseThrow(() -> new UsernameNotFoundException("User not found"));
+        return user;
+    }
+
+    public List<User> findAllByDeleted(boolean deleted) {
+        return userRepository.findByDeleted(deleted);
+    }
+
+    public List<User> findAllUsers() {
+        return userRepository.findAll();
+    }
+    
+    public Optional<User> findUserById(long id) {
+        return userRepository.findById(id);
+    }
+
 }

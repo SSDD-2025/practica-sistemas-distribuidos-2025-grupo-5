@@ -10,5 +10,6 @@ public record UserDTO (
     List<ReviewDTO> reviews,
     List<ProductDTO> products,
     List<OrderDTO> orders,
-    Integer phoneNumber,
-    boolean image) {}
+    Integer phoneNumber) {}
+
+    
