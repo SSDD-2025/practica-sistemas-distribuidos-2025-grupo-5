@@ -24,9 +24,7 @@ import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestParam;
 
 import es.codeurjc.practica1.model.User;
-import es.codeurjc.practica1.service.OrderService;
 import es.codeurjc.practica1.service.ProductService;
-import es.codeurjc.practica1.service.ReviewService;
 import es.codeurjc.practica1.service.UserService;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -39,12 +37,6 @@ public class UserController {
 
 	@Autowired
 	private ProductService productService;
-
-	@Autowired
-	private ReviewService reviewService;
-
-	@Autowired
-	private OrderService orderService;
 
 	@Autowired
 	private PasswordEncoder passwordEncoder;

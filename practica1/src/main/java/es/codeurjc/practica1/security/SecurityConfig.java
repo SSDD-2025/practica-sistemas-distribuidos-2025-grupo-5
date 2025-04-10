@@ -123,7 +123,7 @@ public class SecurityConfig {
         .requestMatchers("/saveNewUser/**").permitAll()
         .requestMatchers("/updateUser/**").permitAll()
         .requestMatchers("/removeUser/**").permitAll()
-        .requestMatchers("/removeUserByUser/**").permitAll()
+        .requestMatchers("/removeReview/**").permitAll()
 
         // PRIVATE PAGES
         .requestMatchers("/private").hasAnyRole("USER")
@@ -140,7 +140,6 @@ public class SecurityConfig {
         .requestMatchers("/showOrders/**").hasAnyRole("USER")
         .requestMatchers("/removeOrder/**").hasAnyRole("USER")
         .requestMatchers("/update/**").hasAnyRole("ADMIN")
-        .requestMatchers("/removeReview/**").hasAnyRole("ADMIN")
 
         .requestMatchers("/gateway").hasAnyRole("USER")
         .requestMatchers("/admin").hasAnyRole("ADMIN"))
