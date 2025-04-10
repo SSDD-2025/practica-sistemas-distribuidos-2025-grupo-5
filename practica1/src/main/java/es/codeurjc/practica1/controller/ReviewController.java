@@ -117,15 +117,15 @@ public class ReviewController {
 		}
 
 		Product product = productOpt.get();
-		Optional<User> userOpt = userService.findByName(authentication.getName());
+		Optional<User> userOpt = userService.findUserByName(authentication.getName());
 		User author = userOpt.get();
 
 		Review review = new Review(title, text, author, product);
 		author.addReview(review);
 		product.addReview(review);
 		userService.save(author);
-		reviewService.save(review);
-		productService.save(product);
+		reviewService.saveReview(review);
+		productService.saveP(product);
 		return "redirect:/productReviews/" + product.getId();
 	}
 
@@ -136,7 +136,7 @@ public class ReviewController {
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
 			// Buscar la review
-			Optional<Review> reviewAux = reviewService.findById(reviewId);
+			Optional<Review> reviewAux = reviewService.findReviewById(reviewId);
 			if (!reviewAux.isPresent()) {
 				return "/reviews";
 			}
@@ -145,7 +145,7 @@ public class ReviewController {
 			// Continuar con la lógica de borrado
 			List<Review> reviews = (List<Review>) session.getAttribute("reviews");
 
-			User userAux = userService.findById(review.getAuthor().getId()).orElse(null);
+			User userAux = userService.findUserById(review.getAuthor().getId()).get();//.orElse(null);
 			Product productAux = productService.findById(review.getProduct().getId()).orElse(null);
 
 			if (userAux == null || productAux == null) {
@@ -156,8 +156,8 @@ public class ReviewController {
 			productAux.removeReview(review);
 
 			userService.save(userAux);
-			productService.save(productAux);
-			reviewService.delete(review);
+			productService.saveP(productAux);
+			reviewService.deleteReview(review);
 
 			if (reviews != null) {
 				reviews.removeIf(r -> r.getId() == reviewId);
@@ -166,7 +166,7 @@ public class ReviewController {
 			}
 
 			session.setAttribute("reviews", reviews);
-			List<Review> updatedReviews = reviewService.findAll();
+			List<Review> updatedReviews = reviewService.findAllReviews();
 
 			session.setAttribute("reviews", updatedReviews);
 			return "redirect:/productReviews/" + productAux.getId();
@@ -192,7 +192,7 @@ public class ReviewController {
 
 			Product product = productOpt.get();
 			List<Review> reviews = product.getReviews();
-			User user= userService.findByName(authentication.getName()).get();
+			User user= userService.findUserByName(authentication.getName()).get();
 			for (Review review: reviews){
 				if(review.getAuthor().equals(user)){
 					review.setme(true);

@@ -26,6 +26,7 @@ import org.springframework.web.multipart.MultipartFile;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 import es.codeurjc.practica1.dto.ProductDTO;
+import es.codeurjc.practica1.dto.ProductMapper;
 import es.codeurjc.practica1.dto.UserDTO;
 import es.codeurjc.practica1.service.ProductService;
 import es.codeurjc.practica1.service.UserService;
@@ -39,6 +40,9 @@ public class ProductRestController {
 
     @Autowired
     private UserService userService;
+
+    @Autowired
+    private ProductMapper mapper;
 
     @GetMapping("/")
     public List<ProductDTO> getProducts() {
