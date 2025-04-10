@@ -19,6 +19,8 @@ import es.codeurjc.practica1.model.Product;
 import es.codeurjc.practica1.model.User;
 import es.codeurjc.practica1.repositories.ProductRepository;
 
+
+
 @Service
 public class ProductService {
 
@@ -26,34 +28,33 @@ public class ProductService {
     private ProductRepository productRepository;
 
     @Autowired
-    private ProductMapper mapper;
-
-    @Autowired
     private UserService userService;
 
-    private Product toDomain(ProductDTO productDTO) {
-		return mapper.toDomain(productDTO);
-	}
-
-	private List<ProductDTO> toDTOs(List<Product> Products) {
-		return mapper.toDTOs(Products);
-	}
+    @Autowired
+    private ProductMapper mapper;
 
     private ProductDTO toDTO(Product product) {
 		return mapper.toDTO(product);
 	}
 
+	private Product toDomain(ProductDTO productDTO) {
+		return mapper.toDomain(productDTO);
+	}
+
+	private List<ProductDTO> toDTOs(List<Product> products) {
+		return mapper.toDTOs(products);
+	}
+
     public ProductDTO getProduct(long id) {
-       	
-        return toDTO(productRepository.findById(id).orElseThrow());
+        return toDTO(productRepository.findById(id).get());
     }
 
     public List<ProductDTO> findAllById(List<Long> productIds) {
-        return toDTOs (productRepository.findAllById(productIds));
+        return toDTOs(productRepository.findAllById(productIds));
     }
 
     public List<ProductDTO> findByDeleteProducts(Boolean deletedProducts) {
-        return toDTOs (productRepository.findByDeletedProducts(deletedProducts));
+        return toDTOs(productRepository.findByDeletedProducts(deletedProducts));
     }
 
     public boolean exist(long id) {
@@ -61,37 +62,33 @@ public class ProductService {
     }
 
     public List<ProductDTO> findProducts() {
-
-        return toDTOs (productRepository.findAll());
+        return toDTOs(productRepository.findAll());
     }
 
     public ProductDTO save(ProductDTO productDTO) {
-
-        Product product =  toDomain(productDTO);
+        Product product = toDomain(productDTO);
         productRepository.save(product);
         return toDTO(product);
     }
 
-    public ProductDTO save(ProductDTO productDTO, List<Long> selectedUsers) throws IOException {
+    public ProductDTO save(ProductDTO product, List<Long> selectedUsers) throws IOException {
 
-        Product product = toDomain(productDTO);
+        Product productDomain = toDomain(product);
         if (selectedUsers != null) {
             List<User> products = userService.findByIds(selectedUsers);
-            product.setUsers(products);
+            productDomain.setUsers(products);
         }
-        productRepository.save(product);
-
-        return toDTO(product);
+        productRepository.save(productDomain);
+        return toDTO(productDomain);
     }
 
-    public ProductDTO deleteProduct (ProductDTO productDTO) {
-
+    public boolean delete(ProductDTO productDTO) {
         Product product = toDomain(productDTO);
         if (productRepository.existsById(product.getId())) {
             productRepository.delete(product);
-            return toDTO(product);
+            return true;
         }
-        return toDTO(product);
+        return false;
     }
 
     public ProductDTO deleteProduct (Long id) {

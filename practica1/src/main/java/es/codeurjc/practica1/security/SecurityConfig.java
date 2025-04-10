@@ -123,6 +123,7 @@ public class SecurityConfig {
         .requestMatchers("/saveNewUser/**").permitAll()
         .requestMatchers("/updateUser/**").permitAll()
         .requestMatchers("/removeUser/**").permitAll()
+        .requestMatchers("/removeReview/**").permitAll()
         .requestMatchers("/removeUserByUser/**").permitAll()
 
         // PRIVATE PAGES

@@ -18,9 +18,7 @@ import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.authentication.AnonymousAuthenticationToken;
 import org.springframework.security.core.Authentication;
-import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
-import org.springframework.security.core.userdetails.UserDetails;
 import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -59,6 +57,7 @@ public class ProductController {
 	
 	@Autowired
 	private ReviewService reviewService;
+
 
 	@GetMapping("/")
 	public String showProducts(Model model) {
@@ -334,23 +333,8 @@ public class ProductController {
 		productService.saveP(product);
 		return "redirect:/products/" + id; // Correctly redirect to the updated product.
 	}
-
-
-	//ORDER
-	@GetMapping("/showOrders")
-	public String showOrders(HttpSession session, Model model,@AuthenticationPrincipal UserDetails userDetails) {
-		//TOOLBAR
-		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-		boolean isLoggedIn = authentication != null &&
-		authentication.isAuthenticated() &&
-		!(authentication instanceof AnonymousAuthenticationToken);
-		model.addAttribute("isLoggedIn", isLoggedIn);
-		//----
-		if (userDetails == null) {
-			return "/login"; // o manejar el caso de usuario no autenticado
-		}
-
-		// Get the list of product IDs in the session.
+	/*
+	 * // Get the list of product IDs in the session.
 		Optional<User> oneUser = userService.findUserByName(userDetails.getUsername());
 		List<Order> orderList = null;
 		
@@ -367,7 +351,7 @@ public class ProductController {
 
 		return "orders"; // Display the cart view.
 	}
-
+	 */
 
 	// ORDER
 	@GetMapping("/checkout")
@@ -729,6 +713,7 @@ public class ProductController {
 			return "/error";
 		}
 	}
+
 
 
 
