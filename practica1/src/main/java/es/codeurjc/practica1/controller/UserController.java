@@ -200,15 +200,22 @@ public class UserController {
 			userService.save(new User(name, email, hashedPassword, rol, phoneNumber));
 			boolean isAdmin = authentication.getAuthorities().stream()
 			.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+
 			model.addAttribute("isAdmin", isAdmin);
 			List<User> listAux = userService.findByDeleted(false);
 			listAux.remove(0);
-			model.addAttribute("isLoggedIn", true);
+			boolean isLoggedIn;
+			if(isAdmin){
+				isLoggedIn=true;
+			}else{
+				isLoggedIn=false;
+			}
+			model.addAttribute("isLoggedIn", isLoggedIn);
 			model.addAttribute("users", listAux);
 			model.addAttribute("products", productService.findByDeleteProducts(false));
 			// model.addAttribute("userName",user.getName());
 	
-			return "products";
+			return "/products";
 		}
 	}
 
