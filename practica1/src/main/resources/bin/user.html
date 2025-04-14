@@ -1,0 +1,17 @@
+{{>header}}
+
+<div>
+    <h2>{{user.name}}</h2>
+    <p><b>Address:</b> {{user.address}}</p>
+
+    <h3>Users available in this shop:</h3>
+    <ul>
+        {{#user.products}}
+        <li>
+            <a href="/products/{{id}}">{{title}}</a>
+        </li>
+        {{/user.products}}
+    </ul>   
+</div>
+
+{{>footer}}

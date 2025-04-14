@@ -1,0 +1,56 @@
+{{>header}}
+
+<div class="container">
+    <div class="row align-items-center">
+    <div class="col-4">
+        <img class="img-thumbnail" src="/products/{{product.id}}/image" style="width: 100%; height: auto;">
+    </div>
+    <div class="col-8">
+        <p><b></b></p>
+        <h2>Nombre del producto: "{{product.name}}"</h2>
+        <div>
+          <p><b>Descripción:</b>{{{product.description}}}</p>
+        </div>
+        <p><b>Precio: </b>{{product.price}} €</p>
+
+        <p><b>Stock disponible:</b> {{{product.stock}}} units</p>
+        <div>
+        <p><b>Marca:</b> {{{product.provider}}}</p>
+        </div>
+
+        <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Volver a todos los productos</button>
+        <button class="btn btn-outline-dark" onclick="location.href='/productReviews/{{product.id}} '">Ver comentarios</button>
+
+        <p><b>¿Quieres editarlo?</b></p>
+        <button class="btn btn-primary" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/edit/{{product.id}}'">EDITAR</button>
+        <p><b></b></p>
+
+        <p><b>¿Quieres borrarlo?</b></p>
+        <div style="justify-content: center;">
+            <form action="/remove-from-products/{{product.id}}" method="post">
+                <button class="btn btn-danger" style="width: 1200%; max-width: 1172px; margin-left: -28px; margin-bottom: 100px;">BORRAR</button>
+                <input type="hidden" name="_csrf" value="{{token}}">
+
+            </form>
+        </div>
+    
+    </div>
+  </div>
+</div>
+
+{{>footer}}
+
+<script>
+    const stock =  parseInt("{{product.stock}}", 10);
+    
+    const addToCartButton = document.getElementById('add-to-cart');
+    const buyNowButton = document.getElementById('buy-now');
+    const outOfStockMessage = document.getElementById('out-of-stock-message');
+    
+    if (typeof stock === 'number' && stock === 0) {
+        addToCartButton.disabled = true;
+        buyNowButton.disabled = true;
+        outOfStockMessage.style.display = 'block';
+    }
+</script>
+
