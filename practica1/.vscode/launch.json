@@ -1,6 +1,5 @@
 {
     "configurations": [
-        
         {
             "type": "java",
             "name": "Spring Boot-Practica1Application<practica1>",
@@ -8,7 +7,7 @@
             "cwd": "${workspaceFolder}",
             "mainClass": "es.codeurjc.practica1.Practica1Application",
             "projectName": "practica1",
-            "args": "--server.port=8443",
+            "args": "",
             "envFile": "${workspaceFolder}/.env"
         }
     ]
