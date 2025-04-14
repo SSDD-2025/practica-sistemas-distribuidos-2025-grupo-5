@@ -123,6 +123,12 @@ public class UserController {
 		if (!listAux.isEmpty()) {
 			listAux.remove(0);
 		}
+		if(newAuth.getAuthorities().stream()
+				.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"))){
+			model.addAttribute("isAdmin", true);
+		}else{
+			model.addAttribute("isAdmin", false);
+		}
 		model.addAttribute("users", listAux);
 		model.addAttribute("products", productService.findByDeleteProducts(false));
 		return "/products";
