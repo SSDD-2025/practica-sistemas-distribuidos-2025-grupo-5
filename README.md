@@ -88,3 +88,77 @@ Juan José Villanueva Molina
       - [Fichero 4](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/README.md)
       - [Fichero 5](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/model/Review.java)
 ***
+## Práctica 2: Incorporación de Seguridad y API REST a la aplicación web
+### Navegación
+#### Navegación de usuarios no registrados
+![alt text](navegacionnoreg.png)
+#### Navegación de usuarios registrados
+![alt text](navegacionreg.png)
+#### Navegación de administrador
+![alt text](navegacionadmin.png)
+### Intrucciones de ejecución
+1. Descargar el repositorio y descomprimir el archivo
+2. Tener descargado MySQL Workbench: [Descargar](https://dev.mysql.com/downloads/workbench/)
+3. Usuario: root\ root
+   Contraseña: Trabaj0MySQL.
+4. Crear un esquema con nombre: B&D
+5. Ejecuta el código en Visual Studio usando Spring Boot Dashboard(añadir como extensión): [Descargar VS](https://code.visualstudio.com/download)
+6. Abrelo en el navegador: puedes abrirlo directamente desde VS o escribiendo en el navegador localhost:8843
+7. Las credenciales de un usuario se pueden crear pero si se quiere entrar como uno ya creado o como un administrador son las siguientes:
+- Usuario: 
+  - Nombre de usuario: user 
+  - Contraseña: pass
+- Administrador: 
+  - Nombre de usuario: admin 
+  - Contraseña: adminpass
+### Diagrama con las entidades de la base de datos
+![alt text](diagramabbdd2.png)  
+La base de datos no borra los productos eliminados ni los usuarios elimandos, esto se debe para poder seguir almacenando estas entidades para futuras consultas, por ejemplo para guardar el registro de un pedido de un producto que ha sido comprado antes de ser eliminado o un usuario que elimina su cuenta al haber hecho un pedido sin pagar
+### Diagrama de clases y templates
+
+### Participación de miembros
+Paula Marcela Barroso Robleda
+  - Tareas:
+  - 5 commits mas significativos:
+      - [Commit 1]()
+      - [Commit 2]()
+      - [Commit 3]()
+      - [Commit 4]()
+      - [Commit 5]()
+  - 5 ficheros en los que mas se ha participado:
+      - [Fichero 1]()
+      - [Fichero 2]()
+      - [Fichero 3]()
+      - [Fichero 4]()
+      - [Fichero 5]()
+
+David Coronado Testa
+  - Tareas:
+  - 5 commits mas significativos:
+      - [Commit 1]()
+      - [Commit 2]()
+      - [Commit 3]()
+      - [Commit 4]()
+      - [Commit 5]()
+  - 5 ficheros en los que mas se ha participado:
+      - [Fichero 1]()
+      - [Fichero 2]()
+      - [Fichero 3]()
+      - [Fichero 4]()
+      - [Fichero 5]()
+
+Juan José Villanueva Molina
+  - Tareas:
+  - 5 commits mas significativos:
+      - [Commit 1]()
+      - [Commit 2]()
+      - [Commit 3]()
+      - [Commit 4]()
+      - [Commit 5]()
+  - 5 ficheros en los que mas se ha participado:
+      - [Fichero 1]()
+      - [Fichero 2]()
+      - [Fichero 3]()
+      - [Fichero 4]()
+      - [Fichero 5]()
+***
