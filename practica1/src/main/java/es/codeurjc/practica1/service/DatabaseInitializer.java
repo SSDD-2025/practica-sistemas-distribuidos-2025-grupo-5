@@ -39,12 +39,12 @@ public class DatabaseInitializer {
     @PostConstruct
     public void init() throws IOException {
         List<String> rolUser = List.of("USER");
-        List<String> rolAdmin = List.of( "ADMIN");
-        userService.save(new User("admin","paula@gmail.com", passwordEncoder.encode("adminpass"), rolAdmin,912));
-        userService.save(new User("user","juanjo@gmail.com",passwordEncoder.encode("pass"), rolUser,112));
+        List<String> rolAdmin = List.of("ADMIN");
+        userService.save(new User("admin", "paula@gmail.com", passwordEncoder.encode("adminpass"), rolAdmin, 912));
+        userService.save(new User("user", "juanjo@gmail.com", passwordEncoder.encode("pass"), rolUser, 112));
         User user1 = userService.findByName("user").get();
         System.out.println("ID USUARIO: " + user1.getId());
-        
+
         List<Long> set = List.of(user1.getId());
         // User user2 = new User( "juanjo", "juanjo@gmail.com", "567",0, 987654321 );
         // UserService.save(user2);
@@ -55,7 +55,6 @@ public class DatabaseInitializer {
         saveProductWithURLImage(product1, set, "rope.jpg");
         Review review2 = new Review("Cuerda", "no aguanta", user1, product1);
         reviewService.save(review2);
-   
 
         Product product2 = new Product("Gafas", "para el sol", 56.3, 123, "GLLASSES_factory");
         productService.save(product2);
@@ -72,7 +71,7 @@ public class DatabaseInitializer {
     private Product saveProductWithURLImage(Product product, List<Long> selectedUsers, String image) {
         try {
             // GitHub RAW URL to access the image.
-            String imageUrl = "https://raw.githubusercontent.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/tree/main/images/"
+            String imageUrl = "https://raw.githubusercontent.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/main/images/"
                     + image;
 
             // Download the image from the URL.
