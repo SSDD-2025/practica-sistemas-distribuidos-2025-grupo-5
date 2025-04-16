@@ -89,7 +89,7 @@ public class SecurityConfig {
                         .requestMatchers(HttpMethod.DELETE, "/api/reviews/**").hasRole("ADMIN")
 
                         //ORDER
-                        .requestMatchers(HttpMethod.POST, "/api/orders/**").hasAnyRole("USER", "ADMIN")
+                        .requestMatchers(HttpMethod.POST, "/api/orders/**").hasRole("USER")
 
 
 

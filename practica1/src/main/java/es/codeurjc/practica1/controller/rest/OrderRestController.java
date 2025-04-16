@@ -1,20 +1,21 @@
 package es.codeurjc.practica1.controller.rest;
 
 import java.net.URI;
-import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.server.ResponseStatusException;
 import static org.springframework.web.servlet.support.ServletUriComponentsBuilder.fromCurrentRequest;
 
 import es.codeurjc.practica1.dto.OrderDTO;
@@ -23,7 +24,7 @@ import es.codeurjc.practica1.model.Order;
 import es.codeurjc.practica1.service.OrderService;
 
 @RestController
-@RequestMapping("/api/order")
+@RequestMapping("/api/orders")
 public class OrderRestController {
 
     @Autowired
@@ -49,7 +50,7 @@ public class OrderRestController {
     }
 
     @PostMapping("/")
-    public ResponseEntity<OrderDTO> createShop(@RequestBody OrderDTO orderDTO) {
+    public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
         Order newOrder = orderMapper.toDomain(orderDTO);
         orderService.save(newOrder);
         Order createdOrder = orderService.findById(newOrder.getId()).get();
@@ -58,20 +59,20 @@ public class OrderRestController {
         return ResponseEntity.created(location).body(responseDTO);
     }
 
-    @PutMapping("/{id}")
-    public OrderDTO replaceOrder(@PathVariable long id, @RequestBody OrderDTO updatedOrderDTO) throws SQLException {
-        Order originalOrder = orderService.findById(id).get();
-        Order updatedOrder = orderMapper.toDomain(updatedOrderDTO);
-        orderService.update(originalOrder, updatedOrder);
-        return orderMapper.toDTO(updatedOrder);
-    }
-
     @DeleteMapping("/{id}")
-    public OrderDTO deleteOrder(@PathVariable long id) {
-        Order orderToDelete = orderService.findById(id).get();
+    public ResponseEntity<OrderDTO> deleteOrder(@PathVariable long id) {
+        Optional<Order> orderOpt = orderService.findById(id);
+    
+        if (orderOpt.isEmpty()) {
+            throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found with id " + id);
+        }
+        Order orderToDelete = orderOpt.get();
+        OrderDTO dto = orderMapper.toDTO(orderToDelete);
         orderService.delete(orderToDelete);
-        return orderMapper.toDTO(orderToDelete);
+        return ResponseEntity.ok(dto);
     }
+    
+
    
 }
 
