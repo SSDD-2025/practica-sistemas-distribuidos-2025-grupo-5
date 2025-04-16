@@ -48,11 +48,9 @@ public class ProductRestController {
 
    @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
-        // 1. Buscar el producto existente
         Product existingProduct = productService.findById(id)
             .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 
-        // 2. Actualizar los campos
         existingProduct.setName(productDTO.name());
         existingProduct.setPrice(productDTO.price());
         existingProduct.setStock(productDTO.stock());
@@ -61,7 +59,6 @@ public class ProductRestController {
         //existingProduct.setImage(productDTO.image());
         // OJO con reviews: puedes ignorarlas o mapearlas si quieres manejar también eso
 
-        // 3. Guardar
         Product updatedProduct = productService.save(existingProduct);
         ProductDTO responseDTO = productMapper.toDTO(updatedProduct);
 

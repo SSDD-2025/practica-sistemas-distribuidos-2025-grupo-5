@@ -65,14 +65,28 @@ public class SecurityConfig {
 		http
 			.authorizeHttpRequests(authorize -> authorize
                     // PRIVATE ENDPOINTS
-					.requestMatchers(HttpMethod.GET, "/api/users/me").hasRole("USER")
-                    .requestMatchers(HttpMethod.POST,"/api/products/").hasRole("ADMIN")
-                    .requestMatchers(HttpMethod.PUT,"/api/products/**").hasRole("ADMIN")
-                    .requestMatchers(HttpMethod.DELETE,"/api/products/**").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.POST,"/api/users/**").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.PUT,"/api/users/**").hasRole("ADMIN")
-					.requestMatchers(HttpMethod.DELETE,"/api/users/**").hasRole("ADMIN")
                     .requestMatchers("/style.css/**").permitAll()
+                        //PRODUCT
+                        .requestMatchers(HttpMethod.POST,"/api/products/").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,"/api/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/api/products/**").hasRole("ADMIN")
+
+                        //USER
+                            //  ---user---
+                        .requestMatchers(HttpMethod.GET, "/api/users/me").hasRole("USER")
+                        
+                            //  ---admin---
+                        .requestMatchers(HttpMethod.POST,"/api/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET,"/api/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE,"/api/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT,"/api/users/**").hasRole("ADMIN")
+
+                        //REVIEW
+
+                        //ORDER
+					
+
+
 
                     .requestMatchers("/admin").hasRole("ADMIN")
                     .requestMatchers("/api/cart/**").hasRole("USER")
