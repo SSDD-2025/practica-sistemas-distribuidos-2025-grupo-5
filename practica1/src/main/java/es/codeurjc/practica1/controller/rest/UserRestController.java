@@ -6,6 +6,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.core.Authentication;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.security.core.userdetails.UsernameNotFoundException;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -20,9 +21,9 @@ import es.codeurjc.practica1.service.UserService;
 @RestController
 @RequestMapping("/api/users")
 public class UserRestController {
-	
-	@Autowired
-	private UserService userService;
+    
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private UserMapper userMapper;
@@ -30,7 +31,8 @@ public class UserRestController {
     @Autowired
     private UserRepository userRepository;
 
-
+//update user does not exist yet
+//---- USER
     @GetMapping("/me")
     public UserDTO me() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -40,10 +42,11 @@ public class UserRestController {
 
         return userMapper.toDTO(user);
     }
+//---- ADMIN
 
     @GetMapping("/admin/")
     public List<UserDTO> getAllUsers() {
-        List<User> users = userRepository.findAll();
+        List<User> users = userRepository.findByDeleted(false);
         return users.stream()
                     .map(userMapper::toDTO)
                     .toList();
@@ -56,4 +59,12 @@ public class UserRestController {
         return userMapper.toDTO(user);
     }
 
+    @DeleteMapping("/admin/user/{id}")
+    public UserDTO deleteUser(@PathVariable long id) {
+        User user = userService.findById(id)
+                .orElseThrow(() -> new RuntimeException("User not found with id: " + id));
+        user.setDeletedd(true);
+        userService.save(user);
+        return userMapper.toDTO(user);
+    }
 }

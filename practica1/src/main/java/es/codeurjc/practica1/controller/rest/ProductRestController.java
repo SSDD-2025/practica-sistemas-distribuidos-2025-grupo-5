@@ -35,7 +35,7 @@ public class ProductRestController {
 
     @GetMapping("/")
     public Page<ProductDTO> getProducts(Pageable pageable) {
-        return productService.findAll(pageable)
+        return productService.findByDeleteProducts(pageable, false)
                 .map(productMapper::toDTO);
     }
 
@@ -46,17 +46,17 @@ public class ProductRestController {
         return productMapper.toDTO(product);
     }
 
-   @PutMapping("/{id}")
+    @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
         Product existingProduct = productService.findById(id)
-            .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found"));
 
         existingProduct.setName(productDTO.name());
         existingProduct.setPrice(productDTO.price());
         existingProduct.setStock(productDTO.stock());
         existingProduct.setProvider(productDTO.provider());
         existingProduct.setDescription(productDTO.description());
-        //existingProduct.setImage(productDTO.image());
+        // existingProduct.setImage(productDTO.image());
         // OJO con reviews: puedes ignorarlas o mapearlas si quieres manejar también eso
 
         Product updatedProduct = productService.save(existingProduct);
@@ -64,7 +64,6 @@ public class ProductRestController {
 
         return ResponseEntity.ok(responseDTO);
     }
-
 
     @PostMapping("/")
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {

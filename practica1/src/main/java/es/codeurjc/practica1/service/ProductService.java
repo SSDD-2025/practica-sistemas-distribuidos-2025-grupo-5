@@ -34,6 +34,10 @@ public class ProductService {
         return productRepository.findByDeletedProducts(deletedProducts);
     }
 
+    public Page<Product> findByDeleteProducts(Pageable pageable, boolean deletedProducts) {
+        return productRepository.findByDeletedProducts(pageable, false);
+    }
+
     public boolean exist(long id) {
         return productRepository.findById(id).isPresent();
     }
@@ -43,9 +47,9 @@ public class ProductService {
     }
 
     public Page<Product> findAll(Pageable pageable) {
-    return productRepository.findAll(pageable);
+        return productRepository.findAll(pageable);
     }
-    
+
     public Product save(Product product) {
         return productRepository.save(product);
     }
@@ -58,13 +62,9 @@ public class ProductService {
         }
         return productRepository.save(product);
     }
-
-    public boolean delete(Product product) {
-        if (productRepository.existsById(product.getId())) {
-            productRepository.delete(product);
-            return true;
-        }
-        return false;
+    public void delete(Product product) {
+        product.setDeletedProducts(true);
+        productRepository.save(product);
     }
 
 }

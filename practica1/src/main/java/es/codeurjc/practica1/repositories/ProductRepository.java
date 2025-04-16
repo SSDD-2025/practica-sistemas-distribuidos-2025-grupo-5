@@ -3,6 +3,8 @@ package es.codeurjc.practica1.repositories;
 import java.util.List;
 import java.util.Optional;
 
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 
 import es.codeurjc.practica1.model.Product;
@@ -14,6 +16,8 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
     List<Product> findByName(String name);
 
     List<Product> findByDeletedProducts(boolean deletedProducts);
+
+    Page<Product> findByDeletedProducts(Pageable pageable, boolean deletedProducts);
 
     List<Product> findByProvider(String provider);
 
@@ -29,6 +33,6 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Product save(Product product);
 
-    void delete(@SuppressWarnings("null") Product product);
+    //void delete(@SuppressWarnings("null") Product product);
 
 }

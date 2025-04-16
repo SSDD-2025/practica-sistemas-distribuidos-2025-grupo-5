@@ -23,47 +23,47 @@ import es.codeurjc.practica1.security.jwt.UnauthorizedHandlerJwt;
 @EnableWebSecurity
 public class SecurityConfig {
 
-	@Autowired
-	private JwtRequestFilter jwtRequestFilter;
+    @Autowired
+    private JwtRequestFilter jwtRequestFilter;
 
-	@Autowired
-	RepositoryUserDetailsService userDetailsService;
+    @Autowired
+    RepositoryUserDetailsService userDetailsService;
 
-	@Autowired
-	private UnauthorizedHandlerJwt unauthorizedHandlerJwt;
+    @Autowired
+    private UnauthorizedHandlerJwt unauthorizedHandlerJwt;
 
-	@Bean
-	public PasswordEncoder passwordEncoder() {
-		return new BCryptPasswordEncoder();
-	}
+    @Bean
+    public PasswordEncoder passwordEncoder() {
+        return new BCryptPasswordEncoder();
+    }
 
-	@Bean
-	public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
-		return authConfig.getAuthenticationManager();
-	}
+    @Bean
+    public AuthenticationManager authenticationManager(AuthenticationConfiguration authConfig) throws Exception {
+        return authConfig.getAuthenticationManager();
+    }
 
-	@Bean
-	public DaoAuthenticationProvider authenticationProvider() {
-		DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
+    @Bean
+    public DaoAuthenticationProvider authenticationProvider() {
+        DaoAuthenticationProvider authProvider = new DaoAuthenticationProvider();
 
-		authProvider.setUserDetailsService(userDetailsService);
-		authProvider.setPasswordEncoder(passwordEncoder());
+        authProvider.setUserDetailsService(userDetailsService);
+        authProvider.setPasswordEncoder(passwordEncoder());
 
-		return authProvider;
-	}
+        return authProvider;
+    }
 
-	@Bean
-	@Order(1)
-	public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
-		
-		http.authenticationProvider(authenticationProvider());
-		
-		http
-			.securityMatcher("/api/**")
-			.exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
-		
-		http
-			.authorizeHttpRequests(authorize -> authorize
+    @Bean
+    @Order(1)
+    public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
+        
+        http.authenticationProvider(authenticationProvider());
+        
+        http
+            .securityMatcher("/api/**")
+            .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
+        
+        http
+            .authorizeHttpRequests(authorize -> authorize
                     // PRIVATE ENDPOINTS
                     .requestMatchers("/style.css/**").permitAll()
                         //PRODUCT
@@ -84,7 +84,7 @@ public class SecurityConfig {
                         //REVIEW
 
                         //ORDER
-					
+                    
 
 
 
@@ -93,10 +93,10 @@ public class SecurityConfig {
                     .requestMatchers("/api/checkout/**").hasRole("USER")
                     .requestMatchers("/api/gateway").hasRole("USER")
 
-					// PUBLIC ENDPOINTS
-					.anyRequest().permitAll()
-			);
-		
+                    // PUBLIC ENDPOINTS
+                    .anyRequest().permitAll()
+            );
+        
         // Disable Form login Authentication
         http.formLogin(formLogin -> formLogin.disable());
 
@@ -109,16 +109,16 @@ public class SecurityConfig {
         // Stateless session
         http.sessionManagement(management -> management.sessionCreationPolicy(SessionCreationPolicy.STATELESS));
 
-		// Add JWT Token filter
-		http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
+        // Add JWT Token filter
+        http.addFilterBefore(jwtRequestFilter, UsernamePasswordAuthenticationFilter.class);
 
-		return http.build();
-	}
+        return http.build();
+    }
 
-	@Bean
-	@Order(2)
-	public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
-		http.authenticationProvider(authenticationProvider());
+    @Bean
+    @Order(2)
+    public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
+        http.authenticationProvider(authenticationProvider());
         http.authorizeHttpRequests(authorize -> authorize
         
         // PUBLIC PAGES
@@ -171,5 +171,6 @@ public class SecurityConfig {
         // Disable CSRF at the moment
         //http.csrf(csrf -> csrf.disable());
         return http.build();
-	}
+    }
 }
+
