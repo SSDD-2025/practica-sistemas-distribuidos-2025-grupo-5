@@ -38,45 +38,44 @@ public class ReviewController {
     // Reviwes
 	@GetMapping("/productReviews/{id}")
 	public String showReviews(Model model, @PathVariable long id) {
-
-		//TOOLBAR
+		// TOOLBAR
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
-		authentication.isAuthenticated() &&
-		!(authentication instanceof AnonymousAuthenticationToken);
+			authentication.isAuthenticated() &&
+			!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
-		//-----
-		
-		if (isLoggedIn) {
-			//tiene que ser asi porque puede ser que te de como válido un usuario anónimo
-			boolean isAdmin = authentication.getAuthorities().stream()
-											.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
-			
-			
-			model.addAttribute("isAdmin", isAdmin);
-			
-		}
-		User user= userService.findByName(authentication.getName()).get();
-		List<Review> reviews=reviewService.findAll();
-			for (Review review: reviews){
 
-				if(review.getAuthor().getName().equals(user.getName())){
-					review.setme(true);
-					System.err.println("entraaaaaaaaa");
-				}else{
-					review.setme(false);
+		if (isLoggedIn) {
+			boolean isAdmin = authentication.getAuthorities().stream()
+				.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+			model.addAttribute("isAdmin", isAdmin);
+
+			Optional<User> userOpt = userService.findByName(authentication.getName());
+			if (userOpt.isPresent()) {
+				User user = userOpt.get();
+				List<Review> reviews = reviewService.findAll();
+				for (Review review : reviews) {
+					review.setme(review.getAuthor().getName().equals(user.getName()));
 				}
 			}
+		} else {
+			// No hay usuario logueado → no marcamos ninguna review como "me"
+			List<Review> reviews = reviewService.findAll();
+			for (Review review : reviews) {
+				review.setme(false);
+			}
+		}
+
 		Optional<Product> product = productService.findById(id);
 		if (product.isPresent()) {
 			Product p = product.get();
-
 			model.addAttribute("reviews", p.getReviews());
 			return "reviews";
 		} else {
 			return "/error";
 		}
 	}
+
 
 	@GetMapping("/newReview/{productId}")
 	public String newReview(@PathVariable long productId, Model model) {

@@ -10,7 +10,6 @@ import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
-import org.springframework.web.bind.annotation.PutMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
@@ -62,29 +61,15 @@ public class ReviewRestController {
         return ResponseEntity.created(location).body(savedDTO);
     }
 
-    // Actualizar una review existente
-    @PutMapping("/{id}")
-    public ResponseEntity<ReviewDTO> updateReview(@PathVariable long id, @RequestBody ReviewDTO updatedReviewDTO) {
-        Optional<Review> reviewOpt = reviewService.findById(id);
-        if (reviewOpt.isPresent()) {
-            Review existing = reviewOpt.get();
-            Review updated = reviewsMapper.toDomain(updatedReviewDTO);
-            reviewService.update(existing, updated);
-            return ResponseEntity.ok(reviewsMapper.toDTO(existing));
-        } else {
-            return ResponseEntity.notFound().build();
-        }
-    }
-
     // Eliminar una review
     @DeleteMapping("/{id}")
-    public ResponseEntity<Void> deleteReview(@PathVariable long id) {
+    public ReviewDTO deleteReview(@PathVariable long id) {
         Optional<Review> reviewOpt = reviewService.findById(id);
         if (reviewOpt.isPresent()) {
             reviewService.delete(reviewOpt.get());
-            return ResponseEntity.noContent().build();
+            return reviewsMapper.toDTO(reviewOpt.get());
         } else {
-            return ResponseEntity.notFound().build();
+            return null; // o lanzar una excepción
         }
     }
 }

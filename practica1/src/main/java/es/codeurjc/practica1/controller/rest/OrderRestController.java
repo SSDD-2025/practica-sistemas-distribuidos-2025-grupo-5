@@ -23,7 +23,7 @@ import es.codeurjc.practica1.model.Order;
 import es.codeurjc.practica1.service.OrderService;
 
 @RestController
-@RequestMapping("/api/shops")
+@RequestMapping("/api/order")
 public class OrderRestController {
 
     @Autowired
@@ -31,7 +31,6 @@ public class OrderRestController {
 
     @Autowired
     private OrderMapper orderMapper;
-
 
     @GetMapping("/")
     public List<OrderDTO> getOrders() {
