@@ -103,7 +103,7 @@ Juan José Villanueva Molina
    Contraseña: Trabaj0MySQL.
 4. Crear un esquema con nombre: B&D
 5. Ejecuta el código en Visual Studio usando Spring Boot Dashboard(añadir como extensión): [Descargar VS](https://code.visualstudio.com/download)
-6. Abrelo en el navegador: puedes abrirlo directamente desde VS o escribiendo en el navegador localhost:8843
+6. Abrelo en el navegador: puedes abrirlo directamente desde VS o escribiendo en el navegador https://localhost:8843
 7. Las credenciales de un usuario se pueden crear pero si se quiere entrar como uno ya creado o como un administrador son las siguientes:
 - Usuario: 
   - Nombre de usuario: user 
