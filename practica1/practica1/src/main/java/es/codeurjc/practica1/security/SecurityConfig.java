@@ -73,7 +73,7 @@ public class SecurityConfig {
 
                         //USER
                             //  ---user---
-                        .requestMatchers(HttpMethod.GET, "/api/users/me").hasRole("USER")
+                        .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyRole("USER", "ADMIN")
                         
                             //  ---admin---
                         .requestMatchers(HttpMethod.POST,"/api/users/**").hasRole("ADMIN")
