@@ -53,7 +53,7 @@ public class Product {
         this.price = price;
         this.stock = stock;
         this.deletedProducts = false;
-        // this.imageFile = img;
+        //this.imageFile = img;
         this.users = new ArrayList<>();
         this.provider = provider;
         this.orders = new ArrayList<>();

@@ -1,4 +1,5 @@
 package es.codeurjc.practica1.dto;
+import java.sql.Blob;
 import java.util.List;
     public record ProductDTO(
     Long id,
@@ -11,7 +12,7 @@ import java.util.List;
 
     //List<UserDTO>users,
 
-    boolean image,
+    Blob image,
 
     List<ReviewDTO>reviews
 

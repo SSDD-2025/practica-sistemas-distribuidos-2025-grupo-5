@@ -51,15 +51,19 @@ public class DatabaseInitializer {
         // set = List.of(user2.getId());
 
         Product product1 = new Product("Cuerda", "resistente", 12.3, 123, "ES_factory");
+        productService.save(product1);
         saveProductWithURLImage(product1, set, "rope.jpg");
         Review review2 = new Review("Cuerda", "no aguanta", user1, product1);
         reviewService.save(review2);
+   
 
         Product product2 = new Product("Gafas", "para el sol", 56.3, 123, "GLLASSES_factory");
+        productService.save(product2);
         saveProductWithURLImage(product2, set, "glasses.jpg");
         Review review1 = new Review("Gafas", "no son de sol", user1, product2);
         Review review3 = new Review("ggg", "ggg", user1, product2);
         reviewService.save(review3);
+        productService.save(product2);
 
         reviewService.save(review1);
 

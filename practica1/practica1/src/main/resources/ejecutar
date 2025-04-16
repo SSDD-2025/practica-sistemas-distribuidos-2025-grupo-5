@@ -34,7 +34,7 @@ spring.datasource.password=password1234
 spring.jpa.hibernate.ddl-auto=create-drop
 
 spring.mustache.suffix=.html
-
+debug=true
 server.port = 8443
 server.ssl.key-store = classpath:keystore.jks
 server.ssl.key-store-password = password
