@@ -24,7 +24,7 @@ spring.mustache.suffix=.html
 server.port = 8443
 server.ssl.key-store = classpath:keystore.jks
 server.ssl.key-store-password = password
-server.ssl.key-password = secret
+server.ssl.key-password = secret //cambiar "secret" por "password" segun el profe para generar la documentacion openapi
 
 
 --Paula
@@ -38,7 +38,7 @@ debug=true
 server.port = 8443
 server.ssl.key-store = classpath:keystore.jks
 server.ssl.key-store-password = password
-server.ssl.key-password = secret
+server.ssl.key-password = secret //cambiar "secret" por "password" segun el profe para generar la documentacion openapi
 
 
 --Juanjo
@@ -52,7 +52,7 @@ spring.mustache.suffix=.html
 server.port = 8443
 server.ssl.key-store = classpath:keystore.jks
 server.ssl.key-store-password = password
-server.ssl.key-password = secret
+server.ssl.key-password = secret //cambiar "secret" por "password" segun el profe para generar la documentacion openapi
 
 
 --Datos de Usuario en fichero

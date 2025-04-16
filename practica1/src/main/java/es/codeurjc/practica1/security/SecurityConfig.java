@@ -100,6 +100,11 @@ public class SecurityConfig {
                     .requestMatchers("/api/gateway").hasRole("USER")
 
                     // PUBLIC ENDPOINTS
+
+                    .requestMatchers("/v3/api-docs*/**").permitAll()
+                    .requestMatchers("/swagger-ui.html").permitAll()
+                    .requestMatchers("/swagger-ui/**").permitAll()
+
                     .anyRequest().permitAll()
             );
         
@@ -144,7 +149,6 @@ public class SecurityConfig {
         .requestMatchers("/updateUser/**").permitAll()
         .requestMatchers("/removeUser/**").permitAll()
         .requestMatchers("/removeUserByUser/**").permitAll()
-
         .requestMatchers("/removeReview/**").permitAll()
 
         // PRIVATE PAGES
