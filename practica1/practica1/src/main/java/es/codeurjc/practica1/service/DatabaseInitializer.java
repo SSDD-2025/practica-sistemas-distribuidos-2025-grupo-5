@@ -72,7 +72,7 @@ public class DatabaseInitializer {
     private Product saveProductWithURLImage(Product product, List<Long> selectedUsers, String image) {
         try {
             // GitHub RAW URL to access the image.
-            String imageUrl = "https://raw.githubusercontent.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/practica1/main/images/"
+            String imageUrl = "https://raw.githubusercontent.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/tree/main/images/"
                     + image;
 
             // Download the image from the URL.
