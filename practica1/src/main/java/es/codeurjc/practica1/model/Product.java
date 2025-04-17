@@ -1,5 +1,8 @@
 package es.codeurjc.practica1.model;
 
+import java.io.InputStream;
+import java.net.MalformedURLException;
+import java.net.URL;
 import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
@@ -58,22 +61,27 @@ public class Product {
         this.price = price;
         this.stock = stock;
         this.deletedProducts = false;
-        this.imageFile = saveProductWithURLImage(img);
+        if(isURL(img)) {
+            this.imageFile = saveProductWithInternetImage(img);
+        } else {
+            this.imageFile = saveProductWithURLImage(img);
+        }
         this.users = new ArrayList<>();
         this.provider = provider;
         this.orders = new ArrayList<>();
     }
-    public Product(String name, String description, double price, int stock, String provider, Blob img) {
-        this.name = name;
-        this.description = description;
-        this.price = price;
-        this.stock = stock;
-        this.deletedProducts = false;
-        this.imageFile = img;
-        this.users = new ArrayList<>();
-        this.provider = provider;
-        this.orders = new ArrayList<>();
+
+    public static boolean isURL(String path) {
+        try {
+            URL url = new URL(path);
+            // Si tiene un protocolo como http, https, ftp, etc., es una URL válida
+            return url.getProtocol().equals("http") || url.getProtocol().equals("https");
+        } catch (MalformedURLException e) {
+            // Si lanza esta excepción, no es una URL válida → probablemente es una ruta local
+            return false;
+        }
     }
+
     private Blob saveProductWithURLImage(String image) {
         try {
             // Ruta local relativa al proyecto
@@ -85,6 +93,24 @@ public class Product {
             System.out.println("Image file created: " + imageBlob);
             return imageBlob;
         } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
+    }
+
+    private Blob saveProductWithInternetImage(String imageUrl) {
+        try {
+            // Abrir el flujo desde la URL
+            InputStream imageStream = new URL(imageUrl).openStream();
+            byte[] imageBytes = imageStream.readAllBytes(); // Java 9+
+
+            // Convertir a Blob
+            Blob imageBlob = new SerialBlob(imageBytes);
+
+            System.out.println("Image downloaded and converted to Blob: " + imageBlob);
+            return imageBlob;
+        } catch (Exception e) {
+            System.err.println("Error downloading image from URL: " + imageUrl);
             e.printStackTrace();
             return null;
         }

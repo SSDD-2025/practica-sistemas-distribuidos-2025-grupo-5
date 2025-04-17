@@ -35,16 +35,27 @@ public class ProductRestController {
 
     @GetMapping("/")
     public Page<ProductDTO> getProducts(Pageable pageable) {
-        return productService.findByDeleteProducts(pageable, false)
-                .map(productMapper::toDTO);
+        try {
+            return productService.findByDeleteProducts(pageable, false)
+                    .map(productMapper::toDTO);
+        } catch (Exception e) {
+            e.printStackTrace();  // <- Aquí también
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error getting products");
+        }
     }
 
     @GetMapping("/{id}")
     public ProductDTO getProduct(@PathVariable long id) {
         Product product = productService.findById(id)
                 .orElseThrow(() -> new RuntimeException("Product not found with id: " + id));
-        return productMapper.toDTO(product);
+        try {
+            return productMapper.toDTO(product);
+        } catch (Exception e) {
+            e.printStackTrace();  // <- Este print te dará más información
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error mapping product");
+        }
     }
+    
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
@@ -69,9 +80,7 @@ public class ProductRestController {
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
         Product product = new Product(productDTO.name(), productDTO.description(),productDTO.price(), productDTO.stock(), productDTO.provider(), productDTO.image());
       
-
-        product = productMapper.toDomain(productDTO);
-        product = productService.save(product); // guarda y actualiza con ID
+        product = productService.save(product);
         ProductDTO responseDTO = productMapper.toDTO(product);
 
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(responseDTO.id()).toUri();
