@@ -1,12 +1,7 @@
 package es.codeurjc.practica1.service;
 
 import java.io.IOException;
-import java.io.InputStream;
-import java.net.URL;
-import java.sql.Blob;
 import java.util.List;
-
-import javax.sql.rowset.serial.SerialBlob;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.security.crypto.password.PasswordEncoder;
@@ -50,15 +45,13 @@ public class DatabaseInitializer {
         // UserService.save(user2);
         // set = List.of(user2.getId());
 
-        Product product1 = new Product("Cuerda", "resistente", 12.3, 123, "ES_factory");
+        Product product1 = new Product("Cuerda", "resistente", 12.3, 123, "ES_factory", "rope.jpg");
         productService.save(product1);
-        saveProductWithURLImage(product1, set, "rope.jpg");
         Review review2 = new Review("Cuerda", "no aguanta", user1, product1);
         reviewService.save(review2);
 
-        Product product2 = new Product("Gafas", "para el sol", 56.3, 123, "GLLASSES_factory");
+        Product product2 = new Product("Gafas", "para el sol", 56.3, 123, "GLLASSES_factory", "glasses.jpg");
         productService.save(product2);
-        saveProductWithURLImage(product2, set, "glasses.jpg");
         Review review1 = new Review("Gafas", "no son de sol", user1, product2);
         Review review3 = new Review("ggg", "ggg", user1, product2);
         reviewService.save(review3);
@@ -68,26 +61,6 @@ public class DatabaseInitializer {
 
     }
 
-    private Product saveProductWithURLImage(Product product, List<Long> selectedUsers, String image) {
-        try {
-            // GitHub RAW URL to access the image.
-            String imageUrl = "https://raw.githubusercontent.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/main/images/"
-                    + image;
 
-            // Download the image from the URL.
-            InputStream imageStream = new URL(imageUrl).openStream();
-            byte[] imageBytes = imageStream.readAllBytes(); // Java 9+
-
-            // Convert the byte[] into a Blob.
-            Blob imageBlob = new SerialBlob(imageBytes);
-            product.setImageFile(imageBlob);
-
-            // Save the product with the image.
-            return productService.save(product, selectedUsers);
-        } catch (Exception e) {
-            e.printStackTrace(); // Print error in console for debugging.
-            return null; // Or handle with a custom exception.
-        }
-    }
 
 }

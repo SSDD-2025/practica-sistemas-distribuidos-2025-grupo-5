@@ -243,7 +243,11 @@ public class ProductController {
 			@RequestParam String provider,
 			@RequestParam("imageField") MultipartFile imageField) throws IOException, SQLException {
 
-		Product product = new Product(name, description, price, stock, provider);
+		Blob imageBlob = null;
+		if (!imageField.isEmpty()) {
+			imageBlob = imageUtils.createBlob(imageField.getInputStream());
+		}
+		Product product = new Product(name, description, price, stock, provider, imageBlob);
 		
 		//TOOLBAR
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -253,10 +257,7 @@ public class ProductController {
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		//-----
 
-		if (!imageField.isEmpty()) {
-			Blob imageBlob = imageUtils.createBlob(imageField.getInputStream());
-			product.setImageFile(imageBlob);
-		}
+		
 		if (product.getProvider() == null || product.getName() == null || product.getDescription() == null) {
 			return "/error";
 		}

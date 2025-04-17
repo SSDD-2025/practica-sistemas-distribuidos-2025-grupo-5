@@ -1,8 +1,13 @@
 package es.codeurjc.practica1.model;
 
+import java.nio.file.Files;
+import java.nio.file.Path;
+import java.nio.file.Paths;
 import java.sql.Blob;
 import java.util.ArrayList;
 import java.util.List;
+
+import javax.sql.rowset.serial.SerialBlob;
 
 import org.hibernate.annotations.OnDelete;
 import org.hibernate.annotations.OnDeleteAction;
@@ -47,16 +52,42 @@ public class Product {
     public Product() {
     }
 
-    public Product(String name, String description, double price, int stock, String provider) { // Blob img
+    public Product(String name, String description, double price, int stock, String provider, String img) { 
         this.name = name;
         this.description = description;
         this.price = price;
         this.stock = stock;
         this.deletedProducts = false;
-        //this.imageFile = img;
+        this.imageFile = saveProductWithURLImage(img);
         this.users = new ArrayList<>();
         this.provider = provider;
         this.orders = new ArrayList<>();
+    }
+    public Product(String name, String description, double price, int stock, String provider, Blob img) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
+        this.deletedProducts = false;
+        this.imageFile = img;
+        this.users = new ArrayList<>();
+        this.provider = provider;
+        this.orders = new ArrayList<>();
+    }
+    private Blob saveProductWithURLImage(String image) {
+        try {
+            // Ruta local relativa al proyecto
+            Path imagePath = Paths.get("images/", image); // Usar Paths para construir rutas seguras
+            byte[] imageBytes = Files.readAllBytes(imagePath); // Java 7+
+
+            Blob imageBlob = new SerialBlob(imageBytes);
+            //product.setImageFile(imageBlob);
+            System.out.println("Image file created: " + imageBlob);
+            return imageBlob;
+        } catch (Exception e) {
+            e.printStackTrace();
+            return null;
+        }
     }
 
     public long getId() {
@@ -66,7 +97,9 @@ public class Product {
     public String getName() {
         return name;
     }
-
+    public String getImage() {
+        return imageFile.toString();
+    }
     public String getDescription() {
         return description;
     }

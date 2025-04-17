@@ -67,7 +67,10 @@ public class ProductRestController {
 
     @PostMapping("/")
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
-        Product product = productMapper.toDomain(productDTO);
+        Product product = new Product(productDTO.name(), productDTO.description(),productDTO.price(), productDTO.stock(), productDTO.provider(), productDTO.image());
+      
+
+        product = productMapper.toDomain(productDTO);
         product = productService.save(product); // guarda y actualiza con ID
         ProductDTO responseDTO = productMapper.toDTO(product);
 
