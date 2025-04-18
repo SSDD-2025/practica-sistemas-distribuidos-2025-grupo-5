@@ -19,7 +19,7 @@
 
         <p><b>Pulsa para cancelar el pedido:</b></p>
         <form action="/removeOrder/{{orders.id}}" method="post">
-            <button type="submit" class="btn btn-outline-secondary">Cancelar pedido</button>
+            <button type="submit" class="btn btn-outline-secondary" onclick="return confirm('¿Estás seguro de que quieres cancelarlo?');">Cancelar pedido</button>
             <input type="hidden" name="_csrf" value="{{token}}"/>
         </form>
         

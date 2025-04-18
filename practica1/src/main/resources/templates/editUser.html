@@ -31,7 +31,9 @@
         {{^isAdmin}}
         <form method="post" action="/removeUserByUser" style="margin: 0;">
           <input type="hidden" name="_csrf" value="{{token}}"/>
-          <button type="submit" class="btn btn-danger" style="width: 700px;">Borrar Perfil</button>
+          <button type="submit" style="width: 700px; background-color: red; color: black; border: none; padding: 10px 20px; border-radius: 25px;" onclick="return confirm('¿Estás seguro de que quieres borrar tu perfil?');">
+            Borrar Perfil
+          </button>
         </form>
         
         {{/isAdmin}}

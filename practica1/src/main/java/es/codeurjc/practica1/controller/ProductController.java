@@ -72,6 +72,7 @@ public class ProductController {
 		listAux.remove(0);
 		model.addAttribute("users",listAux);		
 		model.addAttribute("products", productService.findByDeleteProducts(false));
+
 		return "products";
 	}
 
@@ -93,6 +94,8 @@ public class ProductController {
 				model.addAttribute("isAdmin", isAdmin);
 			}
 			model.addAttribute("product", product.get());
+			model.addAttribute("isOutOfStock", product.get().getStock() <= 0);
+
 			return "product";
 		} else {
 			return "products";
@@ -179,6 +182,7 @@ public class ProductController {
 		Optional<User> user = userService.findByName(authentication.getName());
 	
 		if (user.isEmpty()) {
+			model.addAttribute("message", "El usuario no existe.");
 			return "/error"; // o redirigir al login
 		}
 	
@@ -187,6 +191,7 @@ public class ProductController {
 		Optional<Product> productAux = productService.findById(productId);
 	
 		if (productAux.isEmpty()) {
+			model.addAttribute("message", "El producto no existe.");
 			return "/error";
 		}
 	
@@ -199,11 +204,14 @@ public class ProductController {
 			user.get().addProduct(p);
 			userService.save(user.get());
 		} else {
+			model.addAttribute("message", "El producto no está disponible en stock.");
 			return "/error"; // Producto sin stock
 		}
 	
 		model.addAttribute("cartProducts", cart);
 		model.addAttribute("isEmpty", cart.isEmpty());
+		model.addAttribute("isOutOfStock", p.getStock() <= 0);
+
 	
 		return "redirect:/showCart";
 	}
@@ -259,6 +267,7 @@ public class ProductController {
 
 		
 		if (product.getProvider() == null || product.getName() == null || product.getDescription() == null) {
+			model.addAttribute("message", "El producto no se ha podido crear, faltan datos.");
 			return "/error";
 		}
 		Product newProduct = productService.save(product);
@@ -299,16 +308,18 @@ public class ProductController {
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		//-----
 		model.addAttribute("product", product.get());
+		
 		return "editProduct";
 	}
 
 	@PostMapping("/update/{id}")
 	public String updateProduct(@PathVariable Long id,
 			@ModelAttribute Product updatedProduct,
-			@RequestParam(value = "imageFile", required = false) MultipartFile imageFile) {
+			@RequestParam(value = "imageFile", required = false) MultipartFile imageFile ,Model model) {
 
 		Optional<Product> existingProduct = productService.findById(id);
 		if (existingProduct.isEmpty()) {
+			
 			return "/error";
 		}
 
@@ -327,6 +338,7 @@ public class ProductController {
 				throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error processing image");
 			}
 		}
+		model.addAttribute("isOutOfStock", product.getStock() <= 0);
 
 		productService.save(product);
 		return "redirect:/products/" + id; // Correctly redirect to the updated product.
@@ -368,10 +380,14 @@ public class ProductController {
 				model.addAttribute("orders", order);
 				
 			} else {
-				throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
+				model.addAttribute("isOutOfStock", product.getStock() <= 0);
+				model.addAttribute("message", "Producto sin stock");
+				//throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
+				return "/error";
 			}
 
 		} else {
+			model.addAttribute("message", "No product found with id: " + id);
 			return "/error";
 		}
 		return "/gateway";

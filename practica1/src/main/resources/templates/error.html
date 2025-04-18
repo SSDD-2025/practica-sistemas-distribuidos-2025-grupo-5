@@ -3,19 +3,20 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Error 404 - Página no encontrada</title>
+    <title>Error</title>
     <link rel="stylesheet" href="styles.css">
 </head>
 <body>
 
-    <div class="container">
-        <h1>404</h1>
-        <h2>Página no encontrada</h2>
-        <p>Lo sentimos, lo que buscas conseguir no existe o no es valido.</p>
+    <div class="container" style="text-align: center; margin-top: 50px;">
+        <h1>Error</h1>
+        <h2>Se ha producido un imprevisto</h2>
+        <p>Deberías comprobar la URL, más abajo explicamos el fallo</p>
         <a href="/">
             <button class="btn btn-primary">Volver al menú principal</button>
         </a>
-        Message: {{ message }}
+        <p></p>
+        Error Message: {{message}}
     </div>
     
 </body>

@@ -253,12 +253,12 @@ public class UserController {
 		User user=userService.findByName(username).get();
 		user.setDeletedd(true);
 		userService.save(user);
-    
+		
 		model.addAttribute("isLoggedIn", false);
 		model.addAttribute("products", productService.findByDeleteProducts(false));
 		model.addAttribute("isAdmin", false);
     
-		return "products";
+		return "/logout";
 	}
 
 

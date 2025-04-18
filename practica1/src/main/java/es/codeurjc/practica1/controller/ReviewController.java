@@ -72,6 +72,7 @@ public class ReviewController {
 			model.addAttribute("reviews", p.getReviews());
 			return "reviews";
 		} else {
+			model.addAttribute("message", "El producto no existe.");
 			return "/error";
 		}
 	}
@@ -82,6 +83,7 @@ public class ReviewController {
 		Optional<Product> productOpt = productService.findById(productId);
 
 		if (!productOpt.isPresent()) {
+			model.addAttribute("message", "El producto no existe.");
 			return "/error";
 		}
 		
@@ -112,6 +114,7 @@ public class ReviewController {
 
 		Optional<Product> productOpt = productService.findById(productId);
 		if (!productOpt.isPresent()) {
+			model.addAttribute("message", "El producto no existe.");
 			return "redirect:/error";
 		}
 
@@ -171,6 +174,7 @@ public class ReviewController {
 			return "redirect:/productReviews/" + productAux.getId();
 
 		} catch (Exception e) {
+			model.addAttribute("message", "Error al eliminar la review: " + e.getMessage());
 			return "/error";
 		}
 	}
@@ -182,6 +186,7 @@ public class ReviewController {
 		try {
 			Optional<Product> productOpt = productService.findById(productId);
 			if (!productOpt.isPresent()) {
+				model.addAttribute("message", "El producto no existe.");
 				return "/error";
 			}
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -208,6 +213,7 @@ public class ReviewController {
 			return "reviews";
 
 		} catch (Exception e) {
+			model.addAttribute("message", "Error al obtener las reviews: " + e.getMessage());
 			return "/error";
 		}
 	}

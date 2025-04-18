@@ -19,69 +19,61 @@
           <p><b>Marca:</b> {{{product.provider}}}</p>
         </div>
 
-        <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Volver a todos los productos</button>
-        <button class="btn btn-outline-dark" onclick="location.href='/productReviews/{{product.id}}'">Ver comentarios</button>
+        <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Volver a todos los
+          productos</button>
+        <button class="btn btn-outline-dark" onclick="location.href='/productReviews/{{product.id}}'">Ver
+          comentarios</button>
       </div>
 
       {{#isAdmin}}
-        <p><b>¿Quieres editarlo?</b></p>
-        <button class="btn btn-primary" style="width: 1200%; max-width: 1172px; margin-left: -15px;" onclick="location.href='/edit/{{product.id}}'">EDITAR</button>
-        <p><b></b></p>
+      <p><b>¿Quieres editarlo?</b></p>
+      <button class="btn btn-primary" style="width: 1200%; max-width: 1172px; margin-left: -15px;"
+        onclick="location.href='/edit/{{product.id}}'">EDITAR</button>
+      <p><b></b></p>
 
-        <p><b>¿Quieres borrarlo?</b></p>
-        <div style="justify-content: center;">
-            <form action="/remove-from-products/{{product.id}}" method="post">
-                <button class="btn btn-danger" style="width: 1200%; max-width: 1172px; margin-left: -28px; margin-bottom: 100px;">BORRAR</button>
-                <input type="hidden" name="_csrf" value="{{token}}">
-            </form>
-        </div>
+      <p><b>¿Quieres borrarlo?</b></p>
+      <div style="justify-content: center;">
+        <form action="/remove-from-products/{{product.id}}" method="post">
+          <button class="btn btn-danger"
+            style="width: 1200%; max-width: 1172px; margin-left: -25px; margin-bottom: 100px;"
+            onclick="return confirm('¿Estás seguro de que quieres borrarlo?');">BORRAR</button>
+          <input type="hidden" name="_csrf" value="{{token}}">
+        </form>
+      </div>
       {{/isAdmin}}
 
       {{^isAdmin}}
-        <p><b></b></p>
-        <p><b>¿Quieres añadirlo al carrito?</b></p> 
-        <form method="post" action="/add-to-cart/{{product.id}}">
-          <input type="hidden" name="_csrf" value="{{token}}" />
-      
-          <button 
-              id="add-to-cart" 
-              class="btn btn-success" 
-              style="width: 1200%; max-width: 1172px; margin-left: -15px;">
-              AÑADIR AL CARRITO
-          </button>
-        </form>
-              <p></p>
-        
-        <p><b>¿Quieres comprarlo ahora?</b></p>
-        <div style="justify-content: center;">
-          <form method="get" action="/checkoutOne/{{product.id}}">
-              <button 
-                  id="buy-now" 
-                  type="submit" 
-                  class="btn btn-warning" 
-                  style="width: 1200%; max-width: 1172px; margin-left: -28px;">
-                  COMPRAR AHORA
-              </button>
-          </form>
-          <p id="out-of-stock-message" style="color: red; font-weight: bold; display: none;">Lo sentimos, este producto está agotado.</p>
-        </div>
+
+      <p><b>¿Quieres añadirlo al carrito?</b></p>
+      <form method="post" action="/add-to-cart/{{product.id}}">
+        <input type="hidden" name="_csrf" value="{{token}}" />
+        <button class="btn btn-success" style="width: 1200%; max-width: 1172px; margin-left: -15px;"
+          {{#isOutOfStock}}disabled title="Producto sin stock" {{/isOutOfStock}}>
+          AÑADIR AL CARRITO
+        </button>
+      </form>
+
+      <p><b>¿Quieres comprarlo ahora?</b></p>
+      <form method="get" action="/checkoutOne/{{product.id}}">
+        <button type="submit"
+          class="btn btn-warning"
+          style="width: 1200%; max-width: 1172px; margin-left: -15px;" 
+          {{#isOutOfStock}}disabled title="Producto sin stock" {{/isOutOfStock}}>
+          COMPRAR AHORA
+        </button>
+      </form>
+
+      {{#isOutOfStock}}
+      <p style="color: red; font-size: 1.5em; font-weight: bold; margin-top: 10px;">
+        Lo sentimos, este producto está agotado.
+      </p>
+      {{/isOutOfStock}}
+
       {{/isAdmin}}
+
+
     </div>
   </div>
 </div>
 
 {{>footer}}
-
-<script>
-    const stock =  parseInt("{{product.stock}}", 10);
-    
-    const addToCartButton = document.getElementById('add-to-cart');
-    const buyNowButton = document.getElementById('buy-now');
-    const outOfStockMessage = document.getElementById('out-of-stock-message');
-    
-    if (typeof stock === 'number' && stock === 0) {
-        addToCartButton.disabled = true;
-        buyNowButton.disabled = true;
-        outOfStockMessage.style.display = 'block';
-    }
-</script>

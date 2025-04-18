@@ -31,7 +31,9 @@
     {{/reviews}}
     <p></p>
 
+    {{#isLoggedIn}}
     <button class="btn add-to-cart" onclick="location.href='/newReview/{{id}}'">Añadir comentario</button>
+    {{/isLoggedIn}}
 
     <button class="btn btn-outline-secondary" onclick="location.href='/products/{{id}}'">Volver a todos los productos</button>
 
