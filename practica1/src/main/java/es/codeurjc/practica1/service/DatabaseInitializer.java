@@ -59,6 +59,27 @@ public class DatabaseInitializer {
 
         reviewService.save(review1);
 
+        //new products 
+        Product product3 = new Product("disco", " top mundial", 30, 123, "LUNAKI", "disco.jpg");
+        productService.save(product3);
+
+        Product product4 = new Product("videojuego", " aburrido", 10, 123, "EASPORTS", "fifa.jpg");
+        productService.save(product4);
+
+        Product product5 = new Product("gato", " es de peluche", 5, 123, "MATEL", "gato.jpg");
+        productService.save(product5);
+
+        Product product6 = new Product("kart", " de carlos sainz", 100, 12, "FERRARI", "kart.jpeg");
+        productService.save(product6);
+
+        Product product7 = new Product("poster", " no gana nunca", 33, 34, "ALPINE", "poster.jpg");
+        productService.save(product7);
+
+        Product product8 = new Product("porsche", " gasta demasiada gasolina", 200000, 2, "PORSCHE", "porsche.jpg");
+        productService.save(product8);
+
+        Product product9 = new Product("casco Hamilton", " es el mejor", 200, 1, "FERRARI", "casco.jpg");
+        productService.save(product9);
     }
 
 
