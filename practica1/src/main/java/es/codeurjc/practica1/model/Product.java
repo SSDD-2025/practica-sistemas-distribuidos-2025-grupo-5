@@ -70,6 +70,17 @@ public class Product {
         this.provider = provider;
         this.orders = new ArrayList<>();
     }
+    public Product(String name, String description, double price, int stock, String provider, Blob img) {
+        this.name = name;
+        this.description = description;
+        this.price = price;
+        this.stock = stock;
+        this.deletedProducts = false;
+        this.imageFile = img;
+        this.users = new ArrayList<>();
+        this.provider = provider;
+        this.orders = new ArrayList<>();
+    }
 
     public static boolean isURL(String path) {
         try {
