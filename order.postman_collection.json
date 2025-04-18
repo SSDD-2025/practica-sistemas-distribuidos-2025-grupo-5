@@ -1,0 +1,104 @@
+{
+	"info": {
+		"_postman_id": "f08e9622-04e5-4ecc-9e23-fc7def050eae",
+		"name": "order",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json",
+		"_exporter_id": "44164519",
+		"_collection_link": "https://paula-2473653.postman.co/workspace/paula's-Workspace~60ae1812-302a-4feb-8074-487d94702caf/collection/44027068-f08e9622-04e5-4ecc-9e23-fc7def050eae?action=share&source=collection_link&creator=44164519"
+	},
+	"item": [
+		{
+			"name": "showAllOrders",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:8443/api/orders/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"orders",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "createOrder",
+			"request": {
+				"method": "POST",
+				"header": [],
+				"body": {
+					"mode": "raw",
+					"raw": "{\n  \"id\": null,\n  \"totalPrice\": 56.3,\n  \"owner\": {\n    \"id\": 2,\n    \"name\": \"user\",\n    \"email\": \"juanjo@gmail.com\",\n    \"roles\": [\"USER\"],\n    \"phoneNumber\": 112\n  },\n  \"products\": [\n    {\n      \"id\": 2,\n      \"name\": \"Gafas\",\n      \"price\": 56.3,\n      \"stock\": 122,\n      \"provider\": \"GLLASSES_factory\",\n      \"description\": \"para el sol\",\n      \"image\": null,\n      \"reviews\": [\n        {\n          \"id\": 2,\n          \"tittle\": \"null\",\n          \"text\": \"ggg\"\n        },\n        {\n          \"id\": 3,\n          \"tittle\":  \"null\",\n          \"text\": \"no son de sol\"\n        }\n      ]\n    }\n  ]\n}\n",
+					"options": {
+						"raw": {
+							"language": "json"
+						}
+					}
+				},
+				"url": {
+					"raw": "https://localhost:8443/api/orders/",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"orders",
+						""
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "deleteOrder",
+			"request": {
+				"method": "DELETE",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:8443/api/orders/1",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"orders",
+						"1"
+					]
+				}
+			},
+			"response": []
+		},
+		{
+			"name": "showOneOrder",
+			"request": {
+				"method": "GET",
+				"header": [],
+				"url": {
+					"raw": "https://localhost:8443/api/orders/1",
+					"protocol": "https",
+					"host": [
+						"localhost"
+					],
+					"port": "8443",
+					"path": [
+						"api",
+						"orders",
+						"1"
+					]
+				}
+			},
+			"response": []
+		}
+	]
+}
