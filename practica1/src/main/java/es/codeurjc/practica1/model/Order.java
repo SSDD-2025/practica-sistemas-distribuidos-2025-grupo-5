@@ -42,6 +42,11 @@ public class Order {
         this.products = new ArrayList<>();
     }
 
+    public Order(User owner) {
+        this.owner = owner;
+        this.products = new ArrayList<>();
+        this.totalPrice = 0;
+    }
     public Order(User owner, Product product) {
         this.owner = owner;
         this.products = new ArrayList<>();

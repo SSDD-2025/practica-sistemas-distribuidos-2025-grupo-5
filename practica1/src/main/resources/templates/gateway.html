@@ -9,7 +9,9 @@
 
             {{#products}}
             <a href="/products/{{id}}" class="product-item">
-                <img class="product-img" src="/products/{{id}}/image" alt="{{name}}">        
+                <div class="product-img-container">
+                    <img class="product-img" src="/products/{{id}}/image" alt="{{name}}">
+                </div>       
                 <p class="product-name">{{name}}</p>
                 <p class="product-price">{{price}} €</p>
                 <p><b>Descripción:</b> {{description}}</p>
@@ -27,9 +29,6 @@
         <p><b></b></p>
         <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Volver a todos los productos</button>
         <p></p>
-
-
     </div>
 </div>
-
 {{>footer}}

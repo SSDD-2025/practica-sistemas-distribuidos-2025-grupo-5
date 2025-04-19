@@ -88,23 +88,26 @@ public class OrderController {
 					cartProduct.get(0).setStock(cartProduct.get(0).getStock() - 1);
 					productService.save(cartProduct.get(0));
 					cartProduct.get(0).setOrder(order);
-					model.addAttribute("product", cartProduct.get(0));
+					//model.addAttribute("product", cartProduct.get(0));
 
 				}else{
 
 					order= new Order(userAux, cartProduct.get(0));
 					for (int i = 1; i < cartProduct.size(); i++) {
 						Product product =cartProduct.get(i);
-	
 						if (product.getStock() > 0) {
 							order.addProduct(product);
+
 							order.setTotalPrice(order.getTotalPrice()+cartProduct.get(i).getPrice());
 							product.setStock(product.getStock() - 1);
+
 							product.setOrder(order);
+							System.out.println("llega 3");
 							productService.save(product);
-							model.addAttribute("product", product);
+							//model.addAttribute("product", product);
 	
 						} else {
+							model.addAttribute("message", "El producto " + product.getName() + " no está disponible");
 							throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
 						}
 					}

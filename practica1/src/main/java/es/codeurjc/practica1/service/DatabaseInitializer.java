@@ -72,16 +72,17 @@ public class DatabaseInitializer {
         Product product6 = new Product("kart", " de carlos sainz", 100, 12, "FERRARI", "kart.jpeg");
         productService.save(product6);
 
-        Product product7 = new Product("poster", " no gana nunca", 33, 34, "ALPINE", "poster.jpg");
+        Product product7 = new Product("poster", " eran intermedios", 33, 34, "ALPINE", "poster.jpg");
         productService.save(product7);
 
-        Product product8 = new Product("porsche", " gasta demasiada gasolina", 200000, 2, "PORSCHE", "porsche.jpg");
+        Product product8 = new Product("porsche", " gasta demasiada gasolina", 2000, 2, "PORSCHE", "porsche.jpg");
         productService.save(product8);
 
         Product product9 = new Product("casco Hamilton", " es el mejor", 200, 1, "FERRARI", "casco.jpg");
         productService.save(product9);
     }
 
+        
+    }
+        
 
-
-}
