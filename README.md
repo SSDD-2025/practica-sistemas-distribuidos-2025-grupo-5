@@ -115,7 +115,7 @@ Juan José Villanueva Molina
 ![alt text](diagramabbdd2.png)  
 La base de datos no borra los productos eliminados ni los usuarios elimandos, esto se debe para poder seguir almacenando estas entidades para futuras consultas, por ejemplo para guardar el registro de un pedido de un producto que ha sido comprado antes de ser eliminado o un usuario que elimina su cuenta al haber hecho un pedido sin pagar
 ### Diagrama de clases y templates
-
+![alt text](Diagramaderest.png)
 ### Participación de miembros
 Paula Marcela Barroso Robleda
   - Tareas:
