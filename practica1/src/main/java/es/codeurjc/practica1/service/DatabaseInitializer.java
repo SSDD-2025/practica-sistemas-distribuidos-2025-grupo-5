@@ -58,7 +58,7 @@ public class DatabaseInitializer {
 
         reviewService.save(review1);
 
-        // new products
+        //new products 
         Product product3 = new Product("disco", " top mundial", 30, 123, "LUNAKI", "disco.jpg");
         productService.save(product3);
 
@@ -81,4 +81,7 @@ public class DatabaseInitializer {
         productService.save(product9);
     }
 
-}
+        
+    }
+        
+

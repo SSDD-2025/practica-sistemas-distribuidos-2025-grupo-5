@@ -190,19 +190,19 @@ public class ProductController {
 
 		if (p.getStock() > 0) {
 			cart.add(p);
+			model.addAttribute("isOutOfStock", p.getStock()+1 <= 0);
 			p.setStock(p.getStock() - 1);
 			productService.save(p);
 			user.get().addProduct(p);
 			userService.save(user.get());
 		} else {
+			model.addAttribute("isOutOfStock", p.getStock() <= 0);
 			model.addAttribute("message", "El producto no está disponible en stock.");
 			return "/error";
 		}
 
 		model.addAttribute("cartProducts", cart);
 		model.addAttribute("isEmpty", cart.isEmpty());
-		model.addAttribute("isOutOfStock", p.getStock() <= 0);
-
 		return "redirect:/showCart";
 	}
 
