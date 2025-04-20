@@ -1,4 +1,5 @@
 package es.codeurjc.practica1.security;
+
 import java.time.Duration;
 
 public enum TokenType {

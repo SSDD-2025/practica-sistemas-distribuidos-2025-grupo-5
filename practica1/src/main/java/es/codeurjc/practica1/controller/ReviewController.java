@@ -25,29 +25,27 @@ import jakarta.servlet.http.HttpSession;
 
 @Controller
 public class ReviewController {
-    @Autowired
+	@Autowired
 	private ProductService productService;
 
 	@Autowired
 	private UserService userService;
 
-
 	@Autowired
 	private ReviewService reviewService;
 
-    // Reviwes
 	@GetMapping("/productReviews/{id}")
 	public String showReviews(Model model, @PathVariable long id) {
-		// TOOLBAR
+
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
-			authentication.isAuthenticated() &&
-			!(authentication instanceof AnonymousAuthenticationToken);
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
 
 		if (isLoggedIn) {
 			boolean isAdmin = authentication.getAuthorities().stream()
-				.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+					.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 			model.addAttribute("isAdmin", isAdmin);
 
 			Optional<User> userOpt = userService.findByName(authentication.getName());
@@ -59,7 +57,7 @@ public class ReviewController {
 				}
 			}
 		} else {
-			// No hay usuario logueado → no marcamos ninguna review como "me"
+
 			List<Review> reviews = reviewService.findAll();
 			for (Review review : reviews) {
 				review.setme(false);
@@ -77,7 +75,6 @@ public class ReviewController {
 		}
 	}
 
-
 	@GetMapping("/newReview/{productId}")
 	public String newReview(@PathVariable long productId, Model model) {
 		Optional<Product> productOpt = productService.findById(productId);
@@ -86,14 +83,13 @@ public class ReviewController {
 			model.addAttribute("message", "El producto no existe.");
 			return "/error";
 		}
-		
-		//TOOLBAR
+
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
-		authentication.isAuthenticated() &&
-		!(authentication instanceof AnonymousAuthenticationToken);
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
-		//-----
+
 		model.addAttribute("product", productOpt.get());
 		model.addAttribute("productId", productId);
 		return "newReview";
@@ -105,11 +101,10 @@ public class ReviewController {
 			@RequestParam String title,
 			@RequestParam String text, Model model) {
 
-		//TOOLBAR
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
-		authentication.isAuthenticated() &&
-		!(authentication instanceof AnonymousAuthenticationToken);
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
 
 		Optional<Product> productOpt = productService.findById(productId);
@@ -134,17 +129,15 @@ public class ReviewController {
 	@PostMapping("/removeReview/{reviewId}")
 	public String removeReview(@PathVariable long reviewId, HttpSession session, Model model) {
 		try {
-			// Obtener el usuario autenticado
+
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 
-			// Buscar la review
 			Optional<Review> reviewAux = reviewService.findById(reviewId);
 			if (!reviewAux.isPresent()) {
 				return "/reviews";
 			}
 			Review review = reviewAux.get();
 
-			// Continuar con la lógica de borrado
 			List<Review> reviews = (List<Review>) session.getAttribute("reviews");
 
 			User userAux = userService.findById(review.getAuthor().getId()).orElse(null);
@@ -179,7 +172,6 @@ public class ReviewController {
 		}
 	}
 
-
 	@GetMapping("/reviews/{productId}")
 	public String showReviews(@PathVariable Long productId, Model model, HttpSession session) {
 
@@ -191,25 +183,23 @@ public class ReviewController {
 			}
 			Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 			boolean isLoggedIn = authentication != null &&
-			authentication.isAuthenticated() &&
-			!(authentication instanceof AnonymousAuthenticationToken);
+					authentication.isAuthenticated() &&
+					!(authentication instanceof AnonymousAuthenticationToken);
 
 			Product product = productOpt.get();
 			List<Review> reviews = product.getReviews();
-			User user= userService.findByName(authentication.getName()).get();
-			for (Review review: reviews){
-				if(review.getAuthor().equals(user)){
+			User user = userService.findByName(authentication.getName()).get();
+			for (Review review : reviews) {
+				if (review.getAuthor().equals(user)) {
 					review.setme(true);
 				}
 			}
 
 			session.setAttribute("reviews", reviews);
 			model.addAttribute("reviews", reviews);
-			
-			
 
 			model.addAttribute("isLoggedIn", isLoggedIn);
-			//-----
+
 			return "reviews";
 
 		} catch (Exception e) {

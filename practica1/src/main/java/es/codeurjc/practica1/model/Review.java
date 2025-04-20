@@ -20,12 +20,10 @@ public class Review {
 	private String text;
 	private List<String> comments;
 
-	// Each review has a single author
 	@ManyToOne
 	@JoinColumn(name = "author_id")
 	private User author;
 
-	// Each review has a single product
 	@ManyToOne
 	@JoinColumn(name = "product_id")
 	private Product product;
@@ -38,7 +36,7 @@ public class Review {
 		this.text = text;
 		this.author = author;
 		this.product = product;
-		this.me=false;
+		this.me = false;
 		this.comments = new ArrayList<>();
 	}
 
@@ -57,9 +55,11 @@ public class Review {
 	public boolean getme() {
 		return me;
 	}
+
 	public void setTitle(String title) {
 		this.title = title;
 	}
+
 	public void setme(boolean tellMe) {
 		this.me = tellMe;
 	}
@@ -104,9 +104,11 @@ public class Review {
 	public void addComment(String comment) {
 		this.comments.add(comment);
 	}
+
 	public void removeComment(String comment) {
 		this.comments.remove(comment);
 	}
+
 	public void removeAllComments() {
 		this.comments.clear();
 	}

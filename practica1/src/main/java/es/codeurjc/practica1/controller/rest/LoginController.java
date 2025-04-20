@@ -1,4 +1,5 @@
 package es.codeurjc.practica1.controller.rest;
+
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
@@ -21,21 +22,21 @@ import jakarta.servlet.http.HttpServletResponse;
 @RestController
 @RequestMapping("/api/auth")
 public class LoginController {
-	
+
 	@Autowired
 	private UserLoginService userService;
 
-    @Autowired
-    private UserRepository userRepository;
+	@Autowired
+	private UserRepository userRepository;
 
 	@Autowired
-    private UserMapper userMapper;
+	private UserMapper userMapper;
 
 	@PostMapping("/login")
 	public ResponseEntity<AuthResponse> login(
 			@RequestBody LoginRequest loginRequest,
 			HttpServletResponse response) {
-		
+
 		return userService.login(response, loginRequest);
 	}
 
@@ -52,21 +53,21 @@ public class LoginController {
 	}
 
 	@PostMapping("/register")
-    public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
-        if (userRepository.findByName(userDTO.name()).isPresent()) {
-            return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body("Ya existe un usuario con ese nombre");
-        }
+	public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
+		if (userRepository.findByName(userDTO.name()).isPresent()) {
+			return ResponseEntity
+					.status(HttpStatus.CONFLICT)
+					.body("Ya existe un usuario con ese nombre");
+		}
 
-        if (userRepository.findByEmail(userDTO.email()).isPresent()) {
-            return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body("Ya existe un usuario con ese email");
-        }
+		if (userRepository.findByEmail(userDTO.email()).isPresent()) {
+			return ResponseEntity
+					.status(HttpStatus.CONFLICT)
+					.body("Ya existe un usuario con ese email");
+		}
 
-        User user = userMapper.toDomain(userDTO);
-        User savedUser = userRepository.save(user);
-        return ResponseEntity.status(HttpStatus.CREATED).body(userMapper.toDTO(savedUser));
-    }
+		User user = userMapper.toDomain(userDTO);
+		User savedUser = userRepository.save(user);
+		return ResponseEntity.status(HttpStatus.CREATED).body(userMapper.toDTO(savedUser));
+	}
 }

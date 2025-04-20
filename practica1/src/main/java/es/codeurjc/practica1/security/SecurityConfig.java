@@ -55,59 +55,55 @@ public class SecurityConfig {
     @Bean
     @Order(1)
     public SecurityFilterChain apiFilterChain(HttpSecurity http) throws Exception {
-        
-        http.authenticationProvider(authenticationProvider());
-        
-        http
-            .securityMatcher("/api/**")
-            .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
-        
-        http
-            .authorizeHttpRequests(authorize -> authorize
-                    // PRIVATE ENDPOINTS
-                    .requestMatchers("/style.css/**").permitAll()
-                        //PRODUCT
-                        .requestMatchers(HttpMethod.POST,"/api/products/").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT,"/api/products/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE,"/api/products/**").hasRole("ADMIN")
 
-                        //USER
-                            //  ---user---
+        http.authenticationProvider(authenticationProvider());
+
+        http
+                .securityMatcher("/api/**")
+                .exceptionHandling(handling -> handling.authenticationEntryPoint(unauthorizedHandlerJwt));
+
+        http
+                .authorizeHttpRequests(authorize -> authorize
+                        // PRIVATE ENDPOINTS
+                        .requestMatchers("/style.css/**").permitAll()
+                        // PRODUCT
+                        .requestMatchers(HttpMethod.POST, "/api/products/").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/products/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/products/**").hasRole("ADMIN")
+
+                        // USER
+                        // ---user---
                         .requestMatchers(HttpMethod.GET, "/api/users/me").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.PUT, "/api/users/me").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.DELETE, "/api/users/me").hasRole("USER")
 
-                            //  ---admin---
-                        .requestMatchers(HttpMethod.POST,"/api/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.GET,"/api/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.DELETE,"/api/users/**").hasRole("ADMIN")
-                        .requestMatchers(HttpMethod.PUT,"/api/users/**").hasRole("ADMIN")
+                        // ---admin---
+                        .requestMatchers(HttpMethod.POST, "/api/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.GET, "/api/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/users/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.PUT, "/api/users/**").hasRole("ADMIN")
 
-                        //REVIEW
+                        // REVIEW
                         .requestMatchers(HttpMethod.POST, "/api/reviews/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
                         .requestMatchers(HttpMethod.DELETE, "/api/reviews/**").hasRole("ADMIN")
 
-                        //ORDER
+                        // ORDER
                         .requestMatchers(HttpMethod.POST, "/api/orders/**").hasRole("USER")
 
+                        .requestMatchers("/admin").hasRole("ADMIN")
+                        .requestMatchers("/api/cart/**").hasRole("USER")
+                        .requestMatchers("/api/checkout/**").hasRole("USER")
+                        .requestMatchers("/api/gateway").hasRole("USER")
 
+                        // PUBLIC ENDPOINTS
 
+                        .requestMatchers("/v3/api-docs*/**").permitAll()
+                        .requestMatchers("/swagger-ui.html").permitAll()
+                        .requestMatchers("/swagger-ui/**").permitAll()
 
-                    .requestMatchers("/admin").hasRole("ADMIN")
-                    .requestMatchers("/api/cart/**").hasRole("USER")
-                    .requestMatchers("/api/checkout/**").hasRole("USER")
-                    .requestMatchers("/api/gateway").hasRole("USER")
+                        .anyRequest().permitAll());
 
-                    // PUBLIC ENDPOINTS
-
-                    .requestMatchers("/v3/api-docs*/**").permitAll()
-                    .requestMatchers("/swagger-ui.html").permitAll()
-                    .requestMatchers("/swagger-ui/**").permitAll()
-
-                    .anyRequest().permitAll()
-            );
-        
         // Disable Form login Authentication
         http.formLogin(formLogin -> formLogin.disable());
 
@@ -131,56 +127,55 @@ public class SecurityConfig {
     public SecurityFilterChain webFilterChain(HttpSecurity http) throws Exception {
         http.authenticationProvider(authenticationProvider());
         http.authorizeHttpRequests(authorize -> authorize
-        
-        // PUBLIC PAGES
-        .requestMatchers("/").permitAll()
-        .requestMatchers("/products/**").permitAll()
-        .requestMatchers("/products/product/").permitAll()
-        .requestMatchers("/css/**").permitAll()
-        .requestMatchers("/images/public/**").permitAll()
-        .requestMatchers("/error").permitAll()
-        .requestMatchers("/style.css/**").permitAll()
-        .requestMatchers("/register").permitAll()
-        .requestMatchers("/productReviews/**").permitAll()
-        .requestMatchers("/reviews/**").permitAll()
-        .requestMatchers("/newReview/**").permitAll()
-        .requestMatchers("/newUser/**").permitAll()
-        .requestMatchers("/saveNewUser/**").permitAll()
-        .requestMatchers("/updateUser/**").permitAll()
-        .requestMatchers("/removeUser/**").permitAll()
-        .requestMatchers("/removeUserByUser/**").permitAll()
-        .requestMatchers("/removeReview/**").permitAll()
 
-        // PRIVATE PAGES
-        .requestMatchers("/private").hasAnyRole("USER")
-        .requestMatchers("/editUserGet").hasAnyRole("USER", "ADMIN")
+                // PUBLIC PAGES
+                .requestMatchers("/").permitAll()
+                .requestMatchers("/products/**").permitAll()
+                .requestMatchers("/products/product/").permitAll()
+                .requestMatchers("/css/**").permitAll()
+                .requestMatchers("/images/public/**").permitAll()
+                .requestMatchers("/error").permitAll()
+                .requestMatchers("/style.css/**").permitAll()
+                .requestMatchers("/register").permitAll()
+                .requestMatchers("/productReviews/**").permitAll()
+                .requestMatchers("/reviews/**").permitAll()
+                .requestMatchers("/newReview/**").permitAll()
+                .requestMatchers("/newUser/**").permitAll()
+                .requestMatchers("/saveNewUser/**").permitAll()
+                .requestMatchers("/updateUser/**").permitAll()
+                .requestMatchers("/removeUser/**").permitAll()
+                .requestMatchers("/removeUserByUser/**").permitAll()
+                .requestMatchers("/removeReview/**").permitAll()
 
-        .requestMatchers("/checkoutOne/**").hasAnyRole("USER")
-        .requestMatchers("/checkout/**").hasAnyRole("USER")
-        .requestMatchers("/edit/**").hasAnyRole("USER","ADMIN")
-        .requestMatchers("/add-to-cart/**").hasAnyRole("USER")
-        .requestMatchers("/showCart/**").hasAnyRole("USER")
-        .requestMatchers("/newproduct/**").hasAnyRole("USER","ADMIN")
-        .requestMatchers("/remove-from-products/**").hasAnyRole("ADMIN")
-        .requestMatchers("/remove-from-cart/**").hasAnyRole("USER")
-        .requestMatchers("/showOrders/**").hasAnyRole("USER")
-        .requestMatchers("/removeOrder/**").hasAnyRole("USER")
-        .requestMatchers("/update/**").hasAnyRole("ADMIN")
+                // PRIVATE PAGES
+                .requestMatchers("/private").hasAnyRole("USER")
+                .requestMatchers("/editUserGet").hasAnyRole("USER", "ADMIN")
 
-        .requestMatchers("/gateway").hasAnyRole("USER")
-        .requestMatchers("/admin").hasAnyRole("ADMIN"))
-        .formLogin(formLogin -> formLogin
-        .loginPage("/login")
-        .failureUrl("/loginerror")
-        .defaultSuccessUrl("/")
-        .permitAll())
-        .logout(logout -> logout
-        .logoutUrl("/logout")
-        .logoutSuccessUrl("/")
-        .permitAll());
+                .requestMatchers("/checkoutOne/**").hasAnyRole("USER")
+                .requestMatchers("/checkout/**").hasAnyRole("USER")
+                .requestMatchers("/edit/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/add-to-cart/**").hasAnyRole("USER")
+                .requestMatchers("/showCart/**").hasAnyRole("USER")
+                .requestMatchers("/newproduct/**").hasAnyRole("USER", "ADMIN")
+                .requestMatchers("/remove-from-products/**").hasAnyRole("ADMIN")
+                .requestMatchers("/remove-from-cart/**").hasAnyRole("USER")
+                .requestMatchers("/showOrders/**").hasAnyRole("USER")
+                .requestMatchers("/removeOrder/**").hasAnyRole("USER")
+                .requestMatchers("/update/**").hasAnyRole("ADMIN")
+
+                .requestMatchers("/gateway").hasAnyRole("USER")
+                .requestMatchers("/admin").hasAnyRole("ADMIN"))
+                .formLogin(formLogin -> formLogin
+                        .loginPage("/login")
+                        .failureUrl("/loginerror")
+                        .defaultSuccessUrl("/")
+                        .permitAll())
+                .logout(logout -> logout
+                        .logoutUrl("/logout")
+                        .logoutSuccessUrl("/")
+                        .permitAll());
         // Disable CSRF at the moment
-        //http.csrf(csrf -> csrf.disable());
+        // http.csrf(csrf -> csrf.disable());
         return http.build();
     }
 }
-

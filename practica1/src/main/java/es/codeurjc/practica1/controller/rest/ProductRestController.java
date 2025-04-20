@@ -39,7 +39,7 @@ public class ProductRestController {
             return productService.findByDeleteProducts(pageable, false)
                     .map(productMapper::toDTO);
         } catch (Exception e) {
-            e.printStackTrace();  // <- Aquí también
+            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error getting products");
         }
     }
@@ -51,11 +51,10 @@ public class ProductRestController {
         try {
             return productMapper.toDTO(product);
         } catch (Exception e) {
-            e.printStackTrace();  // <- Este print te dará más información
+            e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error mapping product");
         }
     }
-    
 
     @PutMapping("/{id}")
     public ResponseEntity<ProductDTO> updateProduct(@PathVariable Long id, @RequestBody ProductDTO productDTO) {
@@ -67,8 +66,6 @@ public class ProductRestController {
         existingProduct.setStock(productDTO.stock());
         existingProduct.setProvider(productDTO.provider());
         existingProduct.setDescription(productDTO.description());
-        // existingProduct.setImage(productDTO.image());
-        // OJO con reviews: puedes ignorarlas o mapearlas si quieres manejar también eso
 
         Product updatedProduct = productService.save(existingProduct);
         ProductDTO responseDTO = productMapper.toDTO(updatedProduct);
@@ -78,8 +75,9 @@ public class ProductRestController {
 
     @PostMapping("/")
     public ResponseEntity<ProductDTO> createProduct(@RequestBody ProductDTO productDTO) {
-        Product product = new Product(productDTO.name(), productDTO.description(),productDTO.price(), productDTO.stock(), productDTO.provider(), productDTO.image());
-      
+        Product product = new Product(productDTO.name(), productDTO.description(), productDTO.price(),
+                productDTO.stock(), productDTO.provider(), productDTO.image());
+
         product = productService.save(product);
         ProductDTO responseDTO = productMapper.toDTO(product);
 

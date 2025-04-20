@@ -7,21 +7,23 @@
         <p class="review-title">Título:{{title}}</p>
         <p class="review-text">Comentario: {{text}}</p>
         {{#me}}
-            <form method="post" action="/removeReview/{{id}}" style="margin: 0;">
-                <button type="submit" class="btn btn-danger remove-button" style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">Borrar
-                </button>
-                <input type="hidden" name="_csrf" value="{{token}}">
-            </form>
+        <form method="post" action="/removeReview/{{id}}" style="margin: 0;">
+            <button type="submit" class="btn btn-danger remove-button"
+                style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">Borrar
+            </button>
+            <input type="hidden" name="_csrf" value="{{token}}">
+        </form>
         {{/me}}
         {{#isAdmin}}
-            <form method="post" action="/removeReview/{{id}}" style="margin: 0;">
-                <button type="submit" class="btn btn-danger remove-button" style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">Borrar
-                </button>
-                <input type="hidden" name="_csrf" value="{{token}}">
+        <form method="post" action="/removeReview/{{id}}" style="margin: 0;">
+            <button type="submit" class="btn btn-danger remove-button"
+                style="padding: 5px 10px; display: flex; align-items: center; justify-content: center;">Borrar
+            </button>
+            <input type="hidden" name="_csrf" value="{{token}}">
 
-            </form>
+        </form>
         {{/isAdmin}}
-        
+
     </div>
     {{/reviews}}
 
@@ -35,7 +37,8 @@
     <button class="btn add-to-cart" onclick="location.href='/newReview/{{id}}'">Añadir comentario</button>
     {{/isLoggedIn}}
 
-    <button class="btn btn-outline-secondary" onclick="location.href='/products/{{id}}'">Volver a todos los productos</button>
+    <button class="btn btn-outline-secondary" onclick="location.href='/products/{{id}}'">Volver a todos los
+        productos</button>
 
 </div>
 {{>footer}}

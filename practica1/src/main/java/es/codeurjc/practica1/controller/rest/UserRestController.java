@@ -26,7 +26,7 @@ import es.codeurjc.practica1.service.UserService;
 @RestController
 @RequestMapping("/api/users")
 public class UserRestController {
-    
+
     @Autowired
     private UserService userService;
 
@@ -36,8 +36,6 @@ public class UserRestController {
     @Autowired
     private UserRepository userRepository;
 
-
-//---- USER
     @GetMapping("/me")
     public UserDTO me() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -55,55 +53,53 @@ public class UserRestController {
         User user = userRepository.findByName(username)
                 .orElseThrow(() -> new UsernameNotFoundException("USER NOT FOUND"));
 
-        user.setName(userDTO.name());  // o los campos que desees actualizar
-        user.setEmail(userDTO.email()); // por ejemplo, si tienes un campo de email
+        user.setName(userDTO.name());
+        user.setEmail(userDTO.email());
         User updatedUser = userRepository.save(user);
 
         return userMapper.toDTO(updatedUser);
     }
+
     @DeleteMapping("/me")
     public UserDTO deleteCurrentUser() {
         Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
         String username = authentication.getName();
-    
+
         User user = userRepository.findByName(username)
                 .orElseThrow(() -> new UsernameNotFoundException("User not found with username: " + username));
-    
+
         user.setDeletedd(true);
         userRepository.save(user);
-    
+
         return userMapper.toDTO(user);
     }
-    
-//---- ADMIN
 
     @GetMapping("/admin")
     public List<UserDTO> getAllUsers() {
         List<User> users = userRepository.findByDeleted(false);
         return users.stream()
-                    .map(userMapper::toDTO)
-                    .toList();
+                .map(userMapper::toDTO)
+                .toList();
     }
 
     @PostMapping("/admin")
     public ResponseEntity<?> createUser(@RequestBody UserDTO userDTO) {
         if (userRepository.findByName(userDTO.name()).isPresent()) {
             return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body("Ya existe un usuario con ese nombre");
+                    .status(HttpStatus.CONFLICT)
+                    .body("Ya existe un usuario con ese nombre");
         }
 
         if (userRepository.findByEmail(userDTO.email()).isPresent()) {
             return ResponseEntity
-                .status(HttpStatus.CONFLICT)
-                .body("Ya existe un usuario con ese email");
+                    .status(HttpStatus.CONFLICT)
+                    .body("Ya existe un usuario con ese email");
         }
 
         User user = userMapper.toDomain(userDTO);
         User savedUser = userRepository.save(user);
         return ResponseEntity.status(HttpStatus.CREATED).body(userMapper.toDTO(savedUser));
     }
-
 
     @GetMapping("/admin/user/{id}")
     public UserDTO getUserById(@PathVariable Long id) {

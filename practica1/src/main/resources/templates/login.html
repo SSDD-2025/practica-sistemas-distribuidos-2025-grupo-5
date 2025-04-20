@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -13,7 +14,6 @@
             text-align: center;
         }
 
-        /* Estilo para el contenedor del formulario */
         .form-container {
             background: white;
             padding: 20px;
@@ -48,7 +48,6 @@
             background-color: #218838;
         }
 
-        /* Botón de registro */
         .register-button {
             background-color: #007bff;
             color: white;
@@ -66,9 +65,9 @@
         }
     </style>
 </head>
+
 <body>
 
-    <!-- Formulario de inicio de sesión -->
     <div class="form-container">
         <h2>Inicia sesión en tu cuenta</h2>
         <form action="/login" method="post">
@@ -78,11 +77,12 @@
             <input type="hidden" name="_csrf" value="{{token}}">
         </form>
 
-        <!-- Botón de registro -->
-        <p>¿No tienes cuenta? <p>
-        <button class="register-button" onclick="location.href='/newUser'">Registrarse</button>
+        <p>¿No tienes cuenta?
+        <p>
+            <button class="register-button" onclick="location.href='/newUser'">Registrarse</button>
 
     </div>
 
 </body>
+
 </html>

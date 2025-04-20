@@ -13,7 +13,7 @@
           <div class="form-group">
             <label for="name">Nombre:</label>
             <input type="text" class="form-control" id="name" name="name" value="{{user.name}}" required>
-            <input type="hidden" name="_csrf" value="{{token}}"/>
+            <input type="hidden" name="_csrf" value="{{token}}" />
           </div>
 
           <div class="form-group">
@@ -23,23 +23,27 @@
 
           <div class="form-group">
             <label for="phoneNumber">Teléfono:</label>
-            <input type="number" class="form-control" id="phoneNumber" name="phoneNumber" value="{{user.phoneNumber}}" required>
+            <input type="number" class="form-control" id="phoneNumber" name="phoneNumber" value="{{user.phoneNumber}}"
+              required>
           </div>
 
           <button type="submit" class="btn btn-primary" style="width: 700px;">Guardar Cambios</button>
         </form>
         {{^isAdmin}}
         <form method="post" action="/removeUserByUser" style="margin: 0;">
-          <input type="hidden" name="_csrf" value="{{token}}"/>
-          <button type="submit" style="width: 700px; background-color: red; color: black; border: none; padding: 10px 20px; border-radius: 25px;" onclick="return confirm('¿Estás seguro de que quieres borrar tu perfil?');">
+          <input type="hidden" name="_csrf" value="{{token}}" />
+          <button type="submit"
+            style="width: 700px; background-color: red; color: black; border: none; padding: 10px 20px; border-radius: 25px;"
+            onclick="return confirm('¿Estás seguro de que quieres borrar tu perfil?');">
             Borrar Perfil
           </button>
         </form>
-        
-        {{/isAdmin}}
-        
 
-        <button class="btn btn-outline-secondary" style="width: 700px" onclick="location.href='/'; return false;">Cancelar</button>
+        {{/isAdmin}}
+
+
+        <button class="btn btn-outline-secondary" style="width: 700px"
+          onclick="location.href='/'; return false;">Cancelar</button>
       </div>
     </div>
   </div>

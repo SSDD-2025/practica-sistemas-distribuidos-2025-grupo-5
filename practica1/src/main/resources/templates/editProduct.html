@@ -12,7 +12,7 @@
         <h2>Editar Producto "{{product.name}}"</h2>
 
         <form action="/update/{{product.id}}" method="post">
-          <input type="hidden" name="_csrf" value="{{token}}"/>
+          <input type="hidden" name="_csrf" value="{{token}}" />
 
           <div class="form-group">
             <label for="name">Nombre del producto:</label>
@@ -21,12 +21,14 @@
 
           <div class="form-group">
             <label for="description">Descripción:</label>
-            <textarea class="form-control" id="description" name="description" required>{{product.description}}</textarea>
+            <textarea class="form-control" id="description" name="description"
+              required>{{product.description}}</textarea>
           </div>
 
           <div class="form-group">
             <label for="price">Precio (€):</label>
-            <input type="number" class="form-control" id="price" name="price" value="{{product.price}}" step="0.01" required>
+            <input type="number" class="form-control" id="price" name="price" value="{{product.price}}" step="0.01"
+              required>
           </div>
 
           <div class="form-group">
@@ -36,17 +38,18 @@
 
           <div class="form-group">
             <label for="provider">Proveedor:</label>
-            <input type="text" style="margin-bottom: 20px" class="form-control" id="provider" name="provider" value="{{product.provider}}" required>
+            <input type="text" style="margin-bottom: 20px" class="form-control" id="provider" name="provider"
+              value="{{product.provider}}" required>
           </div>
 
           <button type="submit" class="btn btn-primary" style="width: 700px;">Guardar Cambios</button>
         </form>
- 
-        <button class="btn btn-outline-secondary" style="width: 700px" onclick="location.href='/'; return false;">Cancelar</button>
+
+        <button class="btn btn-outline-secondary" style="width: 700px"
+          onclick="location.href='/'; return false;">Cancelar</button>
       </div>
     </div>
   </div>
 </div>
 
 {{>footer}}
-

@@ -13,8 +13,7 @@ public interface UserMapper {
     @Mapping(target = "products", ignore = true)
     @Mapping(target = "orders", ignore = true)
     @Mapping(target = "reviews", ignore = true)
-    
+
     User toDomain(UserDTO userDTO);
-    
 
 }

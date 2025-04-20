@@ -1,4 +1,5 @@
 {{>header}}
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -12,7 +13,6 @@
             text-align: center;
         }
 
-        /* Estilo para el contenedor del formulario */
         .form-container {
             background: white;
             padding: 20px;
@@ -47,7 +47,6 @@
             background-color: #218838;
         }
 
-        /* Botón de registro */
         .register-button {
             background-color: #007bff;
             color: white;
@@ -64,7 +63,6 @@
             background-color: #0056b3;
         }
 
-        /* Estilo para el mensaje de error */
         .error-message {
             color: #dc3545;
             font-size: 16px;
@@ -72,18 +70,16 @@
         }
     </style>
 </head>
+
 <body>
 
-    <!-- Formulario de inicio de sesión con error -->
     <div class="form-container">
 
-        <!-- Mensaje de error general -->
         <div class="error-message">
             <p><strong>Error:</strong> Ha habido un problema al iniciar sesión. Intenta de nuevo.</p>
         </div>
 
-        <!-- Botón de registro -->
         <p>¿No tienes cuenta?</p>
         <button class="register-button" onclick="location.href = '/newUser';">Registrarse</button>
     </div>
-{{>footer}}
+    {{>footer}}

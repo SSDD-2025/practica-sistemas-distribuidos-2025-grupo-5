@@ -38,7 +38,6 @@ public class DatabaseInitializer {
         userService.save(new User("admin", "paula@gmail.com", passwordEncoder.encode("adminpass"), rolAdmin, 912));
         userService.save(new User("user", "juanjo@gmail.com", passwordEncoder.encode("pass"), rolUser, 112));
         User user1 = userService.findByName("user").get();
-        System.out.println("ID USUARIO: " + user1.getId());
 
         List<Long> set = List.of(user1.getId());
         // User user2 = new User( "juanjo", "juanjo@gmail.com", "567",0, 987654321 );
@@ -59,7 +58,7 @@ public class DatabaseInitializer {
 
         reviewService.save(review1);
 
-        //new products 
+        // new products
         Product product3 = new Product("disco", " top mundial", 30, 123, "LUNAKI", "disco.jpg");
         productService.save(product3);
 
@@ -82,7 +81,4 @@ public class DatabaseInitializer {
         productService.save(product9);
     }
 
-        
-    }
-        
-
+}

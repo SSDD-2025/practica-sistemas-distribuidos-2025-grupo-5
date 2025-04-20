@@ -24,10 +24,10 @@ public class Order {
 
     private double totalPrice;
 
-	@ManyToOne  // Un usuario puede tener múltiples órdenes
-	@JoinColumn(name = "owner_id")  // Especifica la clave foránea en la tabla "customer_order"
+    @ManyToOne
+    @JoinColumn(name = "owner_id")
     @OnDelete(action = OnDeleteAction.CASCADE)
-	private User owner;
+    private User owner;
 
     @ManyToMany
     private List<Product> products;
@@ -47,6 +47,7 @@ public class Order {
         this.products = new ArrayList<>();
         this.totalPrice = 0;
     }
+
     public Order(User owner, Product product) {
         this.owner = owner;
         this.products = new ArrayList<>();
@@ -78,7 +79,7 @@ public class Order {
 
     public void setProducts(List<Product> products) {
         this.products = products;
-        this.totalPrice = calculateTotalPrice(); // Recalcular precio al actualizar productos
+        this.totalPrice = calculateTotalPrice();
     }
 
     public double getTotalPrice() {
@@ -90,18 +91,17 @@ public class Order {
     }
 
     public void deleteAllProducts() {
-        for(Product product: this.products){
+        for (Product product : this.products) {
             product.setDeletedProducts(true);
         }
-        this.totalPrice = 0; // Resetear el precio si se eliminan los productos
+        this.totalPrice = 0;
     }
 
-    // Método para calcular el precio total basado en los productos
     private double calculateTotalPrice() {
         return products.stream().mapToDouble(Product::getPrice).sum();
     }
 
-    public void addProduct(Product p){
+    public void addProduct(Product p) {
         this.products.add(p);
     }
 }

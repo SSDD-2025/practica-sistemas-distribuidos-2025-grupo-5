@@ -16,8 +16,6 @@ public class UserService {
     @Autowired
     private UserRepository userRepository;
 
-
-
     public List<User> findAll() {
         return userRepository.findAll();
     }
@@ -55,7 +53,8 @@ public class UserService {
     }
 
     public User getLoggedUser(String name) {
-        User user=userRepository.findByName(name).orElseThrow(()-> new UsernameNotFoundException("USER SERVICE LINE 44") );
+        User user = userRepository.findByName(name)
+                .orElseThrow(() -> new UsernameNotFoundException("USER SERVICE LINE 44"));
         return user;
     }
 
@@ -67,7 +66,7 @@ public class UserService {
         Optional<User> userOptional = userRepository.findById(userId);
 
         if (userOptional.isPresent()) {
-            
+
             User user = userOptional.get();
             user.addAnOrder(order);
             userRepository.save(user);

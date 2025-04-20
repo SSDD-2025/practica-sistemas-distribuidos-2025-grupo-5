@@ -1,21 +1,19 @@
 package es.codeurjc.practica1.dto;
+
 import java.util.List;
-    public record ProductDTO(
-    Long id,
-    String name,
-    Double price,
-    Integer stock,
-    String provider,
 
-    String description,
+public record ProductDTO(
+        Long id,
+        String name,
+        Double price,
+        Integer stock,
+        String provider,
 
-    //List<UserDTO>users,
+        String description,
 
-    String image,
+        String image,
 
-    List<ReviewDTO>reviews
+        List<ReviewDTO> reviews
 
-    //List<OrderDTO> orders
-    ){}
-
-
+) {
+}

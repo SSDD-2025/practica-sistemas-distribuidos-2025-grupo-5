@@ -55,9 +55,7 @@
 
       <p><b>¿Quieres comprarlo ahora?</b></p>
       <form method="get" action="/checkoutOne/{{product.id}}">
-        <button type="submit"
-          class="btn btn-warning"
-          style="width: 1200%; max-width: 1172px; margin-left: -15px;" 
+        <button type="submit" class="btn btn-warning" style="width: 1200%; max-width: 1172px; margin-left: -15px;"
           {{#isOutOfStock}}disabled title="Producto sin stock" {{/isOutOfStock}}>
           COMPRAR AHORA
         </button>

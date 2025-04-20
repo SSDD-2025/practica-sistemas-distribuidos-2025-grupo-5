@@ -38,7 +38,7 @@ public class OrderRestController {
 
     @Autowired
     private OrderMapper orderMapper;
-    
+
     @Autowired
     private UserMapper userMapper;
     @Autowired
@@ -67,20 +67,20 @@ public class OrderRestController {
 
     @PostMapping("/")
     public ResponseEntity<OrderDTO> createOrder(@RequestBody OrderDTO orderDTO) {
-    User owner = userRepository.findById(orderDTO.owner().id())
-        .orElseThrow(() -> new RuntimeException("User not found"));
+        User owner = userRepository.findById(orderDTO.owner().id())
+                .orElseThrow(() -> new RuntimeException("User not found"));
 
-    List<Product> products = orderDTO.products().stream()
-        .map(dto -> productRepository.findById(dto.id())
-            .orElseThrow(() -> new RuntimeException("Product not found")))
-        .toList();
+        List<Product> products = orderDTO.products().stream()
+                .map(dto -> productRepository.findById(dto.id())
+                        .orElseThrow(() -> new RuntimeException("Product not found")))
+                .toList();
 
-    Order newOrder = new Order();
-    newOrder.setTotalPrice(orderDTO.totalPrice());
-    newOrder.setOwner(owner);
-    newOrder.setProducts(products);
+        Order newOrder = new Order();
+        newOrder.setTotalPrice(orderDTO.totalPrice());
+        newOrder.setOwner(owner);
+        newOrder.setProducts(products);
 
-    orderService.save(newOrder);
+        orderService.save(newOrder);
         Order createdOrder = orderService.findById(newOrder.getId()).get();
         OrderDTO responseDTO = orderMapper.toDTO(createdOrder);
         URI location = fromCurrentRequest().path("/{id}").buildAndExpand(responseDTO.id()).toUri();
@@ -90,7 +90,7 @@ public class OrderRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<OrderDTO> deleteOrder(@PathVariable long id) {
         Optional<Order> orderOpt = orderService.findById(id);
-    
+
         if (orderOpt.isEmpty()) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found with id " + id);
         }
@@ -99,10 +99,5 @@ public class OrderRestController {
         orderService.delete(orderToDelete);
         return ResponseEntity.ok(dto);
     }
-    
 
-   
 }
-
-
-    

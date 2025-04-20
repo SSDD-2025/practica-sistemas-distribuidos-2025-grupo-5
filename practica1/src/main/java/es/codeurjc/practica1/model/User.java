@@ -21,17 +21,16 @@ public class User {
     @Id
     @GeneratedValue(strategy = GenerationType.AUTO)
     private long id;
-    private boolean deleted; 
+    private boolean deleted;
     private String name;
     private String email;
     private String encodedPassword;
-    
+
     @ElementCollection(fetch = FetchType.EAGER)
     private List<String> roles;
 
     private int phoneNumber;
 
-    // Un usuario puede crear muchas reviews
     @OneToMany(mappedBy = "author")
     private List<Review> reviews = new ArrayList<>();
 
@@ -143,23 +142,21 @@ public class User {
 
     public void deleteOrder(Order order) {
         this.orders.remove(order);
-       // this.orders.setAuthor(null);
     }
-
 
     public List<Order> getOrders() {
         return this.orders;
     }
 
-    public void addAnOrder(Order order){
+    public void addAnOrder(Order order) {
         this.orders.add(order);
     }
 
-    public void setDeletedd(boolean deleted){
+    public void setDeletedd(boolean deleted) {
         this.deleted = deleted;
     }
 
-    public boolean getDeletedd(){
+    public boolean getDeletedd() {
         return this.deleted;
     }
 }

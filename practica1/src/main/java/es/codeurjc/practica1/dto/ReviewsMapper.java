@@ -4,6 +4,7 @@ import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
 import es.codeurjc.practica1.model.Review;
+
 @Mapper(componentModel = "spring")
 
 public interface ReviewsMapper {

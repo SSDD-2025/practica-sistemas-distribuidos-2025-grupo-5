@@ -30,7 +30,6 @@ public class ReviewRestController {
     @Autowired
     private ReviewsMapper reviewsMapper;
 
-    // Obtener todas las reviews
     @GetMapping("/")
     public List<ReviewDTO> getAllReviews() {
         return reviewService.findAll()
@@ -39,15 +38,13 @@ public class ReviewRestController {
                 .toList();
     }
 
-    // Obtener una review por ID
     @GetMapping("/{id}")
     public ResponseEntity<ReviewDTO> getReview(@PathVariable long id) {
         Optional<Review> reviewOpt = reviewService.findById(id);
         return reviewOpt.map(review -> ResponseEntity.ok(reviewsMapper.toDTO(review)))
-                        .orElse(ResponseEntity.notFound().build());
+                .orElse(ResponseEntity.notFound().build());
     }
 
-    // Crear nueva review
     @PostMapping("/")
     public ResponseEntity<ReviewDTO> createReview(@RequestBody ReviewDTO reviewDTO) {
         Review review = reviewsMapper.toDomain(reviewDTO);
@@ -61,7 +58,6 @@ public class ReviewRestController {
         return ResponseEntity.created(location).body(savedDTO);
     }
 
-    // Eliminar una review
     @DeleteMapping("/{id}")
     public ReviewDTO deleteReview(@PathVariable long id) {
         Optional<Review> reviewOpt = reviewService.findById(id);
@@ -69,7 +65,7 @@ public class ReviewRestController {
             reviewService.delete(reviewOpt.get());
             return reviewsMapper.toDTO(reviewOpt.get());
         } else {
-            return null; // o lanzar una excepción
+            return null;
         }
     }
 }

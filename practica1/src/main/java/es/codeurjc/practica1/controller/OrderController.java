@@ -28,7 +28,7 @@ import jakarta.servlet.http.HttpSession;
 @Controller
 public class OrderController {
 
-    @Autowired
+	@Autowired
 	private ProductService productService;
 
 	@Autowired
@@ -37,25 +37,21 @@ public class OrderController {
 	@Autowired
 	private OrderService orderService;
 
-
-    //ORDER
 	@GetMapping("/showOrders")
-	public String showOrders(HttpSession session, Model model,@AuthenticationPrincipal UserDetails userDetails) {
-		//TOOLBAR
+	public String showOrders(HttpSession session, Model model, @AuthenticationPrincipal UserDetails userDetails) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
-		authentication.isAuthenticated() &&
-		!(authentication instanceof AnonymousAuthenticationToken);
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
-		//----
 		if (userDetails == null) {
-			return "/login"; // o manejar el caso de usuario no autenticado
+			return "/login";
 		}
 
 		// Get the list of product IDs in the session.
 		Optional<User> oneUser = userService.findByName(userDetails.getUsername());
 		List<Order> orderList = null;
-		
+
 		if (oneUser.isPresent()) {
 			User user = oneUser.get();
 			orderList = user.getOrders();
@@ -70,65 +66,57 @@ public class OrderController {
 		return "orders"; // Display the cart view.
 	}
 
-
-	// ORDER
 	@GetMapping("/checkout")
-	public String showGateway( HttpSession session, Model model) {
+	public String showGateway(HttpSession session, Model model) {
 		// Get the list of product IDs in the session.
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Optional<User> user = userService.findByName(authentication.getName());
 		Order order;
-			if (user != null) {
-				User userAux=user.get();
-				List<Product> cartProduct= userAux.getProducts();
-				
-				if(cartProduct.size()==1){
-					order= new Order(userAux, cartProduct.get(0));
-					order.setTotalPrice(cartProduct.get(0).getPrice());
-					cartProduct.get(0).setStock(cartProduct.get(0).getStock() - 1);
-					productService.save(cartProduct.get(0));
-					cartProduct.get(0).setOrder(order);
-					//model.addAttribute("product", cartProduct.get(0));
+		if (user != null) {
+			User userAux = user.get();
+			List<Product> cartProduct = userAux.getProducts();
 
-				}else{
+			if (cartProduct.size() == 1) {
+				order = new Order(userAux, cartProduct.get(0));
+				order.setTotalPrice(cartProduct.get(0).getPrice());
+				cartProduct.get(0).setStock(cartProduct.get(0).getStock() - 1);
+				productService.save(cartProduct.get(0));
+				cartProduct.get(0).setOrder(order);
 
-					order= new Order(userAux, cartProduct.get(0));
-					for (int i = 1; i < cartProduct.size(); i++) {
-						Product product =cartProduct.get(i);
-						if (product.getStock() > 0) {
-							order.addProduct(product);
+			} else {
 
-							order.setTotalPrice(order.getTotalPrice()+cartProduct.get(i).getPrice());
-							product.setStock(product.getStock() - 1);
+				order = new Order(userAux, cartProduct.get(0));
+				for (int i = 1; i < cartProduct.size(); i++) {
+					Product product = cartProduct.get(i);
+					if (product.getStock() > 0) {
+						order.addProduct(product);
 
-							product.setOrder(order);
-							System.out.println("llega 3");
-							productService.save(product);
-							//model.addAttribute("product", product);
-	
-						} else {
-							model.addAttribute("message", "El producto " + product.getName() + " no está disponible");
-							throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
-						}
+						order.setTotalPrice(order.getTotalPrice() + cartProduct.get(i).getPrice());
+						product.setStock(product.getStock() - 1);
+
+						product.setOrder(order);
+						productService.save(product);
+
+					} else {
+						model.addAttribute("message", "El producto " + product.getName() + " no está disponible");
+						throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
 					}
 				}
-				
-				orderService.save(order);
-				user.get().getProducts().clear();
-				userService.addOrder(user.get().getId(), order);
-				userService.save(user.get());
-				model.addAttribute("orders", order);
-				
-				//TOOLBAR
-				boolean isLoggedIn = authentication != null &&
-				authentication.isAuthenticated() &&
-				!(authentication instanceof AnonymousAuthenticationToken);
-				model.addAttribute("isLoggedIn", isLoggedIn);
-				//-----
 			}
-			return "/gateway";
-	}
 
+			orderService.save(order);
+			user.get().getProducts().clear();
+			userService.addOrder(user.get().getId(), order);
+			userService.save(user.get());
+			model.addAttribute("orders", order);
+
+			boolean isLoggedIn = authentication != null &&
+					authentication.isAuthenticated() &&
+					!(authentication instanceof AnonymousAuthenticationToken);
+			model.addAttribute("isLoggedIn", isLoggedIn);
+		}
+		return "/gateway";
+	}
 
 	@PostMapping("/removeOrder/{id}")
 	public String removeOrder(@PathVariable Long id) {
@@ -138,24 +126,24 @@ public class OrderController {
 		Optional<Order> order = orderService.findById(id);
 
 		try {
-			if (order!=null) {
+			if (order != null) {
 
 				for (Product product : order.get().getProducts()) {
 					product.setStock(product.getStock() + 1);
 					productService.save(product);
 				}
-				
-				User user = userA.get();
-				user.deleteOrder(order.get());  //Elimina de la lista de órdenes
 
-				userService.save(user);  // Guarda cambios en el usuario
-				orderService.delete(order.get());  // Ahora sí borra la orden
-		
+				User user = userA.get();
+				user.deleteOrder(order.get());
+
+				userService.save(user);
+				orderService.delete(order.get());
+
 				return "redirect:/";
 			} else {
 				return "redirect:/error";
 			}
-		
+
 		} catch (Exception e) {
 			return "redirect:/error";
 		}

@@ -26,7 +26,6 @@ public class RepositoryUserDetailsService implements UserDetailsService {
 		User user = userRepository.findByName(username)
 				.orElseThrow(() -> new UsernameNotFoundException("User not found"));
 
-		// 🚫 Comprobación: si el usuario está eliminado, no permitir login
 		if (user.getDeletedd()) {
 			throw new UsernameNotFoundException("Este usuario está eliminado y no puede iniciar sesión");
 		}
@@ -37,10 +36,8 @@ public class RepositoryUserDetailsService implements UserDetailsService {
 		}
 
 		return new org.springframework.security.core.userdetails.User(
-			user.getName(), 
-			user.getPassword(), 
-			roles
-		);
+				user.getName(),
+				user.getPassword(),
+				roles);
 	}
 }
-

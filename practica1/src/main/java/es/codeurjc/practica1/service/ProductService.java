@@ -62,6 +62,7 @@ public class ProductService {
         }
         return productRepository.save(product);
     }
+
     public void delete(Product product) {
         product.setDeletedProducts(true);
         productRepository.save(product);

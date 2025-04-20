@@ -53,24 +53,21 @@ public class ProductController {
 	@Autowired
 	private ImageUtils imageUtils;
 
-
 	@GetMapping("/")
 	public String showProducts(Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
-								authentication.isAuthenticated() &&
-								!(authentication instanceof AnonymousAuthenticationToken);
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
 		if (isLoggedIn) {
-			//tiene que ser asi porque puede ser que te de como válido un usuario anónimo
 			boolean isAdmin = authentication.getAuthorities().stream()
-											.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+					.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 			model.addAttribute("isAdmin", isAdmin);
 		}
-		System.out.println(isLoggedIn);
 		model.addAttribute("isLoggedIn", isLoggedIn);
-		List<User> listAux=userService.findByDeleted(false);
+		List<User> listAux = userService.findByDeleted(false);
 		listAux.remove(0);
-		model.addAttribute("users",listAux);		
+		model.addAttribute("users", listAux);
 		model.addAttribute("products", productService.findByDeleteProducts(false));
 
 		return "products";
@@ -78,19 +75,16 @@ public class ProductController {
 
 	@GetMapping("/products/{id}")
 	public String showProduct(Model model, @PathVariable long id) {
-		//TOOLBAR
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
-		authentication.isAuthenticated() &&
-		!(authentication instanceof AnonymousAuthenticationToken);
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
-		//-----
 		Optional<Product> product = productService.findById(id);
 		if (product.isPresent()) {
 			if (isLoggedIn) {
-				//tiene que ser asi porque puede ser que te de como válido un usuario anónimo
 				boolean isAdmin = authentication.getAuthorities().stream()
-												.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+						.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
 				model.addAttribute("isAdmin", isAdmin);
 			}
 			model.addAttribute("product", product.get());
@@ -125,25 +119,24 @@ public class ProductController {
 
 	@GetMapping("/newproduct")
 	public String newProduct(Model model) {
-		//TOOLBAR
+
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
-		authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken);
+				authentication.isAuthenticated() && !(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
-		//-----
+
 		return "newProductPage";
 	}
 
 	@GetMapping("/showCart")
 	public String showCart(HttpSession session, Model model) {
 
-		//TOOLBAR
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
-		authentication.isAuthenticated() &&
-		!(authentication instanceof AnonymousAuthenticationToken);
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
-		//-----
+
 		List<Long> cartProductIds = (List<Long>) session.getAttribute("cart");
 		List<Product> cartProducts = new ArrayList<>();
 
@@ -160,43 +153,41 @@ public class ProductController {
 			}
 			model.addAttribute("isEmpty", !user.getProducts().isEmpty());
 			model.addAttribute("cartProducts", cartProducts);
-			
+
 			return "cart"; // Display the cart view.
-		}else{
-			return "/login"; // o redirigir al login
+		} else {
+			return "/login";
 		}
 
 	}
 
 	@PostMapping("/add-to-cart/{productId}")
 	public String addToCart(@PathVariable long productId, HttpSession session, Model model) {
-		// TOOLBAR
+
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
-			authentication.isAuthenticated() &&
-			!(authentication instanceof AnonymousAuthenticationToken);
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
-		// ----
-	
-		// Obtener el usuario
+
 		Optional<User> user = userService.findByName(authentication.getName());
-	
+
 		if (user.isEmpty()) {
 			model.addAttribute("message", "El usuario no existe.");
-			return "/error"; // o redirigir al login
+			return "/error";
 		}
-	
+
 		List<Product> cart = user.get().getProducts();
-	
+
 		Optional<Product> productAux = productService.findById(productId);
-	
+
 		if (productAux.isEmpty()) {
 			model.addAttribute("message", "El producto no existe.");
 			return "/error";
 		}
-	
+
 		Product p = productAux.get();
-	
+
 		if (p.getStock() > 0) {
 			cart.add(p);
 			p.setStock(p.getStock() - 1);
@@ -205,35 +196,34 @@ public class ProductController {
 			userService.save(user.get());
 		} else {
 			model.addAttribute("message", "El producto no está disponible en stock.");
-			return "/error"; // Producto sin stock
+			return "/error";
 		}
-	
+
 		model.addAttribute("cartProducts", cart);
 		model.addAttribute("isEmpty", cart.isEmpty());
 		model.addAttribute("isOutOfStock", p.getStock() <= 0);
 
-	
 		return "redirect:/showCart";
 	}
-	
+
 	@PostMapping("/remove-from-cart/{productId}")
 	public String removeFromCart(@PathVariable long productId, Model model, HttpSession session) {
-		
+
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		Optional<User> user = userService.findByName(authentication.getName());
 		Optional<Product> productAux = productService.findById(productId);
 
 		if (productAux.isPresent()) {
 			Product p = productAux.get();
-			p.setStock(p.getStock() +1);
+			p.setStock(p.getStock() + 1);
 			productService.save(p);
 			user.get().removeProduct(p);
 			userService.save(user.get());
 		}
 
 		boolean isLoggedIn = authentication != null &&
-		authentication.isAuthenticated() &&
-		!(authentication instanceof AnonymousAuthenticationToken);
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
 
 		model.addAttribute("isEmpty", !user.get().getProducts().isEmpty());
@@ -256,16 +246,13 @@ public class ProductController {
 			imageBlob = imageUtils.createBlob(imageField.getInputStream());
 		}
 		Product product = new Product(name, description, price, stock, provider, imageBlob);
-		
-		//TOOLBAR
+
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
-		authentication.isAuthenticated() &&
-		!(authentication instanceof AnonymousAuthenticationToken);
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
-		//-----
 
-		
 		if (product.getProvider() == null || product.getName() == null || product.getDescription() == null) {
 			model.addAttribute("message", "El producto no se ha podido crear, faltan datos.");
 			return "/error";
@@ -300,26 +287,26 @@ public class ProductController {
 		if (product.isEmpty()) {
 			throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product not found");
 		}
-		//TOOLBAR
+
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
-		authentication.isAuthenticated() &&
-		!(authentication instanceof AnonymousAuthenticationToken);
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
-		//-----
+
 		model.addAttribute("product", product.get());
-		
+
 		return "editProduct";
 	}
 
 	@PostMapping("/update/{id}")
 	public String updateProduct(@PathVariable Long id,
 			@ModelAttribute Product updatedProduct,
-			@RequestParam(value = "imageFile", required = false) MultipartFile imageFile ,Model model) {
+			@RequestParam(value = "imageFile", required = false) MultipartFile imageFile, Model model) {
 
 		Optional<Product> existingProduct = productService.findById(id);
 		if (existingProduct.isEmpty()) {
-			
+
 			return "/error";
 		}
 
@@ -344,21 +331,17 @@ public class ProductController {
 		return "redirect:/products/" + id; // Correctly redirect to the updated product.
 	}
 
-
-
-
 	@GetMapping("/checkoutOne/{id}")
 	public String showGatewayOne(@PathVariable Long id, HttpSession session, Model model) {
 		// Get the list of product IDs in the session.
 		Optional<Product> productOptional = productService.findById(id);
 		Order order;
-		//TOOLBAR
+
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
-		authentication.isAuthenticated() &&
-		!(authentication instanceof AnonymousAuthenticationToken);
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
-		//-----
 
 		if (productOptional.isPresent()) {
 			Product product = productOptional.get();
@@ -371,18 +354,18 @@ public class ProductController {
 				order = new Order(optionalUser.get(), product);
 				order.setTotalPrice(product.getPrice());
 				orderService.save(order);
-				
+
 				userService.addOrder(optionalUser.get().getId(), order);
 				userService.save(optionalUser.get());
 
 				product.setOrder(order);
 				productService.save(product);
 				model.addAttribute("orders", order);
-				
+
 			} else {
 				model.addAttribute("isOutOfStock", product.getStock() <= 0);
 				model.addAttribute("message", "Producto sin stock");
-				//throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Product out of stock");
+
 				return "/error";
 			}
 
@@ -394,5 +377,3 @@ public class ProductController {
 	}
 
 }
-	
-

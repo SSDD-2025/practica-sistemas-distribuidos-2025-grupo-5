@@ -40,6 +40,7 @@ body {
     max-height: 100%;
     object-fit: contain;
 }
+
 .toolbar button,
 .toolbar select,
 .toolbar input {
@@ -229,7 +230,6 @@ body {
 .btn-success:focus,
 .btn-success:active {
     background-color: #218838 !important;
-    /* tono más oscuro al pasar el ratón */
     border-color: #1e7e34 !important;
     color: white !important;
 }
@@ -244,7 +244,6 @@ body {
 .btn-warning:focus,
 .btn-warning:active {
     background-color: #e0a800 !important;
-    /* tono más oscuro para hover */
     border-color: #d39e00 !important;
     color: black !important;
 }

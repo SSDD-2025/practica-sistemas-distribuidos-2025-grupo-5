@@ -1,4 +1,5 @@
 package es.codeurjc.practica1.security;
+
 public class LoginRequest {
 
 	private String username;

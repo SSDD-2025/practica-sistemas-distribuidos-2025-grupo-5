@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html lang="es">
+
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
@@ -14,6 +15,7 @@
             flex-direction: column;
             align-items: center;
         }
+
         .toolbar {
             width: 100%;
             display: flex;
@@ -23,24 +25,31 @@
             padding: 10px 20px;
             color: white;
         }
-        .toolbar button, .toolbar select, .toolbar input {
+
+        .toolbar button,
+        .toolbar select,
+        .toolbar input {
             margin: 0 5px;
             padding: 8px;
             border: none;
             border-radius: 5px;
         }
+
         .toolbar button {
             background-color: #555;
             color: white;
             cursor: pointer;
         }
+
         .toolbar button:hover {
             background-color: #777;
         }
+
         .toolbar input {
             padding: 8px;
             width: 200px;
         }
+
         .container {
             background: white;
             padding: 20px;
@@ -50,10 +59,13 @@
             text-align: center;
             margin-top: 50px;
         }
+
         h2 {
             margin-bottom: 20px;
         }
-        input, .btn {
+
+        input,
+        .btn {
             width: calc(100% - 20px);
             padding: 10px;
             margin: 10px 0;
@@ -68,15 +80,15 @@
             background-color: #28a745;
             color: white;
             border: none;
-            cursor: poi
-            nter;
+            cursor: poi nter;
         }
+
         .btn:hover {
             background-color: #218838;
         }
-        
     </style>
 </head>
+
 <body>
     <div class="toolbar">
         <button onclick="reload()">
@@ -102,4 +114,5 @@
         </form>
     </div>
 </body>
+
 </html>

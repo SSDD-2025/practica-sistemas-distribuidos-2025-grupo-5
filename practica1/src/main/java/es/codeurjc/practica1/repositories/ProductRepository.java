@@ -33,6 +33,4 @@ public interface ProductRepository extends JpaRepository<Product, Long> {
 
     Product save(Product product);
 
-    //void delete(@SuppressWarnings("null") Product product);
-
 }
