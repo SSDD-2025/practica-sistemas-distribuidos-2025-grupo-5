@@ -77,7 +77,7 @@ public class DatabaseInitializer {
         Product product8 = new Product("porsche", " gasta demasiada gasolina", 2000, 2, "PORSCHE", "porsche.jpg");
         productService.save(product8);
 
-        Product product9 = new Product("casco Hamilton", " es el mejor", 200, 1, "FERRARI", "casco.jpg");
+        Product product9 = new Product("casco Hamilton", " es el mejor", 200, 2, "FERRARI", "casco.jpg");
         productService.save(product9);
     }
 
