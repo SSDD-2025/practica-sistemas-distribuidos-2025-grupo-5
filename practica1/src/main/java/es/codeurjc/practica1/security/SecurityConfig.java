@@ -98,12 +98,6 @@ public class SecurityConfig {
 
                         // PUBLIC ENDPOINTS
 
-                        .requestMatchers("/v3/api-docs*/**").permitAll()
-                        .requestMatchers("/v3/api-docs/**").permitAll()
-                        .requestMatchers("/v3/api-docs").permitAll()
-                        .requestMatchers("/swagger-ui.html").permitAll()
-                        .requestMatchers("/swagger-ui/**").permitAll()
-
                         .anyRequest().permitAll());
 
         // Disable Form login Authentication
@@ -168,7 +162,13 @@ public class SecurityConfig {
                 .requestMatchers("/update/**").hasAnyRole("ADMIN")
 
                 .requestMatchers("/gateway").hasAnyRole("USER")
-                .requestMatchers("/admin").hasAnyRole("ADMIN"))
+                .requestMatchers("/admin").hasAnyRole("ADMIN")
+                
+                // OpenAPI
+				.requestMatchers("/v3/api-docs*/**").permitAll()
+				.requestMatchers("/swagger-ui.html").permitAll()
+				.requestMatchers("/swagger-ui/**").permitAll()
+            )
                 .formLogin(formLogin -> formLogin
                         .loginPage("/login")
                         .failureUrl("/loginerror")
