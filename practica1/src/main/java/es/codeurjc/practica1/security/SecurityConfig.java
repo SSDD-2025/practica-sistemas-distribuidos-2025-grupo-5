@@ -146,6 +146,8 @@ public class SecurityConfig {
                 .requestMatchers("/removeUser/**").permitAll()
                 .requestMatchers("/removeUserByUser/**").permitAll()
                 .requestMatchers("/removeReview/**").permitAll()
+                .requestMatchers("/search").permitAll()
+
 
                 // PRIVATE PAGES
                 .requestMatchers("/private").hasAnyRole("USER")

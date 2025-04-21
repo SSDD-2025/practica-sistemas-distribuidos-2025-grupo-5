@@ -68,4 +68,14 @@ public class ProductService {
         productRepository.save(product);
     }
 
+    public List<Product> searchProducts(String query) {
+        if (query == null || query.isEmpty()) {
+            return null;
+        }else{
+            List<Product> p=productRepository.findByName(query);
+            return p;
+
+        }
+    }
+    
 }

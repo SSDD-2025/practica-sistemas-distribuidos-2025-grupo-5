@@ -1,4 +1,4 @@
-!DOCTYPE html>
+<!DOCTYPE html>
 <html>
 
 <head>
@@ -31,7 +31,10 @@
 			<button onclick="location.href='/showCart'"> CARRITO</button>
 			<button onclick="location.href='/showOrders'"> PEDIDOS</button>
 			{{/isAdmin}}
-			<input type="text" placeholder="Buscar...">
+			<form action="/search" method="get" class="d-flex" style="margin-left: 20px;">
+				<input type="text" name="query" placeholder="Buscar..." class="form-control me-2">
+				<button type="submit" class="btn btn-outline-light">Buscar</button>
+			</form>
 			<select id="language" onchange="changeLanguage()">
 				<option value="es">Español</option>
 				<option value="en">English</option>

@@ -273,6 +273,7 @@ public class ProductController {
 
 		if (productAux.isPresent()) {
 			productAux.get().setDeletedProducts(true);
+			productAux.get().setStock(0);
 			productService.save(productAux.get());
 
 		} else {
@@ -374,6 +375,30 @@ public class ProductController {
 			return "/error";
 		}
 		return "/gateway";
+	}
+
+	//header.html
+	@GetMapping("/search")
+	public String searchProducts(@RequestParam("query") String query, Model model) {
+		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		boolean isLoggedIn = authentication != null &&
+				authentication.isAuthenticated() &&
+				!(authentication instanceof AnonymousAuthenticationToken);
+		model.addAttribute("isLoggedIn", isLoggedIn);
+
+		if (isLoggedIn) {
+			boolean isAdmin = authentication.getAuthorities().stream()
+					.anyMatch(authority -> authority.getAuthority().equals("ROLE_ADMIN"));
+			model.addAttribute("isAdmin", isAdmin);
+		}
+
+		List<Product> results = productService.searchProducts(query);
+		if (results == null || results.isEmpty()) {
+			model.addAttribute("message", "No se encontraron productos que coincidan con la búsqueda.");
+		}
+		model.addAttribute("products", results);
+
+		return "products"; // Reutiliza la vista de productos
 	}
 
 }
