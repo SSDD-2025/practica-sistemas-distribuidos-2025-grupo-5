@@ -118,19 +118,19 @@ La base de datos no borra los productos eliminados ni los usuarios elimandos, es
 ![alt text](/practica1/diagramas/Diagramaderest.png)
 ### Participación de miembros
 Paula Marcela Barroso Robleda
-  - Tareas:
+  - Tareas: arreglo de problemas anteriores relacionados con correcciones de la primera parte del proyecto, organización y desarrollo de la gestión de los usuarios en la aplicación, implementación de clases RestControllers y posterior realización de funciones en la porpia aplicación de Postman. Añadido funcionalidades nuevas como ver los usuarios, borrarlos, editarlos, botón búsqueda de productos, etc.
   - 5 commits mas significativos:
-      - [Commit 1]()
-      - [Commit 2]()
-      - [Commit 3]()
-      - [Commit 4]()
-      - [Commit 5]()
+      - [Commit 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/9cf2b7ef593b52203fd00c29fed7ce9e70b0eda9)
+      - [Commit 2](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/54a995bde86ee4cd543c34d256b3181dbe000392)
+      - [Commit 3](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/777faf0fb9e7426a839aa49fb77bf39a766b6c69)
+      - [Commit 4](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/19e9bfc3ff2acaf7a44fde23332301085172c649)
+      - [Commit 5](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/d36b941bcdfe13b573e532286215d237f031780f)
   - 5 ficheros en los que mas se ha participado:
-      - [Fichero 1]()
-      - [Fichero 2]()
-      - [Fichero 3]()
-      - [Fichero 4]()
-      - [Fichero 5]()
+      - [Fichero 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/f450b2a1e1c598878c6e5003ea91f1c8db15423b/practica1/src/main/java/es/codeurjc/practica1/controller/ProductController.java)
+      - [Fichero 2](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/f450b2a1e1c598878c6e5003ea91f1c8db15423b/practica1/src/main/java/es/codeurjc/practica1/controller/UserController.java)
+      - [Fichero 3](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/tree/f450b2a1e1c598878c6e5003ea91f1c8db15423b/practica1/src/main/resources/templates)
+      - [Fichero 4](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/tree/f450b2a1e1c598878c6e5003ea91f1c8db15423b/practica1/src/main/java/es/codeurjc/practica1/controller/rest)
+      - [Fichero 5](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/f450b2a1e1c598878c6e5003ea91f1c8db15423b/practica1/src/main/java/es/codeurjc/practica1/model/Product.java)
 
 David Coronado Testa
   - Tareas: He participado en la seguridad con todas las clases en general añadiendo los logins, logouts y roles. En API REST he implementado los DTOS y los controllers. Completado paginación.
