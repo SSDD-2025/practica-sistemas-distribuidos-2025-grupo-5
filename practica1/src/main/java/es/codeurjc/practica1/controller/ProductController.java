@@ -67,8 +67,8 @@ public class ProductController {
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		List<User> listAux = userService.findByDeleted(false);
 		listAux.remove(0);
-		model.addAttribute("users", listAux);		
-		model.addAttribute("products", productService.findByDeleteProducts(false).subList(0,10));
+		model.addAttribute("users", listAux);
+		model.addAttribute("products", productService.findByDeleteProducts(false).subList(0, 10));
 		return "products";
 	}
 
@@ -376,7 +376,7 @@ public class ProductController {
 		return "/gateway";
 	}
 
-	//header.html
+	// header.html
 	@GetMapping("/search")
 	public String searchProducts(@RequestParam("query") String query, Model model) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
@@ -392,12 +392,18 @@ public class ProductController {
 		}
 
 		List<Product> results = productService.searchProducts(query);
+
 		if (results == null || results.isEmpty()) {
 			model.addAttribute("message", "No se encontraron productos que coincidan con la búsqueda.");
+			return "error";
 		}
-		model.addAttribute("products", results);
 
-		return "products"; 
+		if (results.size() == 1) {
+			return "redirect:/products/" + results.get(0).getId();
+		}
+
+		model.addAttribute("products", results);
+		return "products";
 	}
 
 }
