@@ -3,3 +3,6 @@ mvn springdoc-openapi:generate
 
 curl -k https://localhost:8443/v3/api-docs.yaml -o api-docs/api-docs.yaml
 
+web: https://localhost:8443/swagger-ui/index.html
+
+para el json: https://localhost:8443/v3/api-docs
