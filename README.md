@@ -133,9 +133,9 @@ Paula Marcela Barroso Robleda
       - [Fichero 5]()
 
 David Coronado Testa
-  - Tareas:
+  - Tareas: He participado en la seguridad con todas las clases en general añadiendo los logins, logouts y roles. En API REST he implementado los DTOS y los controllers.
   - 5 commits mas significativos:
-      - [Commit 1]()
+      - [Commit 1]() 
       - [Commit 2]()
       - [Commit 3]()
       - [Commit 4]()
