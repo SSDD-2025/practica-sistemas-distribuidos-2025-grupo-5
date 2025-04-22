@@ -17,13 +17,22 @@
                 <p class="product-price">{{price}} €</p>
                 <p><b>Descripción:</b> {{description}}</p>
             </a>
+
             {{/products}}
+            <form action="/removeOrder/{{id}}" method="post">
+                <button type="submit" class="btn-danger">Cancelar pedido</button>
+                <input type="hidden" name="_csrf" value="{{token}}" />
+            </form>
             <p></p>
         </div>
         <div class="container" style="background-color: #ffffff; padding: 20px; border-radius: 5px;">
         </div>
         </a>
         <p></p>
+        {{/orderList}}
+
+        {{^orderList}}
+            <p style="margin-top: 20px; font-style: italic;">No has realizado ningun pedido todavia.</p>
         {{/orderList}}
     </div>
 </div>
