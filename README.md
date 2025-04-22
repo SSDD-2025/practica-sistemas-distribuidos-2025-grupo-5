@@ -118,7 +118,7 @@ La base de datos no borra los productos eliminados ni los usuarios elimandos, es
 ![alt text](/practica1/diagramas/Diagramaderest.png)
 ### Participación de miembros
 Paula Marcela Barroso Robleda
-  - Tareas: arreglo de problemas anteriores relacionados con correcciones de la primera parte del proyecto, organización y desarrollo de la gestión de los usuarios en la aplicación, implementación de clases RestControllers y posterior realización de funciones en la porpia aplicación de Postman. Añadido funcionalidades nuevas como ver los usuarios, borrarlos, editarlos, botón búsqueda de productos, etc.
+  - Tareas: arreglo de problemas anteriores relacionados con correcciones de la primera parte del proyecto, organización y desarrollo de la gestión de los usuarios en la aplicación, implementación de clases RestControllers y posterior realización de funciones en la propia aplicación de Postman. Añadido funcionalidades nuevas como ver los usuarios, borrarlos, editarlos, botón búsqueda de productos, etc.
   - 5 commits mas significativos:
       - [Commit 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/9cf2b7ef593b52203fd00c29fed7ce9e70b0eda9)
       - [Commit 2](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/54a995bde86ee4cd543c34d256b3181dbe000392)
@@ -148,7 +148,7 @@ David Coronado Testa
       - [Fichero 5](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/service/UserService.java)
 
 Juan José Villanueva Molina
-  - Tareas: Colaborar en la parte de seguridad, ayudar a los problemas que surjieron al añadir la seguridad, gestion de los usuarios, preparar la api y la autorizacion para el postman, documentacion, diagramas y Readme.
+  - Tareas: Colaborar en la parte de seguridad, ayudar a los problemas que surgieron al añadir la seguridad, gestión de los usuarios, preparar la api y la autorización para el postman, documentación, diagramas y Readme.
   - 5 commits mas significativos:
       - [Commit 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/32729f708fbf346e879ba5ce2c54c127c9bc2af5)
       - [Commit 2](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/9fdcb6179f1f06ddc847bd8a41e4cdb445851ab1)
