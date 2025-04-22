@@ -204,13 +204,13 @@ public class UserController {
 			model.addAttribute("users", listAux);
 			model.addAttribute("products", productService.findByDeleteProducts(false));
 
-			return "/showProducts";
+			return "products";
 		}
 	}
 
 	@PostMapping("/removeUser/{id}")
 	public String removeUser(Model model, @PathVariable long id, HttpServletRequest request) {
-		// Search for the product in the database.
+		
 		Optional<User> user = userService.findById(id);
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
 		boolean isLoggedIn = authentication != null &&
@@ -224,7 +224,7 @@ public class UserController {
 		model.addAttribute("products", productService.findByDeleteProducts(false));
 		model.addAttribute("isAdmin", true);
 
-		return "products";
+		return "redirect:/";
 	}
 
 	@PostMapping("/removeUserByUser")

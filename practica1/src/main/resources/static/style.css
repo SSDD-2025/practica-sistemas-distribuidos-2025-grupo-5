@@ -152,7 +152,7 @@ body {
 
     /* Style for the 'New product' button */
     .btn.btn-primary {
-        background-color: #f9f9f9;
+        background-color: #1a1de6;
         color: white;
         padding: 12px 25px;
         font-size: 1em;
@@ -163,7 +163,7 @@ body {
     }
 
     .btn.btn-primary:hover {
-        background-color: #f9f9f9;
+        background-color: #1815e7;
         /* Darker blue on hover */
     }
 
@@ -320,7 +320,7 @@ body {
 
     /* Style for the 'New product' button */
     .btn.btn-primary {
-        background-color: #f9f9f9;
+        background-color: #3723e9;
         color: white;
         padding: 12px 25px;
         font-size: 1em;
@@ -331,7 +331,7 @@ body {
     }
 
     .btn.btn-primary:hover {
-        background-color: #f9f9f9;
+        background-color: #2913f0;
         /* Darker blue on hover */
     }
 
