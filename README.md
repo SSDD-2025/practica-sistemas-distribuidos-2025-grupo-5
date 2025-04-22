@@ -141,11 +141,11 @@ David Coronado Testa
       - [Commit 4](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/75075dc207e6c70d35c911008e7507b729fe2adf)
       - [Commit 5](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/e35340d40d08c542cd4862f1372e274c08ce859b)
   - 5 ficheros en los que mas se ha participado:
-      - [Fichero 1]()
-      - [Fichero 2]()
-      - [Fichero 3]()
-      - [Fichero 4]()
-      - [Fichero 5]()
+      - [Fichero 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/security/SecurityConfig.java)
+      - [Fichero 2](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/controller/rest/ProductRestController.java)
+      - [Fichero 3](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/controller/ProductController.java)
+      - [Fichero 4](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/controller/rest/UserRestController.java)
+      - [Fichero 5](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/service/UserService.java)
 
 Juan José Villanueva Molina
   - Tareas:
