@@ -7,6 +7,7 @@ import java.nio.file.Files;
 import java.nio.file.Path;
 import java.nio.file.Paths;
 import java.sql.Blob;
+import java.sql.SQLException;
 import java.util.ArrayList;
 import java.util.List;
 
@@ -219,4 +220,8 @@ public class Product {
     public boolean getDeletedProducts() {
         return this.deletedProducts;
     }
+    public byte[] getImageByte() throws SQLException {
+        return imageFile.getBytes(1, (int) imageFile.length());
+    }
+    
 }

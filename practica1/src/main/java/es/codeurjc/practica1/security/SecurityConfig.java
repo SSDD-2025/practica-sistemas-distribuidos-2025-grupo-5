@@ -97,7 +97,6 @@ public class SecurityConfig {
                         .requestMatchers("/api/gateway").hasRole("USER")
 
                         // PUBLIC ENDPOINTS
-
                         .anyRequest().permitAll());
 
         // Disable Form login Authentication

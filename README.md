@@ -27,7 +27,7 @@ Los productos tendran asociada una imágen.
 ***
 ## Práctica 1: Web con HTML y Base de Datos
 ### Navegación
-![image](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Diagrama%20de%20navegacion.png)
+![image](/practica1/diagramas/Diagramadenavegacion.png)
 ### Intrucciones de ejecución
 1. Descargar el repositorio y descomprimir el archivo
 2. Tener descargado MySQL Workbench: [Descargar](https://dev.mysql.com/downloads/workbench/)
@@ -37,10 +37,10 @@ Los productos tendran asociada una imágen.
 5. Ejecuta el código en Visual Studio usando Spring Boot Dashboard(añadir como extensión): [Descargar VS](https://code.visualstudio.com/download)
 6. Abrelo en el navegador: puedes abrirlo directamente desde VS o escribiendo en el navegador localhost:8080
 ### Diagrama con las entidades de la base de datos
-![image](https://github.com/user-attachments/assets/467937e5-20e9-4130-a058-2aa6ad08e2cc)
+![image](/practica1/diagramas/Diagramdeentidadesyrelaciones.jpg)
 
 ### Diagrama de clases y templates
-![image](https://github.com/user-attachments/assets/35c83160-18d2-43ea-a6e0-e377525178ce)
+![image](/practica1/diagramas/Diagramadetenplates1.png)
 
 ### Participación de miembros
 Paula Marcela Barroso Robleda
@@ -91,11 +91,11 @@ Juan José Villanueva Molina
 ## Práctica 2: Incorporación de Seguridad y API REST a la aplicación web
 ### Navegación
 #### Navegación de usuarios no registrados
-![alt text](navegacionnoreg.png)
+![alt text](/practica1/diagramas/navegacionnoreg.png)
 #### Navegación de usuarios registrados
-![alt text](navegacionreg.png)
+![alt text](/practica1/diagramas/navegacionreg.png)
 #### Navegación de administrador
-![alt text](navegacionadmin.png)
+![alt text](/practica1/diagramas/navegacionadmin.png)
 ### Intrucciones de ejecución
 1. Descargar el repositorio y descomprimir el archivo
 2. Tener descargado MySQL Workbench: [Descargar](https://dev.mysql.com/downloads/workbench/)
@@ -112,10 +112,10 @@ Juan José Villanueva Molina
   - Nombre de usuario: admin 
   - Contraseña: adminpass
 ### Diagrama con las entidades de la base de datos
-![alt text](diagramabbdd2.png)  
+![alt text](/practica1/diagramas/diagramabbdd2.png)  
 La base de datos no borra los productos eliminados ni los usuarios elimandos, esto se debe para poder seguir almacenando estas entidades para futuras consultas, por ejemplo para guardar el registro de un pedido de un producto que ha sido comprado antes de ser eliminado o un usuario que elimina su cuenta al haber hecho un pedido sin pagar
 ### Diagrama de clases y templates
-![alt text](Diagramaderest.png)
+![alt text](/practica1/diagramas/Diagramaderest.png)
 ### Participación de miembros
 Paula Marcela Barroso Robleda
   - Tareas:

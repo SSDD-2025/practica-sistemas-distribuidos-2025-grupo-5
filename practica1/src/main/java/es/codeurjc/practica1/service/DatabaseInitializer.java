@@ -79,6 +79,12 @@ public class DatabaseInitializer {
 
         Product product9 = new Product("casco Hamilton", " es el mejor", 200, 2, "FERRARI", "casco.jpg");
         productService.save(product9);
+
+        Product product10 = new Product("mesa", " no es uy alta", 55, 10, "Ikea", "mesa.jpg");
+        productService.save(product10);
+
+        Product product11 = new Product("sudadera", " es muy calentita", 20, 11, "Hollister", "sudadera.jpg");
+        productService.save(product11);
     }
 
         
