@@ -67,9 +67,8 @@ public class ProductController {
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		List<User> listAux = userService.findByDeleted(false);
 		listAux.remove(0);
-		model.addAttribute("users", listAux);
-		model.addAttribute("products", productService.findByDeleteProducts(false));
-
+		model.addAttribute("users", listAux);		
+		model.addAttribute("products", productService.findByDeleteProducts(false).subList(0,10));
 		return "products";
 	}
 

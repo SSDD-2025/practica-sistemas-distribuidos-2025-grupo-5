@@ -2,6 +2,8 @@ package es.codeurjc.practica1.controller.rest;
 
 import java.net.URI;
 import java.sql.SQLException;
+import java.util.HashMap;
+import java.util.Map;
 import java.util.NoSuchElementException;
 
 import org.springframework.beans.factory.annotation.Autowired;
@@ -40,7 +42,7 @@ public class ProductRestController {
     @Autowired
     private ProductRepository productRepository;
 
-    @GetMapping("/")
+    /*@GetMapping("/")
     public Page<ProductDTO> getProducts(Pageable pageable) {
         try {
             return productService.findByDeleteProducts(pageable, false)
@@ -49,7 +51,7 @@ public class ProductRestController {
             e.printStackTrace();
             throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error getting products");
         }
-    }
+    }*/
 
     @GetMapping("/{id}")
     public ProductDTO getProduct(@PathVariable long id) {
@@ -105,18 +107,38 @@ public class ProductRestController {
     public ResponseEntity<byte[]> getProductImage(@PathVariable Long id) throws SQLException {
         Product product = productRepository.findById(id)
                 .orElseThrow(() -> new NoSuchElementException("Book not found"));
-    
+
         byte[] image = product.getImageByte();
-    
+
         System.out.println("Bytes de la imagen: " + (image != null ? image.length : "null"));
-    
+
         if (image == null || image.length == 0) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "No image found for product " + id);
         }
-    
+
         return ResponseEntity.ok()
-        .contentType(MediaType.IMAGE_JPEG)
-        .body(product.getImageByte());
+                .contentType(MediaType.IMAGE_JPEG)
+                .body(product.getImageByte());
+    }
+
+    @GetMapping("/")
+    public ResponseEntity<?> seeMoreProducts(Pageable pageable) {
+        try {
+            Page<ProductDTO> productPage = productService.findByDeleteProducts(pageable, false)
+                    .map(productMapper::toDTO);
+            int num= productRepository.findByDeletedProducts(false).size();
+            Map<String, Object> response = new HashMap<>();
+           
+            response.put("products", productPage.getContent());
+            response.put("page", productPage.getNumber());
+            response.put("totalPages", productPage.getTotalPages());
+            response.put("totalItems", productPage.getTotalElements());
+
+            return ResponseEntity.ok(response);
+        } catch (Exception e) {
+            e.printStackTrace();
+            throw new ResponseStatusException(HttpStatus.INTERNAL_SERVER_ERROR, "Error getting products");
+        }
     }
 
 }

@@ -204,7 +204,7 @@ public class UserController {
 			model.addAttribute("users", listAux);
 			model.addAttribute("products", productService.findByDeleteProducts(false));
 
-			return "/products";
+			return "/showProducts";
 		}
 	}
 
