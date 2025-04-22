@@ -133,13 +133,13 @@ Paula Marcela Barroso Robleda
       - [Fichero 5]()
 
 David Coronado Testa
-  - Tareas: He participado en la seguridad con todas las clases en general añadiendo los logins, logouts y roles. En API REST he implementado los DTOS y los controllers.
+  - Tareas: He participado en la seguridad con todas las clases en general añadiendo los logins, logouts y roles. En API REST he implementado los DTOS y los controllers. Completado paginación.
   - 5 commits mas significativos:
-      - [Commit 1]() 
-      - [Commit 2]()
-      - [Commit 3]()
-      - [Commit 4]()
-      - [Commit 5]()
+      - [Commit 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/e1279bd1a09bdafe13630335228fd8f825101a5f) 
+      - [Commit 2](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/f103e1e245cbeda6c76e06f6ed0958f527d396e5)
+      - [Commit 3](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/152e330fd9bf3eb244ac6e76aff52c1373e75119)
+      - [Commit 4](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/75075dc207e6c70d35c911008e7507b729fe2adf)
+      - [Commit 5](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/e35340d40d08c542cd4862f1372e274c08ce859b)
   - 5 ficheros en los que mas se ha participado:
       - [Fichero 1]()
       - [Fichero 2]()
