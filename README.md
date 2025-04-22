@@ -148,17 +148,17 @@ David Coronado Testa
       - [Fichero 5](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/service/UserService.java)
 
 Juan José Villanueva Molina
-  - Tareas:
+  - Tareas: Colaborar en la parte de seguridad, ayudar a los problemas que surjieron al añadir la seguridad, gestion de los usuarios, preparar la api y la autorizacion para el postman, documentacion, diagramas y Readme.
   - 5 commits mas significativos:
-      - [Commit 1]()
-      - [Commit 2]()
-      - [Commit 3]()
-      - [Commit 4]()
-      - [Commit 5]()
+      - [Commit 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/32729f708fbf346e879ba5ce2c54c127c9bc2af5)
+      - [Commit 2](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/9fdcb6179f1f06ddc847bd8a41e4cdb445851ab1)
+      - [Commit 3](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/0977eeb45e3c14ad2571c001f723c28ec967aa57)
+      - [Commit 4](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/90bb9854fc6e257fb2baeb074d07064c5f195d38)
+      - [Commit 5](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/commit/eb5a71292d911e5a06e721a6833058117786b02d)
   - 5 ficheros en los que mas se ha participado:
-      - [Fichero 1]()
-      - [Fichero 2]()
-      - [Fichero 3]()
-      - [Fichero 4]()
-      - [Fichero 5]()
+      - [Fichero 1](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/README.md)
+      - [Fichero 2](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/security/SecurityConfig.java)
+      - [Fichero 3](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/controller/UserController.java)
+      - [Fichero 4](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/controller/ProductController.java)
+      - [Fichero 5](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/controller/rest/ProductRestController.java)
 ***
