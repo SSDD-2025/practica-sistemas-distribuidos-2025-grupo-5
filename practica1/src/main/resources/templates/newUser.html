@@ -25,12 +25,10 @@
     <input type="number" class="form-control" name="phoneNumber" id="phoneNumber" required>
   </div>
 
-
-
   <button class="btn btn-outline-secondary" onclick="location.href='/'; return false;">Cancelar</button>
 
   <form action="/saveNewUser" method="POST">
-    <button class="btn btn-primary" type="submit">Guardar</button>
+    <button class="btn btn-outline-secondary" type="submit">Guardar</button>
     <input type="hidden" name="_csrf" value="{{token}}" />
   </form>
 </form>
