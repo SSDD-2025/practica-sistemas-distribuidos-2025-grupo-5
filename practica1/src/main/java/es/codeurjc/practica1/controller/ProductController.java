@@ -397,7 +397,7 @@ public class ProductController {
 		}
 		model.addAttribute("products", results);
 
-		return "products"; // Reutiliza la vista de productos
+		return "products"; 
 	}
 
 }

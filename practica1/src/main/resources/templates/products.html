@@ -180,7 +180,6 @@
         justify-content: space-between;
     }
 
-    /* Estilo para el botón de redirección a /admin */
     .admin-btn {
         position: absolute;
         top: 20px;
@@ -196,12 +195,11 @@
 
     .admin-btn:hover {
         background-color: #ff6347;
-        /* Color más oscuro al pasar el mouse */
     }
 </style>
 
 <script>
-    let currentPage = 1; // Spring empieza en 0
+    let currentPage = 1; // Spring starts 0
     const pageSize = 10;
 
     document.getElementById("loadMoreBtn").addEventListener("click", async () => {
@@ -231,9 +229,6 @@
         }
     });
 
-    // Llamada inicial si quieres cargar la primera página automáticamente con JS
-    // (puedes quitarla si ya la cargas desde el servidor)
-    // document.getElementById("loadMoreBtn").click();
 </script>
 
 
