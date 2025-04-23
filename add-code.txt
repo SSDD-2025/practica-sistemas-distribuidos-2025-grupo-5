@@ -5,4 +5,6 @@ curl -k https://localhost:8443/v3/api-docs.yaml -o api-docs/api-docs.yaml
 
 web: https://localhost:8443/swagger-ui/index.html
 
-para el json: https://localhost:8443/v3/api-docs
+for the json: https://localhost:8443/v3/api-docs
+
+Postman: https://app.getpostman.com/join-team?invite_code=969e0cb734399952755f1ccfd82aaa48d01680c2b7773518e656ac59e03d080e&target_code=05d576d29bb33474ca706acaa98e6ce1 
