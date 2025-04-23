@@ -37,7 +37,7 @@ Los productos tendran asociada una imágen.
 5. Ejecuta el código en Visual Studio usando Spring Boot Dashboard(añadir como extensión): [Descargar VS](https://code.visualstudio.com/download)
 6. Abrelo en el navegador: puedes abrirlo directamente desde VS o escribiendo en el navegador localhost:8080
 ### Diagrama con las entidades de la base de datos
-![image](/practica1/diagramas/Diagramdeentidadesyrelaciones.jpg)
+![image](/practica1/diagramas/diagramabbdd2.png)
 
 ### Diagrama de clases y templates
 ![image](/practica1/diagramas/Diagramadetenplates1.png)
