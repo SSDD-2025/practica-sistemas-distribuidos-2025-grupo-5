@@ -86,7 +86,7 @@ public class SecurityConfig {
                         // REVIEW
                         .requestMatchers(HttpMethod.POST, "/api/reviews/**").hasAnyRole("USER", "ADMIN")
                         .requestMatchers(HttpMethod.GET, "/api/reviews/**").permitAll()
-                        .requestMatchers(HttpMethod.DELETE, "/api/reviews/**").hasRole("ADMIN")
+                        .requestMatchers(HttpMethod.DELETE, "/api/reviews/**").hasAnyRole("USER", "ADMIN")
 
                         // ORDER
                         .requestMatchers(HttpMethod.POST, "/api/orders/**").hasRole("USER")

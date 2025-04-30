@@ -143,7 +143,7 @@ public class ReviewController {
 			User userAux = userService.findById(review.getAuthor().getId()).orElse(null);
 			Product productAux = productService.findById(review.getProduct().getId()).orElse(null);
 
-			if (userAux == null || productAux == null) {
+			if (userAux == null || productAux == null|| review.getAuthor() == userAux) {
 				return "redirect:/reviews";
 			}
 
