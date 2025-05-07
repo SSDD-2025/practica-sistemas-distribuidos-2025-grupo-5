@@ -9,9 +9,9 @@
 		<relativePath/> <!-- lookup parent from repository -->
 	</parent>
 	<groupId>es.codeurjc</groupId>
-	<artifactId>practica1</artifactId>
-	<version>0.0.1-SNAPSHOT</version>
-	<name>practica1</name>
+	<artifactId>practica3</artifactId>
+	<version>1.0.0</version>
+	<name>practica3</name>
 	<description>Demo project for Spring Boot</description>
 	<url/>
 	<licenses>
