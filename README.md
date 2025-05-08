@@ -162,3 +162,9 @@ Juan José Villanueva Molina
       - [Fichero 4](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/controller/ProductController.java)
       - [Fichero 5](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/practica1/src/main/java/es/codeurjc/practica1/controller/rest/ProductRestController.java)
 ***
+
+Pasos para crear la imagen (jar, etc):
+docker login
+docker build -t dvcoronado/practica3:1.0.0 . // build pass     mejor lanzar con los argumentos de foto
+mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=dvcoronado/practica3:1.0.0
+docker run -p 8443:8443 dvcoronado/practica3:1.0.0

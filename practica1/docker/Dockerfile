@@ -1,31 +1,36 @@
-# ---------------------
-# Etapa de construcción
-# ---------------------
-    FROM maven:3.9.4-eclipse-temurin-17 AS builder
+#################################################
+# Imagen base para el contenedor de compilación
+#################################################
+FROM maven:3.9.9-eclipse-temurin-21-jammy AS builder
 
-    # Crear directorio de trabajo dentro del contenedor
-    WORKDIR /app
-    
-    # Copiar el código fuente del proyecto (asume estructura Maven estándar)
-    COPY .. .
-    
-    # Compilar el proyecto sin tests y generar el .jar
-    RUN mvn clean package -DskipTests
-    
-    # ------------------
-    # Etapa de ejecución
-    # ------------------
-    FROM eclipse-temurin:17-jdk-alpine
-    
-    # Directorio de trabajo para la aplicación
-    WORKDIR /app
-    
-    # Puerto en el que correrá la aplicación
-    EXPOSE 8443
-    
-    # Añadir el .jar desde el build anterior (multi-stage)
-    ARG JAR_FILE=target/*.jar
-    COPY --from=builder /app/${JAR_FILE} app.jar
-    
-    # Comando para ejecutar la aplicación
-    ENTRYPOINT ["java", "-jar", "/app/app.jar"]
+# Define el directorio de trabajo donde ejecutar comandos
+WORKDIR /practica1
+
+# Copia las dependencias del proyecto
+COPY pom.xml /practica1/
+
+# Descarga las dependencias del proyecto
+RUN mvn dependency:go-offline
+
+# Copia el código del proyecto
+COPY /src /practica1/src
+
+# Compila proyecto
+RUN mvn clean package -DskipTests
+
+#################################################
+# Imagen base para el contenedor de la aplicación
+#################################################
+FROM eclipse-temurin:21-jre
+
+# Define el directorio de trabajo donde se encuentra el JAR
+WORKDIR /usr/src/app/
+
+# Copia el JAR del contenedor de compilación
+COPY --from=builder /practica1/target/app-jar-with-dependencies.jar /usr/src/app/app.jar
+
+# Comando por defecto
+ENTRYPOINT [ "java", "-jar", "app.jar" ]
+
+# Parametro por defecto
+CMD ["--server"]
