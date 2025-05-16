@@ -1,19 +1,36 @@
-# Etapa de compilación
-FROM maven:3.8.6-openjdk-17 AS builder
-WORKDIR /app
+#################################################
+# Imagen base para el contenedor de compilación
+#################################################
+FROM maven:3.9.9-eclipse-temurin-21-jammy AS builder
 
-# Copiamos pom.xml y código fuente
-COPY pom.xml ./
-COPY src ./src
+# Define el directorio de trabajo donde ejecutar comandos
+WORKDIR /practica1
 
-# Cambiamos la versión en pom.xml antes de compilar (asegúrate de tener version = 1.0.0)
+# Copia las dependencias del proyecto
+COPY pom.xml /practica1/
+
+# Descarga las dependencias del proyecto
+RUN mvn dependency:go-offline
+
+# Copia el código del proyecto
+COPY /src /practica1/src
+
+# Compila proyecto
 RUN mvn clean package -DskipTests
 
-# Etapa de ejecución
-FROM openjdk:17-jdk-slim
-WORKDIR /app
-ARG JAR_FILE=target/*.jar
-COPY --from=builder /app/${JAR_FILE} ./app.jar
+#################################################
+# Imagen base para el contenedor de la aplicación
+#################################################
+FROM eclipse-temurin:21-jre
 
-EXPOSE 8443
-ENTRYPOINT ["java", "-jar", "app.jar"]
+# Define el directorio de trabajo donde se encuentra el JAR
+WORKDIR /usr/src/app/
+
+# Copia el JAR del contenedor de compilación
+COPY --from=builder /practica1/target/app-jar-with-dependencies.jar /usr/src/app/app.jar
+
+# Comando por defecto
+ENTRYPOINT [ "java", "-jar", "app.jar" ]
+
+# Parametro por defecto
+CMD ["--server"]

@@ -1,35 +1,66 @@
 version: '3.8'
-services:
-  db:
-    image: mysql:9.2
-    container_name: mysql-db
-    environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: appdb
-      MYSQL_USER: appuser
-      MYSQL_PASSWORD: apppassword
-    volumes:
-      - db-data:/var/lib/mysql
-    healthcheck:
-      test: ["CMD", "mysqladmin", "ping", "--silent"]
-      interval: 10s
-      timeout: 5s
-      retries: 5
 
-  web:
-    image: cuentaDockerHub/nombreApp:1.0.0
-    depends_on:
-      db:
-        condition: service_healthy
-    environment:
-      DB_HOST: db
-      DB_PORT: 3306
-      DB_NAME: appdb
-      DB_USER: appuser
-      DB_PASSWORD: apppassword
+services:
+  app:
+    image: dvcoronado/practica3:1.0.0
     ports:
       - "8443:8443"
-    restart: unless-stopped
+    depends_on:
+      - db
+    environment:
+      - SPRING_DATASOURCE_URL=jdbc:postgresql://db:5432/appdb
+      - SPRING_DATASOURCE_USERNAME=appuser
+      - SPRING_DATASOURCE_PASSWORD=apppassword
+    volumes:
+      - ./certs:/etc/ssl/certs:ro  # Si usas certificados personalizados
+
+  db:
+    image: postgres:15
+    restart: always
+    environment:
+      POSTGRES_DB: appdb
+      POSTGRES_USER: appuser
+      POSTGRES_PASSWORD: apppassword
+    volumes:
+      - db_data:/var/lib/postgresql/data
 
 volumes:
-  db-data:
+  db_data:
+
+
+
+# version: '3.8'
+# services:
+#   db:
+#     image: mysql:9.2
+#     container_name: mysql-db
+#     environment:
+#       MYSQL_ROOT_PASSWORD: rootpassword
+#       MYSQL_DATABASE: appdb
+#       MYSQL_USER: appuser
+#       MYSQL_PASSWORD: apppassword
+#     volumes:
+#       - db-data:/var/lib/mysql
+#     healthcheck:
+#       test: ["CMD", "mysqladmin", "ping", "--silent"]
+#       interval: 10s
+#       timeout: 5s
+#       retries: 5
+
+#   web:
+#     image: cuentaDockerHub/nombreApp:1.0.0
+#     depends_on:
+#       db:
+#         condition: service_healthy
+#     environment:
+#       DB_HOST: db
+#       DB_PORT: 3306
+#       DB_NAME: appdb
+#       DB_USER: appuser
+#       DB_PASSWORD: apppassword
+#     ports:
+#       - "8443:8443"
+#     restart: unless-stopped
+
+# volumes:
+#   db-data:
