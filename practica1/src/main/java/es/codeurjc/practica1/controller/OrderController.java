@@ -40,9 +40,11 @@ public class OrderController {
 	@GetMapping("/showOrders")
 	public String showOrders(HttpSession session, Model model, @AuthenticationPrincipal UserDetails userDetails) {
 		Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		
 		boolean isLoggedIn = authentication != null &&
 				authentication.isAuthenticated() &&
 				!(authentication instanceof AnonymousAuthenticationToken);
+		
 		model.addAttribute("isLoggedIn", isLoggedIn);
 		if (userDetails == null) {
 			return "/login";
@@ -126,7 +128,7 @@ public class OrderController {
 		Optional<Order> order = orderService.findById(id);
 
 		try {
-			if (order != null) {
+			if (order != null && userA.get().getOrders().contains(order.get())) {
 
 				for (Product product : order.get().getProducts()) {
 					product.setStock(product.getStock() + 1);

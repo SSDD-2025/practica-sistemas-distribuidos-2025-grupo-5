@@ -293,7 +293,6 @@ public class ProductController {
 				authentication.isAuthenticated() &&
 				!(authentication instanceof AnonymousAuthenticationToken);
 		model.addAttribute("isLoggedIn", isLoggedIn);
-
 		model.addAttribute("product", product.get());
 
 		return "editProduct";
