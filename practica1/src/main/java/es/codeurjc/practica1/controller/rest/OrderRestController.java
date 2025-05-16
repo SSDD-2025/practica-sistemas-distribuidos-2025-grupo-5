@@ -8,6 +8,8 @@ import java.util.Optional;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -28,6 +30,7 @@ import es.codeurjc.practica1.model.User;
 import es.codeurjc.practica1.repositories.ProductRepository;
 import es.codeurjc.practica1.repositories.UserRepository;
 import es.codeurjc.practica1.service.OrderService;
+import es.codeurjc.practica1.service.UserService;
 
 @RestController
 @RequestMapping("/api/orders")
@@ -35,6 +38,9 @@ public class OrderRestController {
 
     @Autowired
     private OrderService orderService;
+
+    @Autowired
+    private UserService userService;
 
     @Autowired
     private OrderMapper orderMapper;
@@ -90,8 +96,10 @@ public class OrderRestController {
     @DeleteMapping("/{id}")
     public ResponseEntity<OrderDTO> deleteOrder(@PathVariable long id) {
         Optional<Order> orderOpt = orderService.findById(id);
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Optional<User> userA = userService.findByName(authentication.getName());
 
-        if (orderOpt.isEmpty()) {
+        if (orderOpt.isEmpty()|| !userA.get().getOrders().contains(orderOpt.get())) {
             throw new ResponseStatusException(HttpStatus.NOT_FOUND, "Order not found with id " + id);
         }
         Order orderToDelete = orderOpt.get();

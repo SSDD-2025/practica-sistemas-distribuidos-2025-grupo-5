@@ -6,6 +6,8 @@ import java.util.Optional;
 
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.core.Authentication;
+import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
@@ -18,7 +20,9 @@ import static org.springframework.web.servlet.support.ServletUriComponentsBuilde
 import es.codeurjc.practica1.dto.ReviewDTO;
 import es.codeurjc.practica1.dto.ReviewsMapper;
 import es.codeurjc.practica1.model.Review;
+import es.codeurjc.practica1.model.User;
 import es.codeurjc.practica1.service.ReviewService;
+import es.codeurjc.practica1.service.UserService;
 
 @RestController
 @RequestMapping("/api/reviews")
@@ -26,7 +30,8 @@ public class ReviewRestController {
 
     @Autowired
     private ReviewService reviewService;
-
+    @Autowired
+    private UserService userService;
     @Autowired
     private ReviewsMapper reviewsMapper;
 
@@ -60,8 +65,11 @@ public class ReviewRestController {
 
     @DeleteMapping("/{id}")
     public ReviewDTO deleteReview(@PathVariable long id) {
+        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+		Optional<User> userA = userService.findByName(authentication.getName());
+
         Optional<Review> reviewOpt = reviewService.findById(id);
-        if (reviewOpt.isPresent()) {
+        if (reviewOpt.isPresent()|| reviewOpt.get().getAuthor().getId() == userA.get().getId()) {
             reviewService.delete(reviewOpt.get());
             return reviewsMapper.toDTO(reviewOpt.get());
         } else {
