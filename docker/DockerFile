@@ -1,0 +1,19 @@
+# Etapa de compilación
+FROM maven:3.8.6-openjdk-17 AS builder
+WORKDIR /app
+
+# Copiamos pom.xml y código fuente
+COPY pom.xml ./
+COPY src ./src
+
+# Cambiamos la versión en pom.xml antes de compilar (asegúrate de tener version = 1.0.0)
+RUN mvn clean package -DskipTests
+
+# Etapa de ejecución
+FROM openjdk:17-jdk-slim
+WORKDIR /app
+ARG JAR_FILE=target/*.jar
+COPY --from=builder /app/${JAR_FILE} ./app.jar
+
+EXPOSE 8443
+ENTRYPOINT ["java", "-jar", "app.jar"]
