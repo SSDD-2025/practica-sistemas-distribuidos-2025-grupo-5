@@ -27,10 +27,10 @@ FROM eclipse-temurin:21-jre
 WORKDIR /usr/src/app/
 
 # Copia el JAR del contenedor de compilación
-COPY --from=builder /practica1/target/app-jar-with-dependencies.jar /usr/src/app/app.jar
+COPY --from=builder /practica1/target/practica3-1.0.0.jar /usr/src/app/app.jar
 
 # Comando por defecto
 ENTRYPOINT [ "java", "-jar", "app.jar" ]
 
 # Parametro por defecto
-CMD ["--server"]
+CMD ["--server.port=8443"]

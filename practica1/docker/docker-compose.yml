@@ -1,13 +1,13 @@
-version: '3.8'
+
 services:
   db:
     image: mysql:9.2
     container_name: mysql-db
     environment:
-      MYSQL_ROOT_PASSWORD: rootpassword
-      MYSQL_DATABASE: appdb
-      MYSQL_USER: appuser
-      MYSQL_PASSWORD: apppassword
+      MYSQL_ROOT_PASSWORD: MySQL0Password.
+      MYSQL_DATABASE: myapp_db
+      MYSQL_USER: root
+      MYSQL_PASSWORD: MySQL0Password.
     volumes:
       - db-data:/var/lib/mysql
     healthcheck:
@@ -17,7 +17,7 @@ services:
       retries: 5
 
   web:
-    build:
+    build: 
       context: ..
       dockerfile: docker/Dockerfile
     depends_on:
@@ -26,9 +26,9 @@ services:
     environment:
       DB_HOST: db
       DB_PORT: 3306
-      DB_NAME: appdb
-      DB_USER: appuser
-      DB_PASSWORD: apppassword
+      DB_NAME: myapp_db
+      DB_USER: root
+      DB_PASSWORD: MySQL0Password.
     ports:
       - "8443:8443"
     restart: unless-stopped
