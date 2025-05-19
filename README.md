@@ -169,11 +169,12 @@ Pasos para crear la imagen (jar, etc):
 EN LOCAL:
 docker login
 docker compose -f docker/docker-compose.yml up
-docker build -t dvcoronado/practica3:1.0.0 . // build pass     mejor lanzar con los argumentos de foto
+.\docker\create_image.bat // desde practica1 
 mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=dvcoronado/practica3:1.0.0
 docker run -p 8443:8443 dvcoronado/practica3:1.0.0
 
-
+Ver BBDD
+sudo docker exec -it mysql-db mysql -u root -p
 
 MAQUINA 1:
 sudo docker login
@@ -182,4 +183,6 @@ sudo docker run -d --name practica3-app -e DB_HOST=IP_O_HOSTNAME_DEL_SERVIDOR_MY
 
 MAQUINA 2:
 sudo docker login
-sudo docker run -e MYSQL_ROOT_PASSWORD=MySQL0Password. -e MYSQL_DATABASE=myapp_db -p 3306:3306 -d -v $(pwd)/mysql:/var/lib/mysql dvcoronado/mysql_db:latest
+sudo docker run -d --name mysql-db   -e MYSQL_ROOT_PASSWORD=MySQL0Password.   -e MYSQL_DATABASE=myapp_db   -v db_data:/var/lib/mysql   -p 3306:3306   mysql:9.2
+ sudo docker exec -it mysql-db mysql -u root -p
+ SHOW DATABASES;

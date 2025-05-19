@@ -1,38 +1,13 @@
-#################################################
-# Imagen base para el contenedor de compilación
-#################################################
-FROM maven:3.9.9-eclipse-temurin-21-jammy AS builder
-
-# Define el directorio de trabajo donde ejecutar comandos
-WORKDIR /practica1
-
-# Copia las dependencias del proyecto
-COPY pom.xml /practica1/
-
-# Descarga las dependencias del proyecto
-RUN mvn dependency:go-offline
-
-# Copia el código del proyecto
-COPY /src /practica1/src
-
-# Compila proyecto
+FROM maven:3.9.6-eclipse-temurin-21 AS build
+WORKDIR /app
+COPY . .
 RUN mvn clean package -DskipTests
 
-#################################################
-# Imagen base para el contenedor de la aplicación
-#################################################
 FROM eclipse-temurin:21-jre
+WORKDIR /app
 
-# Define el directorio de trabajo donde se encuentra el JAR
-WORKDIR /src/app/
+# Solo necesitas el JAR, los recursos ya están empaquetados en él
+COPY --from=build /app/target/*.jar app.jar
 
-# Copia el JAR del contenedor de compilación
-COPY --from=builder /practica1/target/practica3-1.0.0.jar /usr/src/app/app.jar
-
-# Comando por defecto
-ENTRYPOINT [ "java", "-jar", "app.jar" ]
-
-# Parametro por defecto
-CMD ["--server.port=8443"]
-# Exponer el puerto 8443
 EXPOSE 8443
+ENTRYPOINT ["java", "-jar", "app.jar"]
