@@ -24,7 +24,7 @@ RUN mvn clean package -DskipTests
 FROM eclipse-temurin:21-jre
 
 # Define el directorio de trabajo donde se encuentra el JAR
-WORKDIR /usr/src/app/
+WORKDIR /src/app/
 
 # Copia el JAR del contenedor de compilación
 COPY --from=builder /practica1/target/practica3-1.0.0.jar /usr/src/app/app.jar
@@ -34,3 +34,5 @@ ENTRYPOINT [ "java", "-jar", "app.jar" ]
 
 # Parametro por defecto
 CMD ["--server.port=8443"]
+# Exponer el puerto 8443
+EXPOSE 8443

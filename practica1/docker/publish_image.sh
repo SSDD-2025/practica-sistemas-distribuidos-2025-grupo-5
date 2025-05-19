@@ -20,3 +20,4 @@ echo "Publicando imagen en Docker Hub..."
 docker push "$FULL_IMAGE_NAME"
 
 echo "Imagen publicada con éxito: $FULL_IMAGE_NAME"
+
