@@ -169,6 +169,17 @@ Pasos para crear la imagen (jar, etc):
 EN LOCAL:
 docker login
 
+.\docker\create_image.bat
+
+![Captura de pantalla 2025-05-20 100811]((https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100811.png))
+![Captura de pantalla 2025-05-20 100811]((https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100840.png))
+
+.\docker\publish_image.bat
+
+![Captura de pantalla 2025-05-20 100811]((https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100653.png))
+![Captura de pantalla 2025-05-20 100811]((https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100729.png))
+
+
 docker compose -f docker/docker-compose.yml up
 .\docker\create_image.bat // desde practica1 
 mvn spring-boot:build-image -DskipTests -Dspring-boot.build-image.imageName=dvcoronado/practica3:1.0.0
@@ -182,10 +193,14 @@ sudo docker login
 
 sudo docker run -d --name practica3-app -e DB_HOST=IP_O_HOSTNAME_DEL_SERVIDOR_MYSQL -e DB_PORT=3306 -e DB_NAME=myapp_db -e DB_USER=root -e DB_PASSWORD=MySQL0Password. -p 8443:8443 dvcoronado/practica3:1.0.0
 
+![Captura de pantalla 2025-05-20 100811]((https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100133.png))
 
 MAQUINA 2:
 sudo docker login
 
 sudo docker run -d --name mysql-db   -e MYSQL_ROOT_PASSWORD=MySQL0Password.   -e MYSQL_DATABASE=myapp_db   -v db_data:/var/lib/mysql   -p 3306:3306   mysql:9.2
  sudo docker exec -it mysql-db mysql -u root -p
+
+ ![Captura de pantalla 2025-05-20 100811](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100208.png))
+ 
  SHOW DATABASES;
