@@ -5,7 +5,7 @@ set -e  # Sale en caso de error
 # Configura estas variables antes de ejecutar
 IMAGE_NAME="practica3"
 IMAGE_TAG="1.0.0"
-DOCKER_USERNAME="dvcoronado"  
+DOCKER_USERNAME="paulam04"  
 
 # Nombre completo de la imagen
 FULL_IMAGE_NAME="$DOCKER_USERNAME/$IMAGE_NAME:$IMAGE_TAG"

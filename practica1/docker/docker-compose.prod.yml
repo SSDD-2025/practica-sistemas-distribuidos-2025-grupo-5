@@ -1,36 +1,31 @@
+version: '3.8'
 
- version: '3.8'
- services:
-   db:
-     image: mysql:9.2
-     container_name: mysql-db
-     environment:
-       MYSQL_ROOT_PASSWORD: MySQL0Password.
-       MYSQL_DATABASE: myapp_db
-       MYSQL_USER: root
-       MYSQL_PASSWORD: MySQL0Password.
-     volumes:
-       - db-data:/var/lib/mysql
-     healthcheck:
-       test: ["CMD", "mysqladmin", "ping", "--silent"]
-       interval: 10s
-       timeout: 5s
-       retries: 5
+services:
+  app:
+    image: paulam04/practica3:1.0.0
+    container_name: practica3-app
+    ports:
+      - "8443:8443"
+    depends_on:
+      - db
+    environment:
+      SPRING_PROFILES_ACTIVE: dev
+      DB_HOST: db
+      DB_PORT: 3306
+      DB_NAME: root
+      DB_USER: root
+      DB_PASSWORD: root
 
-   web:
-     image: dvcoronado/practica3:1.0.0
-     depends_on:
-       db:
-         condition: service_healthy
-     environment:
-       DB_HOST: db
-       DB_PORT: 3306
-       DB_NAME: myapp_db
-       DB_USER: root
-       DB_PASSWORD: MySQL0Password.
-     ports:
-       - "8443:8443"
-     restart: unless-stopped
+  db:
+    image: mysql:9.2
+    container_name: practica3-db
+    ports:
+      - "3307:3306"
+    environment:
+      MYSQL_ROOT_PASSWORD: root
+      MYSQL_DATABASE: root
+    volumes:
+      - db_data:/var/lib/mysql
 
- volumes:
-   db-data:
+volumes:
+  db_data:
