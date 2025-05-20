@@ -171,15 +171,15 @@ docker login
 
 .\docker\create_image.bat
 
-![Captura de pantalla 2025-05-20 100811]((https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100811.png))
+![Captura de pantalla 2025-05-20 100811](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100811.png))
 
-![Captura de pantalla 2025-05-20 100811]((https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100840.png))
+![Captura de pantalla 2025-05-20 100811](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100840.png))
 
 .\docker\publish_image.bat
 
-![Captura de pantalla 2025-05-20 100811]((https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100653.png))
+![Captura de pantalla 2025-05-20 100811](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100653.png))
 
-![Captura de pantalla 2025-05-20 100811]((https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100729.png))
+![Captura de pantalla 2025-05-20 100811](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100729.png))
 
 
 docker compose -f docker/docker-compose.yml up
@@ -195,7 +195,7 @@ sudo docker login
 
 sudo docker run -d --name practica3-app -e DB_HOST=IP_O_HOSTNAME_DEL_SERVIDOR_MYSQL -e DB_PORT=3306 -e DB_NAME=myapp_db -e DB_USER=root -e DB_PASSWORD=MySQL0Password. -p 8443:8443 dvcoronado/practica3:1.0.0
 
-![Captura de pantalla 2025-05-20 100811]((https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100133.png))
+![Captura de pantalla 2025-05-20 100811](https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100133.png))
 
 MAQUINA 2:
 sudo docker login
