@@ -172,11 +172,13 @@ docker login
 .\docker\create_image.bat
 
 ![Captura de pantalla 2025-05-20 100811]((https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100811.png))
+
 ![Captura de pantalla 2025-05-20 100811]((https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100840.png))
 
 .\docker\publish_image.bat
 
 ![Captura de pantalla 2025-05-20 100811]((https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100653.png))
+
 ![Captura de pantalla 2025-05-20 100811]((https://github.com/SSDD-2025/practica-sistemas-distribuidos-2025-grupo-5/blob/main/Captura%20de%20pantalla%202025-05-20%20100729.png))
 
 
